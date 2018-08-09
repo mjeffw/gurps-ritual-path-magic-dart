@@ -25,11 +25,14 @@ class Effect {
 
   final String name;
   final String description;
-  final int spellPoints;
+  final int energyCost;
 
   factory Effect.fromString(String name) {
     return _values[name];
   }
 
-  const Effect(this.name, this.spellPoints, this.description);
+  const Effect(this.name, this.energyCost, this.description);
+
+  @override
+  String toString() => name;
 }

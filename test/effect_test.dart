@@ -14,8 +14,8 @@ void main() {
           equals('Learn something about, or communicate with, the subject.'));
     });
 
-    test('has SpellPoints', () {
-      expect(sense.spellPoints, equals(2));
+    test('has Energy Cost', () {
+      expect(sense.energyCost, equals(2));
     });
 
     test('can be constructed by name', () {
@@ -36,7 +36,7 @@ void main() {
     });
 
     test('has SpellPoints', () {
-      expect(sense.spellPoints, equals(3));
+      expect(sense.energyCost, equals(3));
     });
 
     test('can be constructed by name', () {
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('has SpellPoints', () {
-      expect(sense.spellPoints, equals(4));
+      expect(sense.energyCost, equals(4));
     });
 
     test('can be constructed by name', () {
@@ -84,7 +84,7 @@ void main() {
     });
 
     test('has SpellPoints', () {
-      expect(control.spellPoints, equals(5));
+      expect(control.energyCost, equals(5));
     });
   });
 
@@ -104,7 +104,7 @@ void main() {
     });
 
     test('has SpellPoints', () {
-      expect(destroy.spellPoints, equals(5));
+      expect(destroy.energyCost, equals(5));
     });
   });
 
@@ -125,7 +125,7 @@ void main() {
     });
 
     test('has SpellPoints', () {
-      expect(create.spellPoints, equals(6));
+      expect(create.energyCost, equals(6));
     });
   });
 
@@ -145,7 +145,7 @@ void main() {
     });
 
     test('has SpellPoints', () {
-      expect(transform.spellPoints, equals(8));
+      expect(transform.energyCost, equals(8));
     });
   });
 }

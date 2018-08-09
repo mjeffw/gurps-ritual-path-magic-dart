@@ -14,4 +14,7 @@ class Level {
   Level(this.name);
 
   final String name;
+
+  @override
+  String toString() => name;
 }

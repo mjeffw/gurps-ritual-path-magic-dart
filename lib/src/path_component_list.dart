@@ -2,9 +2,7 @@ import 'path_component.dart';
 import 'package:quiver/collection.dart';
 import 'dart:async';
 
-enum Action {
-  Insert, Modify, Remove
-}
+enum Action { Insert, Modify, Remove }
 
 class ListChangeEvent {
   final int index;
@@ -14,7 +12,7 @@ class ListChangeEvent {
   ListChangeEvent(this.index, this.action, this.component);
 }
 
-class PathComponentList extends DelegatingList<PathComponent>{
+class PathComponentList extends DelegatingList<PathComponent> {
   final List<PathComponent> _list = [];
 
   @override
@@ -26,6 +24,23 @@ class PathComponentList extends DelegatingList<PathComponent>{
   @override
   void add(PathComponent value) {
     super.add(value);
-    changeController.add(new ListChangeEvent(this.indexOf(value), Action.Insert, value));
+    changeController
+        .add(new ListChangeEvent(this.indexOf(value), Action.Insert, value));
+  }
+
+  @override
+  void addAll(Iterable<PathComponent> iterable) {
+    iterable.forEach((f) => add(f));
+  }
+
+  @override
+  bool remove(Object value) {
+    var index = super.indexOf(value as PathComponent);
+    var result = super.remove(value);
+    if (result) {
+      changeController
+          .add(ListChangeEvent(index, Action.Remove, value as PathComponent));
+    }
+    return result;
   }
 }

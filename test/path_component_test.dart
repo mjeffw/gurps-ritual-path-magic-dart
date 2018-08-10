@@ -16,13 +16,20 @@ void main() {
       expect(p.path, equals(Path.Body));
     });
 
-    test('has String representation', (){
+    test('has String representation', () {
       expect(p.toString(), equals('Lesser Sense Body'));
+
+      p.level = Level.Greater;
+      expect(p.toString(), equals('Greater Sense Body'));
+
+      p.effect = Effect.Restore;
+      expect(p.toString(), equals('Greater Restore Body'));
     });
 
     test('has Path of Chance', () {
       PathComponent p = PathComponent(Path.Chance);
       expect(p.path, equals(Path.Chance));
+      expect(p.toString(), equals('Lesser Sense Chance'));
     });
 
     test('has Effect default of Sense', () {

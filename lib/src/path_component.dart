@@ -1,24 +1,53 @@
-import 'path.dart';
-import 'level.dart';
 import 'effect.dart';
+import 'level.dart';
+import 'path.dart';
 
 class PathComponent {
   final Path path;
-  Level level = Level.Lesser;
-  bool inherent = false;
-  String _notes;
-  Effect effect = Effect.Sense;
+  final Level _level;
+  final bool _inherent;
+  final Effect _effect;
+  final String _notes;
 
-  PathComponent(this.path);
+  const PathComponent(this.path, {
+    Level level: Level.Lesser,
+    bool inherent: false,
+    Effect effect: Effect.Sense,
+    String notes: '',
+  })
+      : _level = level,
+        _inherent = inherent,
+        _effect = effect,
+        _notes = notes;
 
+  PathComponent withLevel(Level newLevel) =>
+      PathComponent(path,
+          level: newLevel, inherent: _inherent, effect: _effect, notes: _notes);
+
+  PathComponent withEffect(Effect newEffect) =>
+      PathComponent(path,
+          level: _level, inherent: _inherent, effect: newEffect, notes: _notes);
+
+  PathComponent withInherent(bool newInherent) =>
+      PathComponent(path,
+          level: _level, inherent: newInherent, effect: _effect, notes: _notes);
+
+  PathComponent withNotes(String text) =>
+      PathComponent(path,
+          level: _level,
+          inherent: _inherent,
+          effect: _effect,
+          notes: text?.trim());
+
+  int get cost => _effect.energyCost;
+
+  Level get level => _level;
+
+  bool get inherent => _inherent;
+
+  Effect get effect => _effect;
   String get notes => _notes == null ? '' : _notes;
 
-  set notes(String text) {
-    _notes = text.trim();
-  }
-
-  int get cost => effect.energyCost;
-
   @override
-  String toString() => '${level} ${effect} ${path}';
+  String toString() => '${_level} ${_effect} ${path}';
 }

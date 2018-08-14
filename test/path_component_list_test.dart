@@ -1,81 +1,113 @@
 import 'dart:async';
+
 import 'package:test/test.dart';
-import '../lib/src/path_component_list.dart';
-import '../lib/src/path_component.dart';
+
 import '../lib/src/path.dart';
+import '../lib/src/path_component.dart';
+import '../lib/src/path_component_list.dart';
 
 void main() {
-  group('PathComponentList', () {
-    PathComponentList list;
-    var body = PathComponent(Path.Body);
-    var chance = PathComponent(Path.Chance);
-    var crossroads = PathComponent(Path.Crossroads);
+  PathComponentList emptyList;
+  PathComponentList filledList;
+  var body = PathComponent(Path.Body);
+  var chance = PathComponent(Path.Chance);
+  var crossroads = PathComponent(Path.Crossroads);
 
-    setUp(() async {
-      list = PathComponentList();
-    });
+  setUp(() async {
+    emptyList = PathComponentList();
+    filledList = PathComponentList();
+    filledList..add(body)..add(chance)..add(crossroads);
+    await filledList.onChange.take(3);
+  });
 
-    test('should Allow Adding Path Components', () {
-      expect(list.length, equals(0));
+  group('List methods', () {
+    test('should allow adding components', () {
+      expect(emptyList.length, equals(0));
 
-      list.add(body);
-      list.add(chance);
-      list.add(crossroads);
+      emptyList.add(crossroads);
+      emptyList.add(body);
+      emptyList.add(chance);
 
-      expect(list.length, equals(3));
+      expect(emptyList.length, equals(3));
 
-      expect(list[0], equals(body));
-      expect(list[1], equals(chance));
-      expect(list[2], equals(crossroads));
-    });
-
-    test('should fire event when adding', () async {
-      Timer.run(() {
-        list.add(body);
-        list.add(chance);
-        list.add(crossroads);
-      });
-
-      List<ListChangeEvent> events = await list.onChange.take(3).toList();
-
-      expect(events[0].action, equals(Action.Insert));
-      expect(events[0].index, equals(0));
-      expect(events[0].component, equals(body));
-
-      expect(events[1].action, equals(Action.Insert));
-      expect(events[1].index, equals(1));
-      expect(events[1].component, equals(chance));
-
-      expect(events[2].action, equals(Action.Insert));
-      expect(events[2].index, equals(2));
-      expect(events[2].component, equals(crossroads));
+      expect(emptyList[0], equals(crossroads));
+      expect(emptyList[1], equals(body));
+      expect(emptyList[2], equals(chance));
     });
 
     test('should allow removing components', () {
-      list.add(body);
-      list.add(chance);
-      list.add(crossroads);
+      expect(filledList.length, equals(3));
 
-      list.remove(chance);
-      expect(list.length, equals(2));
-      expect(list[0], equals(body));
-      expect(list[1], equals(crossroads));
+      expect(filledList[0], equals(body));
+      expect(filledList[1], equals(chance));
+      expect(filledList[2], equals(crossroads));
+
+      filledList.remove(chance);
+
+      expect(filledList.length, equals(2));
+      expect(filledList[0], equals(body));
+      expect(filledList[1], equals(crossroads));
     });
 
-    test('should notify listeners when removing components', () async {
-      Timer.run(() {
-        list.add(body);
-        list.add(chance);
-        list.add(crossroads);
+    test('remove by bool index', () {
+      filledList.removeByBoolIndex(<bool>[true, true, false]);
 
-        list.remove(chance);
+      expect(filledList.length, equals(1));
+      expect(filledList[0], equals(crossroads));
+    });
+  });
+
+  group('change notification', () {
+    test('should fire event when adding', () async {
+      Timer.run(() {
+        emptyList..add(body)..add(chance)..add(crossroads);
       });
 
-      ListChangeEvent event = await list.onChange.skip(3).first;
+      List<ListChangeEvent> events = await emptyList.onChange.take(3).toList();
+
+      verifyEvent(events[0], Action.Insert, 0, body);
+      verifyEvent(events[1], Action.Insert, 1, chance);
+      verifyEvent(events[2], Action.Insert, 2, crossroads);
+    });
+
+    test('should fire event when removing component', () async {
+      Timer.run(() {
+        filledList.remove(chance);
+      });
+
+      ListChangeEvent event = await filledList.onChange.first;
+
+      verifyEvent(event, Action.Remove, 1, chance);
 
       expect(event.action, equals(Action.Remove));
       expect(event.component, equals(chance));
       expect(event.index, equals(1));
     });
+
+    test('should fire event for each component on clear', () async {
+      Timer.run(() => filledList.clear());
+
+      List<ListChangeEvent> events = await filledList.onChange.take(3).toList();
+
+      verifyEvent(events[0], Action.Remove, 0, body);
+      verifyEvent(events[1], Action.Remove, 1, chance);
+      verifyEvent(events[2], Action.Remove, 2, crossroads);
+    });
+
+    test('should fire event when remove by bool index', () async {
+      Timer.run(() => filledList.removeByBoolIndex(<bool>[true, true, false]));
+
+      List<ListChangeEvent> events = await filledList.onChange.take(2).toList();
+
+      verifyEvent(events[0], Action.Remove, 0, body);
+      verifyEvent(events[1], Action.Remove, 1, chance);
+    });
   });
+}
+
+void verifyEvent(ListChangeEvent event, Action action, int index,
+    PathComponent pathComponent) {
+  expect(event.action, equals(action));
+  expect(event.index, equals(index));
+  expect(event.component, equals(pathComponent));
 }

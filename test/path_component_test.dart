@@ -1,8 +1,9 @@
 import 'package:test/test.dart';
-import '../lib/src/path_component.dart';
-import '../lib/src/path.dart';
-import '../lib/src/level.dart';
+
 import '../lib/src/effect.dart';
+import '../lib/src/level.dart';
+import '../lib/src/path.dart';
+import '../lib/src/path_component.dart';
 
 void main() {
   group('PathComponent', () {
@@ -19,10 +20,10 @@ void main() {
     test('has String representation', () {
       expect(p.toString(), equals('Lesser Sense Body'));
 
-      p.level = Level.Greater;
+      p = p.withLevel(Level.Greater);
       expect(p.toString(), equals('Greater Sense Body'));
 
-      p.effect = Effect.Restore;
+      p = p.withEffect(Effect.Restore);
       expect(p.toString(), equals('Greater Restore Body'));
     });
 
@@ -37,7 +38,7 @@ void main() {
     });
 
     test('can change Effecct', () {
-      p.effect = Effect.Transform;
+      p = p.withEffect(Effect.Transform);
       expect(p.effect, equals(Effect.Transform));
     });
 
@@ -46,7 +47,7 @@ void main() {
     });
 
     test('can change Level', () {
-      p.level = Level.Greater;
+      p = p.withLevel(Level.Greater);
       expect(p.level, equals(Level.Greater));
     });
 
@@ -55,7 +56,7 @@ void main() {
     });
 
     test('can change inherent', () {
-      p.inherent = true;
+      p = p.withInherent(true);
       expect(p.inherent, equals(true));
     });
 
@@ -64,35 +65,34 @@ void main() {
     });
 
     test('notes can be changed', () {
-      p.notes = 'hello';
+      p = p.withNotes('hello');
       expect(p.notes, equals('hello'));
     });
 
     test('notes should be trimmed of whitespace', () {
-      p.notes = ' world \t ';
+      p = p.withNotes(' world \t ');
       expect(p.notes, equals('world'));
     });
 
-    test('lesser effects cost are the same as the energy cost for the effect',
-        () {
+    test('lesser effects cost the same as the energy cost for the effect', () {
       expect(p.cost, equals(Effect.Sense.energyCost));
 
-      p.effect = Effect.Transform;
+      p = p.withEffect(Effect.Transform);
       expect(p.cost, equals(Effect.Transform.energyCost));
 
-      p.effect = Effect.Create;
+      p = p.withEffect(Effect.Create);
       expect(p.cost, equals(Effect.Create.energyCost));
 
-      p.effect = Effect.Destroy;
+      p = p.withEffect(Effect.Destroy);
       expect(p.cost, equals(Effect.Destroy.energyCost));
 
-      p.effect = Effect.Control;
+      p = p.withEffect(Effect.Control);
       expect(p.cost, equals(Effect.Control.energyCost));
 
-      p.effect = Effect.Restore;
+      p = p.withEffect(Effect.Restore);
       expect(p.cost, equals(Effect.Restore.energyCost));
 
-      p.effect = Effect.Strengthen;
+      p = p.withEffect(Effect.Strengthen);
       expect(p.cost, equals(Effect.Strengthen.energyCost));
     });
   });

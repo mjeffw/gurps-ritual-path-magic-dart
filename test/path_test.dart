@@ -1,9 +1,10 @@
-import '../lib/src/path.dart';
 import 'package:test/test.dart';
+
+import '../lib/src/path.dart';
 
 void main() {
   group('Body', () {
-    Path body = Path.Body;
+    Path body = Path.body;
 
     test('has name', () {
       expect(body.name, equals('Body'));
@@ -20,7 +21,7 @@ void main() {
   });
 
   group('Chance', () {
-    Path chance = Path.Chance;
+    Path chance = Path.chance;
 
     test('has name', () {
       expect(chance.name, equals('Chance'));
@@ -36,7 +37,7 @@ void main() {
   });
 
   group('Crossroads', () {
-    Path roads = Path.Crossroads;
+    Path roads = Path.crossroads;
 
     test('has name', () {
       expect(roads.name, equals('Crossroads'));
@@ -55,7 +56,7 @@ void main() {
   });
 
   group('Energy', () {
-    Path energy = Path.Energy;
+    Path energy = Path.energy;
 
     test('has name', () {
       expect(energy.name, equals('Energy'));
@@ -74,7 +75,7 @@ void main() {
   });
 
   group('Magic', () {
-    Path magic = Path.Magic;
+    Path magic = Path.magic;
 
     test('has name', () {
       expect(magic.name, equals('Magic'));
@@ -91,7 +92,7 @@ void main() {
   });
 
   group('Matter', () {
-    Path matter = Path.Matter;
+    Path matter = Path.matter;
 
     test('has name', () {
       expect(matter.name, equals('Matter'));
@@ -108,7 +109,7 @@ void main() {
   });
 
   group('Mind', () {
-    Path mind = Path.Mind;
+    Path mind = Path.mind;
 
     test('has name', () {
       expect(mind.name, equals('Mind'));
@@ -125,7 +126,7 @@ void main() {
   });
 
   group('Spirit', () {
-    Path spirit = Path.Spirit;
+    Path spirit = Path.spirit;
 
     test('has name', () {
       expect(spirit.name, equals('Spirit'));
@@ -144,7 +145,7 @@ void main() {
   });
 
   group('Undead', () {
-    Path undead = Path.Undead;
+    Path undead = Path.undead;
 
     test('has name', () {
       expect(undead.name, equals('Undead'));

@@ -10,45 +10,45 @@ void main() {
     PathComponent p;
 
     setUp(() async {
-      p = PathComponent(Path.Body);
+      p = PathComponent(Path.body);
     });
 
     test('has Path of Body', () {
-      expect(p.path, equals(Path.Body));
+      expect(p.path, equals(Path.body));
     });
 
     test('has String representation', () {
       expect(p.toString(), equals('Lesser Sense Body'));
 
-      p = p.withLevel(Level.Greater);
+      p = p.withLevel(Level.greater);
       expect(p.toString(), equals('Greater Sense Body'));
 
-      p = p.withEffect(Effect.Restore);
+      p = p.withEffect(Effect.restore);
       expect(p.toString(), equals('Greater Restore Body'));
     });
 
     test('has Path of Chance', () {
-      PathComponent p = PathComponent(Path.Chance);
-      expect(p.path, equals(Path.Chance));
+      PathComponent p = PathComponent(Path.chance);
+      expect(p.path, equals(Path.chance));
       expect(p.toString(), equals('Lesser Sense Chance'));
     });
 
     test('has Effect default of Sense', () {
-      expect(p.effect, equals(Effect.Sense));
+      expect(p.effect, equals(Effect.sense));
     });
 
     test('can change Effecct', () {
-      p = p.withEffect(Effect.Transform);
-      expect(p.effect, equals(Effect.Transform));
+      p = p.withEffect(Effect.transform);
+      expect(p.effect, equals(Effect.transform));
     });
 
     test('has default Level of Lesser', () {
-      expect(p.level, equals(Level.Lesser));
+      expect(p.level, equals(Level.lesser));
     });
 
     test('can change Level', () {
-      p = p.withLevel(Level.Greater);
-      expect(p.level, equals(Level.Greater));
+      p = p.withLevel(Level.greater);
+      expect(p.level, equals(Level.greater));
     });
 
     test('has default inherent of false', () {
@@ -75,25 +75,25 @@ void main() {
     });
 
     test('lesser effects cost the same as the energy cost for the effect', () {
-      expect(p.cost, equals(Effect.Sense.energyCost));
+      expect(p.cost, equals(Effect.sense.energyCost));
 
-      p = p.withEffect(Effect.Transform);
-      expect(p.cost, equals(Effect.Transform.energyCost));
+      p = p.withEffect(Effect.transform);
+      expect(p.cost, equals(Effect.transform.energyCost));
 
-      p = p.withEffect(Effect.Create);
-      expect(p.cost, equals(Effect.Create.energyCost));
+      p = p.withEffect(Effect.create);
+      expect(p.cost, equals(Effect.create.energyCost));
 
-      p = p.withEffect(Effect.Destroy);
-      expect(p.cost, equals(Effect.Destroy.energyCost));
+      p = p.withEffect(Effect.destroy);
+      expect(p.cost, equals(Effect.destroy.energyCost));
 
-      p = p.withEffect(Effect.Control);
-      expect(p.cost, equals(Effect.Control.energyCost));
+      p = p.withEffect(Effect.control);
+      expect(p.cost, equals(Effect.control.energyCost));
 
-      p = p.withEffect(Effect.Restore);
-      expect(p.cost, equals(Effect.Restore.energyCost));
+      p = p.withEffect(Effect.restore);
+      expect(p.cost, equals(Effect.restore.energyCost));
 
-      p = p.withEffect(Effect.Strengthen);
-      expect(p.cost, equals(Effect.Strengthen.energyCost));
+      p = p.withEffect(Effect.strengthen);
+      expect(p.cost, equals(Effect.strengthen.energyCost));
     });
   });
 }

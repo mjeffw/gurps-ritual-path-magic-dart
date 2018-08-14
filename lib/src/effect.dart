@@ -1,26 +1,26 @@
 class Effect {
-  static const Sense = Effect(
+  static const sense = Effect(
       'Sense', 2, 'Learn something about, or communicate with, the subject.');
-  static const Strengthen = Effect(
+  static const strengthen = Effect(
       'Strengthen', 3, 'Protect, enhance, or otherwise augment the subject.');
-  static const Restore =
+  static const restore =
       Effect('Restore', 4, 'Heal or repair subject or undo a transformation.');
-  static const Control = Effect('Control', 5,
+  static const control = Effect('Control', 5,
       'Direct or move the subject without changing it fundamentally.');
-  static const Destroy = Effect('Destroy', 5, 'Damage or weaken the subject.');
-  static const Create =
+  static const destroy = Effect('Destroy', 5, 'Damage or weaken the subject.');
+  static const create =
       Effect('Create', 6, 'Bring subject into being from nothing.');
-  static const Transform =
+  static const transform =
       Effect('Transform', 8, 'Significantly alter the subject.');
 
   static Map<String, Effect> _values = {
-    Sense.name: Sense,
-    Strengthen.name: Strengthen,
-    Restore.name: Restore,
-    Control.name: Control,
-    Destroy.name: Destroy,
-    Create.name: Create,
-    Transform.name: Transform,
+    sense.name: sense,
+    strengthen.name: strengthen,
+    restore.name: restore,
+    control.name: control,
+    destroy.name: destroy,
+    create.name: create,
+    transform.name: transform,
   };
 
   final String name;

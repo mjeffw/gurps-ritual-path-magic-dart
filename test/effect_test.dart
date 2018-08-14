@@ -1,5 +1,6 @@
-import '../lib/src/effect.dart';
 import 'package:test/test.dart';
+
+import '../lib/src/effect.dart';
 
 void main() {
   group('Sense:', () {
@@ -19,7 +20,7 @@ void main() {
     });
 
     test('can be constructed by name', () {
-      expect(sense, equals(Effect.Sense));
+      expect(sense, equals(Effect.sense));
     });
   });
 
@@ -40,7 +41,7 @@ void main() {
     });
 
     test('can be constructed by name', () {
-      expect(sense, equals(Effect.Strengthen));
+      expect(sense, equals(Effect.strengthen));
     });
   });
 
@@ -61,7 +62,7 @@ void main() {
     });
 
     test('can be constructed by name', () {
-      expect(sense, equals(Effect.Restore));
+      expect(sense, equals(Effect.restore));
     });
   });
 
@@ -69,7 +70,7 @@ void main() {
     Effect control = Effect.fromString('Control');
 
     test('can be constructed by name', () {
-      expect(control, equals(Effect.Control));
+      expect(control, equals(Effect.control));
     });
 
     test('has name', () {
@@ -92,7 +93,7 @@ void main() {
     Effect destroy = Effect.fromString('Destroy');
 
     test('can be constructed by name', () {
-      expect(destroy, equals(Effect.Destroy));
+      expect(destroy, equals(Effect.destroy));
     });
 
     test('has name', () {
@@ -112,7 +113,7 @@ void main() {
     Effect create = Effect.fromString('Create');
 
     test('can be constructed by name', () {
-      expect(create, equals(Effect.Create));
+      expect(create, equals(Effect.create));
     });
 
     test('has name', () {
@@ -133,7 +134,7 @@ void main() {
     Effect transform = Effect.fromString('Transform');
 
     test('can be constructed by name', () {
-      expect(transform, equals(Effect.Transform));
+      expect(transform, equals(Effect.transform));
     });
 
     test('has name', () {

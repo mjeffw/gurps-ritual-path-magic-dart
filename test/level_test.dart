@@ -1,9 +1,10 @@
-import '../lib/src/level.dart';
 import 'package:test/test.dart';
+
+import '../lib/src/level.dart';
 
 void main() {
   group('Greater', () {
-    Level greater = Level.Greater;
+    Level greater = Level.greater;
 
     test('has name', () {
       expect('Greater', equals(greater.name));
@@ -15,7 +16,7 @@ void main() {
   });
 
   group('Lesser', () {
-    Level lesser = Level.Lesser;
+    Level lesser = Level.lesser;
 
     test('has name', () {
       expect('Lesser', equals(lesser.name));

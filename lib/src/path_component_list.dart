@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'path_component.dart';
 
-enum Action { Insert, Modify, Remove }
+enum Action { insert, modify, remove }
 
 class ListChangeEvent {
   final int index;
@@ -15,9 +15,6 @@ class ListChangeEvent {
 class PathComponentList {
   final List<PathComponent> _list = [];
 
-  @override
-  List<PathComponent> get delegate => _list;
-
   int get length => _list.length;
 
   PathComponent operator [](int index) => _list[index];
@@ -25,35 +22,31 @@ class PathComponentList {
   var changeController = new StreamController<ListChangeEvent>.broadcast();
   Stream<ListChangeEvent> get onChange => changeController.stream;
 
-  @override
   void add(PathComponent value) {
     _list.add(value);
     changeController
-        .add(new ListChangeEvent(_list.indexOf(value), Action.Insert, value));
+        .add(new ListChangeEvent(_list.indexOf(value), Action.insert, value));
   }
 
-  @override
   void addAll(Iterable<PathComponent> iterable) {
     iterable.forEach((f) => add(f));
   }
 
-  @override
   bool remove(Object value) {
     var index = _list.indexOf(value as PathComponent);
     var result = _list.remove(value);
     if (result) {
       changeController
-          .add(ListChangeEvent(index, Action.Remove, value as PathComponent));
+          .add(ListChangeEvent(index, Action.remove, value as PathComponent));
     }
     return result;
   }
 
-  @override
   void clear() {
     var events = <ListChangeEvent>[];
     _list.forEach(
             (f) =>
-            events.add(ListChangeEvent(_list.indexOf(f), Action.Remove, f)));
+            events.add(ListChangeEvent(_list.indexOf(f), Action.remove, f)));
 
     events.forEach((event) => removeComponent(event));
   }
@@ -68,7 +61,7 @@ class PathComponentList {
 
     for (var i = 0; i < deleteIndex.length; i++) {
       if (deleteIndex[i]) {
-        events.add(ListChangeEvent(i, Action.Remove, _list.elementAt(i)));
+        events.add(ListChangeEvent(i, Action.remove, _list.elementAt(i)));
       }
     }
 

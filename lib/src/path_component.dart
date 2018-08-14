@@ -10,9 +10,9 @@ class PathComponent {
   final String _notes;
 
   const PathComponent(this.path, {
-    Level level: Level.Lesser,
+    Level level: Level.lesser,
     bool inherent: false,
-    Effect effect: Effect.Sense,
+    Effect effect: Effect.sense,
     String notes: '',
   })
       : _level = level,

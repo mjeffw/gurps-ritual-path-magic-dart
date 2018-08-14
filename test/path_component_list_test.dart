@@ -9,9 +9,9 @@ import '../lib/src/path_component_list.dart';
 void main() {
   PathComponentList emptyList;
   PathComponentList filledList;
-  var body = PathComponent(Path.Body);
-  var chance = PathComponent(Path.Chance);
-  var crossroads = PathComponent(Path.Crossroads);
+  var body = PathComponent(Path.body);
+  var chance = PathComponent(Path.chance);
+  var crossroads = PathComponent(Path.crossroads);
 
   setUp(() async {
     emptyList = PathComponentList();
@@ -65,9 +65,9 @@ void main() {
 
       List<ListChangeEvent> events = await emptyList.onChange.take(3).toList();
 
-      verifyEvent(events[0], Action.Insert, 0, body);
-      verifyEvent(events[1], Action.Insert, 1, chance);
-      verifyEvent(events[2], Action.Insert, 2, crossroads);
+      verifyEvent(events[0], Action.insert, 0, body);
+      verifyEvent(events[1], Action.insert, 1, chance);
+      verifyEvent(events[2], Action.insert, 2, crossroads);
     });
 
     test('should fire event when removing component', () async {
@@ -77,9 +77,9 @@ void main() {
 
       ListChangeEvent event = await filledList.onChange.first;
 
-      verifyEvent(event, Action.Remove, 1, chance);
+      verifyEvent(event, Action.remove, 1, chance);
 
-      expect(event.action, equals(Action.Remove));
+      expect(event.action, equals(Action.remove));
       expect(event.component, equals(chance));
       expect(event.index, equals(1));
     });
@@ -89,9 +89,9 @@ void main() {
 
       List<ListChangeEvent> events = await filledList.onChange.take(3).toList();
 
-      verifyEvent(events[0], Action.Remove, 0, body);
-      verifyEvent(events[1], Action.Remove, 1, chance);
-      verifyEvent(events[2], Action.Remove, 2, crossroads);
+      verifyEvent(events[0], Action.remove, 0, body);
+      verifyEvent(events[1], Action.remove, 1, chance);
+      verifyEvent(events[2], Action.remove, 2, crossroads);
     });
 
     test('should fire event when remove by bool index', () async {
@@ -99,8 +99,8 @@ void main() {
 
       List<ListChangeEvent> events = await filledList.onChange.take(2).toList();
 
-      verifyEvent(events[0], Action.Remove, 0, body);
-      verifyEvent(events[1], Action.Remove, 1, chance);
+      verifyEvent(events[0], Action.remove, 0, body);
+      verifyEvent(events[1], Action.remove, 1, chance);
     });
   });
 }

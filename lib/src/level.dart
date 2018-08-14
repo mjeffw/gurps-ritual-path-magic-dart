@@ -1,10 +1,10 @@
 class Level {
-  static const Greater = Level('Greater');
-  static const Lesser = Level('Lesser');
+  static const greater = Level('Greater');
+  static const lesser = Level('Lesser');
 
   static Map<String, Level> _values = {
-    Greater.name: Greater,
-    Lesser.name: Lesser,
+    greater.name: greater,
+    lesser.name: lesser,
   };
 
   factory Level.fromString(String name) {

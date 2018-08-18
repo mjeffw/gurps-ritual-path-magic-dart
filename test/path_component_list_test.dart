@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 
+import '../lib/src/effect.dart';
+import '../lib/src/level.dart';
 import '../lib/src/path.dart';
 import '../lib/src/path_component.dart';
 import '../lib/src/path_component_list.dart';
@@ -55,6 +57,38 @@ void main() {
       expect(filledList.length, equals(1));
       expect(filledList[0], equals(crossroads));
     });
+
+    test('should allow replacing', () {
+      PathComponent p = filledList[0];
+
+      expect(p.path, equals(Path.body));
+      expect(p.effect, equals(Effect.sense));
+      expect(p.level, equals(Level.lesser));
+
+      filledList[0] = p.withLevel(Level.greater);
+      p = filledList[0];
+
+      expect(p.path, equals(Path.body));
+      expect(p.effect, equals(Effect.sense));
+      expect(p.level, equals(Level.greater));
+
+      filledList[0] = p.withEffect(Effect.control);
+      p = filledList[0];
+
+      expect(p.path, equals(Path.body));
+      expect(p.effect, equals(Effect.control));
+      expect(p.level, equals(Level.greater));
+
+      filledList[0] =
+          PathComponent(Path.energy, level: p.level, effect: p.effect);
+      p = filledList[0];
+
+      expect(p.path, equals(Path.energy));
+      expect(p.effect, equals(Effect.control));
+      expect(p.level, equals(Level.greater));
+    });
+
+    test('should allow iteration', () {});
   });
 
   group('change notification', () {
@@ -101,6 +135,17 @@ void main() {
 
       verifyEvent(events[0], Action.remove, 0, body);
       verifyEvent(events[1], Action.remove, 1, chance);
+    });
+
+    test('should fire event when replacing', () async {
+      var pathComponent = PathComponent(Path.magic,
+          level: Level.greater, effect: Effect.destroy);
+
+      Timer.run(() {
+        filledList[1] = pathComponent;
+      });
+
+      ListChangeEvent event = await filledList.onChange.first;
     });
   });
 }

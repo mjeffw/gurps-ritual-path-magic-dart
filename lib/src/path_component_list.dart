@@ -17,10 +17,18 @@ class PathComponentList {
 
   int get length => _list.length;
 
+  var changeController = new StreamController<ListChangeEvent>.broadcast();
+
+  Stream<ListChangeEvent> get onChange => changeController.stream;
+
+  // -- List-like methods --
+
   PathComponent operator [](int index) => _list[index];
 
-  var changeController = new StreamController<ListChangeEvent>.broadcast();
-  Stream<ListChangeEvent> get onChange => changeController.stream;
+  void operator []=(int index, PathComponent p) {
+    _list[index] = p;
+    changeController.add(ListChangeEvent(index, Action.modify, p));
+  }
 
   void add(PathComponent value) {
     _list.add(value);

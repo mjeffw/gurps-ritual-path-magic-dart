@@ -7,9 +7,10 @@ enum Action { insert, modify, remove }
 class ListChangeEvent {
   final int index;
   final Action action;
-  final PathComponent component;
+  final PathComponent oldValue;
+  final PathComponent newValue;
 
-  ListChangeEvent(this.index, this.action, this.component);
+  ListChangeEvent(this.index, this.action, this.oldValue, this.newValue);
 }
 
 class PathComponentList {
@@ -26,14 +27,15 @@ class PathComponentList {
   PathComponent operator [](int index) => _list[index];
 
   void operator []=(int index, PathComponent p) {
+    var event = ListChangeEvent(index, Action.modify, _list[index], p);
     _list[index] = p;
-    changeController.add(ListChangeEvent(index, Action.modify, p));
+    changeController.add(event);
   }
 
   void add(PathComponent value) {
     _list.add(value);
     changeController
-        .add(new ListChangeEvent(_list.indexOf(value), Action.insert, value));
+        .add(new ListChangeEvent(_list.indexOf(value), Action.insert, null, value));
   }
 
   void addAll(Iterable<PathComponent> iterable) {
@@ -45,7 +47,7 @@ class PathComponentList {
     var result = _list.remove(value);
     if (result) {
       changeController
-          .add(ListChangeEvent(index, Action.remove, value as PathComponent));
+          .add(ListChangeEvent(index, Action.remove, value as PathComponent, null));
     }
     return result;
   }
@@ -54,13 +56,13 @@ class PathComponentList {
     var events = <ListChangeEvent>[];
     _list.forEach(
             (f) =>
-            events.add(ListChangeEvent(_list.indexOf(f), Action.remove, f)));
+            events.add(ListChangeEvent(_list.indexOf(f), Action.remove, f, null)));
 
-    events.forEach((event) => removeComponent(event));
+    events.forEach((event) => _removeComponent(event));
   }
 
-  void removeComponent(ListChangeEvent f) {
-    _list.remove(f.component);
+  void _removeComponent(ListChangeEvent f) {
+    _list.remove(f.oldValue);
     changeController.add(f);
   }
 
@@ -69,10 +71,10 @@ class PathComponentList {
 
     for (var i = 0; i < deleteIndex.length; i++) {
       if (deleteIndex[i]) {
-        events.add(ListChangeEvent(i, Action.remove, _list.elementAt(i)));
+        events.add(ListChangeEvent(i, Action.remove, _list.elementAt(i), null));
       }
     }
 
-    events.forEach((event) => removeComponent(event));
+    events.forEach((event) => _removeComponent(event));
   }
 }

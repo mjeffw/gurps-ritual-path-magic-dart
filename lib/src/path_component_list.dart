@@ -34,8 +34,8 @@ class PathComponentList {
 
   void add(PathComponent value) {
     _list.add(value);
-    changeController
-        .add(new ListChangeEvent(_list.indexOf(value), Action.insert, null, value));
+    changeController.add(
+        new ListChangeEvent(_list.indexOf(value), Action.insert, null, value));
   }
 
   void addAll(Iterable<PathComponent> iterable) {
@@ -46,17 +46,16 @@ class PathComponentList {
     var index = _list.indexOf(value as PathComponent);
     var result = _list.remove(value);
     if (result) {
-      changeController
-          .add(ListChangeEvent(index, Action.remove, value as PathComponent, null));
+      changeController.add(
+          ListChangeEvent(index, Action.remove, value as PathComponent, null));
     }
     return result;
   }
 
   void clear() {
     var events = <ListChangeEvent>[];
-    _list.forEach(
-            (f) =>
-            events.add(ListChangeEvent(_list.indexOf(f), Action.remove, f, null)));
+    _list.forEach((f) =>
+        events.add(ListChangeEvent(_list.indexOf(f), Action.remove, f, null)));
 
     events.forEach((event) => _removeComponent(event));
   }

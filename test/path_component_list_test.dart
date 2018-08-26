@@ -79,7 +79,8 @@ void main() {
       expect(p.effect, equals(Effect.control));
       expect(p.level, equals(Level.greater));
 
-      filledList[0] = PathComponent(Path.energy, level: p.level, effect: p.effect);
+      filledList[0] =
+          PathComponent(Path.energy, level: p.level, effect: p.effect);
       p = filledList[0];
 
       expect(p.path, equals(Path.energy));
@@ -133,7 +134,8 @@ void main() {
     });
 
     test('should fire event when replacing', () async {
-      var pathComponent = PathComponent(Path.magic, level: Level.greater, effect: Effect.destroy);
+      var pathComponent = PathComponent(Path.magic,
+          level: Level.greater, effect: Effect.destroy);
 
       Timer.run(() {
         filledList[1] = pathComponent;
@@ -145,7 +147,8 @@ void main() {
   });
 }
 
-void verifyEvent(ListChangeEvent event, Action action, int index, PathComponent oldValue, PathComponent newValue) {
+void verifyEvent(ListChangeEvent event, Action action, int index,
+    PathComponent oldValue, PathComponent newValue) {
   expect(event.action, equals(action));
   expect(event.index, equals(index));
   expect(event.oldValue, equals(oldValue));

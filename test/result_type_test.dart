@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+
 import '../lib/src/result_type.dart';
 
 void main() {

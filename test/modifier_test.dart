@@ -35,4 +35,36 @@ void main() {
     expect(Modifier.fromString('Speed'), same(Modifier.speed));
     expect(Modifier.fromString('Subject Weight'), same(Modifier.subjectWeight));
   });
+
+  test('toString', () {
+    expect(Modifier.affliction.toString(), equals('Affliction'));
+    expect(Modifier.alteredTrait.toString(), equals('Altered Traits'));
+    expect(Modifier.areaOfEffect.toString(), equals('Area of Effect'));
+    expect(Modifier.bestowsBonus.toString(), equals('Bestows a Bonus'));
+    expect(Modifier.bestowsPenalty.toString(), equals('Bestows a Penalty'));
+    expect(Modifier.damage.toString(), equals('Damage'));
+    expect(Modifier.duration.toString(), equals('Duration'));
+    expect(Modifier.extraEnergy.toString(), equals('Extra Energy'));
+    expect(Modifier.healing.toString(), equals('Healing'));
+    expect(Modifier.metaMagic.toString(), equals('Meta-Magic'));
+    expect(Modifier.range.toString(), equals('Range'));
+    expect(Modifier.speed.toString(), equals('Speed'));
+    expect(Modifier.subjectWeight.toString(), equals('Subject Weight'));
+  });
+
+  test('default level', () {
+    expect(Modifier.affliction.defaultLevel, equals(0));
+    expect(Modifier.alteredTrait.defaultLevel, equals(0));
+    expect(Modifier.areaOfEffect.defaultLevel, equals(1));
+    expect(Modifier.bestowsBonus.defaultLevel, equals(0));
+    expect(Modifier.bestowsPenalty.defaultLevel, equals(0));
+    expect(Modifier.damage.defaultLevel, equals(0));
+    expect(Modifier.duration.defaultLevel, equals(0));
+    expect(Modifier.extraEnergy.defaultLevel, equals(0));
+    expect(Modifier.healing.defaultLevel, equals(0));
+    expect(Modifier.metaMagic.defaultLevel, equals(0));
+    expect(Modifier.range.defaultLevel, equals(0));
+    expect(Modifier.speed.defaultLevel, equals(0));
+    expect(Modifier.subjectWeight.defaultLevel, equals(0));
+  });
 }

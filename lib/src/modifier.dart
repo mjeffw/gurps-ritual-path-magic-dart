@@ -1,14 +1,15 @@
 class Modifier {
-  const Modifier(this.name);
+  const Modifier(this.name, { this.defaultLevel: 0});
 
   final String name;
+  final int defaultLevel;
 
   @override
   String toString() => name;
 
   static var affliction = Modifier('Affliction');
   static var alteredTrait = Modifier('Altered Traits');
-  static var areaOfEffect = Modifier('Area of Effect');
+  static var areaOfEffect = Modifier('Area of Effect', defaultLevel: 1);
   static var bestowsBonus = Modifier('Bestows a Bonus');
   static var bestowsPenalty = Modifier('Bestows a Penalty');
   static var damage = Modifier('Damage');

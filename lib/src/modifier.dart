@@ -20,6 +20,7 @@ class Modifier {
   static var range = Modifier('Range');
   static var speed = Modifier('Speed');
   static var subjectWeight = Modifier('Subject Weight');
+  static var traditionalTrappings = Modifier('Traditional Trappings');
 
   static Map<String, Modifier> _values = {
     affliction.name: affliction,
@@ -35,7 +36,9 @@ class Modifier {
     range.name: range,
     speed.name: speed,
     subjectWeight.name: subjectWeight,
+    traditionalTrappings.name: traditionalTrappings,
   };
 
   static Modifier fromString(String name) => _values[name];
+  static Iterable<String> labels = _values.keys;
 }

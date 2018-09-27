@@ -17,6 +17,7 @@ void main() {
     expect(Modifier.range.name, equals('Range'));
     expect(Modifier.speed.name, equals('Speed'));
     expect(Modifier.subjectWeight.name, equals('Subject Weight'));
+    expect(Modifier.traditionalTrappings.name, equals('Traditional Trappings'));
   });
 
   test('should allow lookup by name', () {
@@ -34,6 +35,8 @@ void main() {
     expect(Modifier.fromString('Range'), same(Modifier.range));
     expect(Modifier.fromString('Speed'), same(Modifier.speed));
     expect(Modifier.fromString('Subject Weight'), same(Modifier.subjectWeight));
+    expect(Modifier.fromString('Traditional Trappings'),
+        same(Modifier.traditionalTrappings));
   });
 
   test('toString', () {
@@ -50,6 +53,10 @@ void main() {
     expect(Modifier.range.toString(), equals('Range'));
     expect(Modifier.speed.toString(), equals('Speed'));
     expect(Modifier.subjectWeight.toString(), equals('Subject Weight'));
+    expect(
+        Modifier.traditionalTrappings.toString(),
+        equals('Traditional '
+            'Trappings'));
   });
 
   test('default level', () {
@@ -66,5 +73,28 @@ void main() {
     expect(Modifier.range.defaultLevel, equals(0));
     expect(Modifier.speed.defaultLevel, equals(0));
     expect(Modifier.subjectWeight.defaultLevel, equals(0));
+    expect(Modifier.traditionalTrappings.defaultLevel, equals(0));
+  });
+
+  test('should publish labels', () {
+    expect(Modifier.labels.length, equals(14));
+    expect(
+        Modifier.labels,
+        containsAll(<String>[
+          "Affliction",
+          'Altered Traits',
+          'Area of Effect',
+          'Bestows a Bonus',
+          'Bestows a Penalty',
+          'Damage',
+          'Duration',
+          'Extra Energy',
+          'Healing',
+          'Meta-Magic',
+          'Range',
+          'Speed',
+          'Subject Weight',
+          'Traditional Trappings',
+        ]));
   });
 }

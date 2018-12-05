@@ -13,5 +13,7 @@ void main() {
     expect(m.modifier, same(Modifier.range));
     expect(m.isInherent, equals(false));
     expect(m.cost, equals(0));
+    expect(m.level, equals(0));
+    expect(m.notes, equals(''));
   });
 }

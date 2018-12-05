@@ -2,7 +2,6 @@ import 'modifier.dart';
 
 class ModifierComponent {
   final Modifier modifier;
-
   bool isInherent;
 
   ModifierComponent(Modifier m, {bool inherent: false})
@@ -11,4 +10,8 @@ class ModifierComponent {
         this.isInherent = inherent;
 
   int get cost => 0;
+
+  int get level => 0;
+
+  String get notes => '';
 }

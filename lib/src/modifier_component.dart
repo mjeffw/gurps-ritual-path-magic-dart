@@ -1,13 +1,13 @@
 import 'modifier.dart';
 
 class ModifierComponent {
-  final Modifier modifier;
-  bool isInherent;
-
   ModifierComponent(Modifier m, {bool inherent: false})
       : assert(m != null),
         this.modifier = m,
         this.isInherent = inherent;
+
+  final Modifier modifier;
+  bool isInherent;
 
   int get cost => 0;
 

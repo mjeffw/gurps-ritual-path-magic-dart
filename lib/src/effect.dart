@@ -1,4 +1,10 @@
 class Effect {
+  const Effect(this.name, this.energyCost, this.description);
+
+  factory Effect.fromString(String name) {
+    return _values[name];
+  }
+
   static const sense = Effect(
       'Sense', 2, 'Learn something about, or communicate with, the subject.');
   static const strengthen = Effect(
@@ -26,12 +32,6 @@ class Effect {
   final String name;
   final String description;
   final int energyCost;
-
-  factory Effect.fromString(String name) {
-    return _values[name];
-  }
-
-  const Effect(this.name, this.energyCost, this.description);
 
   @override
   String toString() => name;

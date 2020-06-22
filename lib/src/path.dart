@@ -1,4 +1,10 @@
 class Path {
+  const Path(this.name, this.aspect);
+
+  factory Path.fromString(String name) {
+    return _values[name];
+  }
+
   static const body =
       Path('Body', 'Targets the tissues and fluids of living things.');
   static const chance = Path('Chance', 'Affects luck, odds, and entropy.');
@@ -28,12 +34,6 @@ class Path {
     spirit.name: spirit,
     undead.name: undead,
   };
-
-  factory Path.fromString(String name) {
-    return _values[name];
-  }
-
-  const Path(this.name, this.aspect);
 
   final String name;
   final String aspect;

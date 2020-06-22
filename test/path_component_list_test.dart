@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 
 import '../lib/src/effect.dart';
 import '../lib/src/level.dart';
+import '../lib/src/list_events.dart';
 import '../lib/src/path.dart';
 import '../lib/src/path_component.dart';
 import '../lib/src/path_component_list.dart';
@@ -97,7 +98,8 @@ void main() {
         emptyList..add(body)..add(chance)..add(crossroads);
       });
 
-      List<ListChangeEvent> events = await emptyList.onChange.take(3).toList();
+      List<ListChangeEvent<PathComponent>> events =
+          await emptyList.onChange.take(3).toList();
 
       verifyEvent(events[0], Action.insert, 0, null, body);
       verifyEvent(events[1], Action.insert, 1, null, chance);
@@ -109,7 +111,7 @@ void main() {
         filledList.remove(chance);
       });
 
-      ListChangeEvent event = await filledList.onChange.first;
+      ListChangeEvent<PathComponent> event = await filledList.onChange.first;
 
       verifyEvent(event, Action.remove, 1, chance, null);
     });
@@ -117,7 +119,8 @@ void main() {
     test('should fire event for each component on clear', () async {
       Timer.run(() => filledList.clear());
 
-      List<ListChangeEvent> events = await filledList.onChange.take(3).toList();
+      List<ListChangeEvent<PathComponent>> events =
+          await filledList.onChange.take(3).toList();
 
       verifyEvent(events[0], Action.remove, 0, body, null);
       verifyEvent(events[1], Action.remove, 1, chance, null);

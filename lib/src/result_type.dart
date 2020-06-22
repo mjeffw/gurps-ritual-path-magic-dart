@@ -1,4 +1,6 @@
 class ResultType {
+  ResultType(this.name);
+
   static ResultType criticalFailure = ResultType('Critical Failure');
   static ResultType failure = ResultType('Failure');
   static ResultType success = ResultType('Success');
@@ -12,8 +14,6 @@ class ResultType {
   };
 
   final String name;
-
-  ResultType(this.name);
 
   static ResultType fromString(String name) => _values[name];
 }

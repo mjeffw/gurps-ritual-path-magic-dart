@@ -1,7 +1,11 @@
+import 'package:meta/meta.dart';
+import 'package:quiver/core.dart';
+
 import 'effect.dart';
 import 'level.dart';
 import 'path.dart';
 
+@immutable
 class PathComponent {
   const PathComponent(
     this.path, {
@@ -40,6 +44,18 @@ class PathComponent {
 
   Effect get effect => _effect;
   String get notes => _notes == null ? '' : _notes;
+
+  @override
+  bool operator ==(Object any) {
+    return any is PathComponent &&
+        any.path == path &&
+        any._level == _level &&
+        any._effect == _effect &&
+        any._inherent == _inherent;
+  }
+
+  @override
+  int get hashCode => hash4(path, _level, _effect, _inherent);
 
   @override
   String toString() => '${_level} ${_effect} ${path}';

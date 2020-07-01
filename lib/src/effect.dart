@@ -1,3 +1,6 @@
+import 'package:meta/meta.dart';
+
+@immutable
 class Effect {
   const Effect(this.name, this.energyCost, this.description);
 

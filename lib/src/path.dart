@@ -1,3 +1,6 @@
+import 'package:meta/meta.dart';
+
+@immutable
 class Path {
   const Path(this.name, this.aspect);
 

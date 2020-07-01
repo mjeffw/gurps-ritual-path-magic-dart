@@ -7,11 +7,27 @@ import 'package:test/test.dart';
 
 void main() {
   test('has name', () {
-    Ritual r = new Ritual();
-    r.name = 'Bag of Bones';
-    r.paths.add(PathComponent(Path.undead,
+    var list = <PathComponent>[];
+    list.add(PathComponent(Path.undead,
         level: Level.greater, effect: Effect.control));
-    r.paths.add(
-        PathComponent(Path.undead, level: Level.lesser, effect: Effect.create));
+    list.add(PathComponent(Path.undead, effect: Effect.create));
+
+    Ritual r = new Ritual(name: 'Bag of Bones', effects: list);
+    expect(r.name, equals('Bag of Bones'));
+    expect(
+        r.effects,
+        containsAll(<PathComponent>[
+          PathComponent(Path.undead,
+              level: Level.greater, effect: Effect.control),
+          PathComponent(Path.undead, level: Level.lesser, effect: Effect.create)
+        ]));
+
+    expect(r.modifiers, isEmpty);
+
+    // r.name = 'Bag of Bones';
+    // r.paths.add(PathComponent(Path.undead,
+    //     level: Level.greater, effect: Effect.control));
+    // r.paths.add(
+    //     PathComponent(Path.undead, level: Level.lesser, effect: Effect.create));
   });
 }

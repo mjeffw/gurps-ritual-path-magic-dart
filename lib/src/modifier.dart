@@ -1,5 +1,8 @@
+import 'package:meta/meta.dart';
+
+@immutable
 class Modifier {
-  const Modifier(this.name, { this.defaultLevel: 0});
+  const Modifier(this.name, {this.defaultLevel: 0});
 
   final String name;
   final int defaultLevel;

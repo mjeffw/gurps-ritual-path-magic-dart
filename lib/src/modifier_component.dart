@@ -1,13 +1,16 @@
+import 'package:meta/meta.dart';
+
 import 'modifier.dart';
 
+@immutable
 class ModifierComponent {
-  ModifierComponent(Modifier m, {bool inherent: false})
+  const ModifierComponent(Modifier m, {bool inherent: false})
       : assert(m != null),
         this.modifier = m,
         this.isInherent = inherent;
 
   final Modifier modifier;
-  bool isInherent;
+  final bool isInherent;
 
   int get cost => 0;
 

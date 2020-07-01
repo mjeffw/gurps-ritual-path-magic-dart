@@ -1,12 +1,19 @@
+import 'package:meta/meta.dart';
+
 import 'modifier_component.dart';
 import 'path_component.dart';
 import 'util/list_events.dart';
 
+@immutable
 class Ritual {
-  String name;
-  ObservableList<PathComponent> paths = ObservableList<PathComponent>();
+  const Ritual({this.name, this.effects, List<ModifierComponent> mods})
+      : this.modifiers = mods ?? const <ModifierComponent>[];
 
-  ModifierComponent modifiers;
+  final String name;
 
-  void addPathComponent(PathComponent pathComponent) {}
+  final List<PathComponent> effects;
+
+  final List<ModifierComponent> modifiers;
+
+  // void addPathComponent(PathComponent pathComponent) {}
 }

@@ -8,9 +8,10 @@ import 'package:test/test.dart';
 void main() {
   test('has name', () {
     Ritual r = new Ritual();
-    r.name = 'Air Jet';
-    r.paths.add(PathComponent(Path.matter,
+    r.name = 'Bag of Bones';
+    r.paths.add(PathComponent(Path.undead,
         level: Level.greater, effect: Effect.control));
-    r.modifiers;
+    r.paths.add(
+        PathComponent(Path.undead, level: Level.lesser, effect: Effect.create));
   });
 }

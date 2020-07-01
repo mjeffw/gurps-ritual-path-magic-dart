@@ -4,21 +4,20 @@ import 'package:test/test.dart';
 
 import '../lib/src/effect.dart';
 import '../lib/src/level.dart';
-import '../lib/src/list_events.dart';
+import '../lib/src/util/list_events.dart';
 import '../lib/src/path.dart';
 import '../lib/src/path_component.dart';
-import '../lib/src/path_component_list.dart';
 
 void main() {
-  PathComponentList emptyList;
-  PathComponentList filledList;
+  ObservableList<PathComponent> emptyList;
+  ObservableList<PathComponent> filledList;
   var body = PathComponent(Path.body);
   var chance = PathComponent(Path.chance);
   var crossroads = PathComponent(Path.crossroads);
 
   setUp(() async {
-    emptyList = PathComponentList();
-    filledList = PathComponentList();
+    emptyList = ObservableList<PathComponent>();
+    filledList = ObservableList<PathComponent>();
     filledList.addAll([body, chance, crossroads]);
     await filledList.onChange.take(3);
   });

@@ -1,10 +1,10 @@
 import 'modifier_component.dart';
 import 'path_component.dart';
-import 'path_component_list.dart';
+import 'util/list_events.dart';
 
 class Ritual {
   String name;
-  PathComponentList paths = PathComponentList();
+  ObservableList<PathComponent> paths = ObservableList<PathComponent>();
 
   ModifierComponent modifiers;
 

@@ -5,7 +5,7 @@ description: A starting point for Dart libraries or applications.
 # author: jeff <email@example.com>
 
 environment:
-  sdk: '>=2.8.1 <3.0.0'
+  sdk: '>=2.9.0 <3.0.0'
 
 dependencies:
   quiver: ^2.1.3

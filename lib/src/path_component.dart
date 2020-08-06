@@ -5,6 +5,15 @@ import 'effect.dart';
 import 'level.dart';
 import 'path.dart';
 
+/// A PathComponent is a "fully-qualified" path component of a specific ritual.
+/// It consists of a Path, Effect, and Level. Example: Greater Control Matter.
+///
+/// A PathComponent also has a flag to indicate if the PathComponent is 'inherent' to the ritual (i.e., it is a
+/// required part of the ritual, without which this would not be the same ritual). Non-inherent PathComponent can be
+/// added to many rituals to allow it to be cast as a charm, for example.
+///
+/// Also optional is a free-form notes field, for explaining what the PathComponent adds to the ritual, in way of an
+/// explanation.
 @immutable
 class PathComponent {
   const PathComponent(

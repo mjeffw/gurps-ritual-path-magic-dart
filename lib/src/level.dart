@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+/// GURPS rpm.7: Each spell effect can be broken into Lesser and Greater effects.
 @immutable
 class Level {
   const Level(this.name);

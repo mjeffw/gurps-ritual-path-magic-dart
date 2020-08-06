@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+/// GURPS rpm.6: Where the core skill of Thaumatology represents theoretical knowledge, all practical spellcasting is
+/// done with the following nine Path skills.
 @immutable
 class Path {
   const Path(this.name, this.aspect);

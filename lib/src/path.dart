@@ -3,30 +3,22 @@ import 'package:meta/meta.dart';
 /// GURPS rpm.6: Where the core skill of Thaumatology represents theoretical knowledge, all practical spellcasting is
 /// done with the following nine Path skills.
 @immutable
-class Path {
+abstract class Path {
   const Path(this.name, this.aspect);
 
   factory Path.fromString(String name) {
     return _values[name];
   }
 
-  static const body =
-      Path('Body', 'Targets the tissues and fluids of living things.');
-  static const chance = Path('Chance', 'Affects luck, odds, and entropy.');
-  static const crossroads = Path('Crossroads',
-      'Targets or creates the connections between locations, times, and planes of existence.');
-  static const energy = Path('Energy',
-      'Energy includes fire, electricity, kinetic energy, light, sound, and more.');
-  static const magic =
-      Path('Magic', 'Governs spells, magical energy, and the act of casting.');
-  static const matter =
-      Path('Matter', 'Governs tangible, unliving, inanimate objects.');
-  static const mind =
-      Path('Mind', 'Governs the thought processes of sentient, living beings.');
-  static const spirit = Path('Spirit',
-      'Governs any being whose spirit and body are one, and who was never "alive" in the sense that we know it.');
-  static const undead = Path('Undead',
-      'Governs any being who lived, then died, but is still hanging around for some reason.');
+  static const body = const _Body();
+  static const chance = const _Chance();
+  static const crossroads = _Crossroads();
+  static const energy = _Energy();
+  static const magic = _Magic();
+  static const matter = _Matter();
+  static const mind = _Mind();
+  static const spirit = _Spirit();
+  static const undead = _Undead();
 
   static Map<String, Path> _values = {
     body.name: body,
@@ -45,4 +37,54 @@ class Path {
 
   @override
   String toString() => name;
+}
+
+class _Body extends Path {
+  const _Body()
+      : super('Body', 'Targets the tissues and fluids of living things.');
+}
+
+class _Chance extends Path {
+  const _Chance() : super('Chance', 'Affects luck, odds, and entropy.');
+}
+
+class _Crossroads extends Path {
+  const _Crossroads()
+      : super('Crossroads',
+            'Targets or creates the connections between locations, times, and planes of existence.');
+}
+
+class _Energy extends Path {
+  const _Energy()
+      : super('Energy',
+            'Energy includes fire, electricity, kinetic energy, light, sound, and more.');
+}
+
+class _Magic extends Path {
+  const _Magic()
+      : super(
+            'Magic', 'Governs spells, magical energy, and the act of casting.');
+}
+
+class _Matter extends Path {
+  const _Matter()
+      : super('Matter', 'Governs tangible, unliving, inanimate objects.');
+}
+
+class _Mind extends Path {
+  const _Mind()
+      : super('Mind',
+            'Governs the thought processes of sentient, living beings.');
+}
+
+class _Spirit extends Path {
+  const _Spirit()
+      : super('Spirit',
+            'Governs any being whose spirit and body are one, and who was never "alive" in the sense that we know it.');
+}
+
+class _Undead extends Path {
+  const _Undead()
+      : super('Undead',
+            'Governs any being who lived, then died, but is still hanging around for some reason.');
 }

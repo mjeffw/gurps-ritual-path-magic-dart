@@ -5,18 +5,19 @@ import 'effect.dart';
 import 'level.dart';
 import 'path.dart';
 
-/// A PathComponent is a "fully-qualified" path component of a specific ritual.
+/// A PathEffect is a "fully-qualified" path component of a specific ritual.
 /// It consists of a Path, Effect, and Level. Example: Greater Control Matter.
 ///
-/// A PathComponent also has a flag to indicate if the PathComponent is 'inherent' to the ritual (i.e., it is a
-/// required part of the ritual, without which this would not be the same ritual). Non-inherent PathComponent can be
-/// added to many rituals to allow it to be cast as a charm, for example.
+/// A PathEffect also has a flag to indicate if the PathEffect is 'inherent' to
+/// the ritual (i.e., it is a required part of the ritual, without which this
+/// would not be the same ritual). Non-inherent PathEffects can be added to
+/// many rituals to allow them to be cast as a charm, for example.
 ///
-/// Also optional is a free-form notes field, for explaining what the PathComponent adds to the ritual, in way of an
-/// explanation.
+/// Also optional is a free-form notes field, for explaining what the
+/// PathEffect adds to the ritual, in way of an explanation.
 @immutable
-class PathComponent {
-  const PathComponent(
+class PathEffect {
+  const PathEffect(
     this.path, {
     Level level: Level.lesser,
     bool inherent: false,
@@ -27,16 +28,16 @@ class PathComponent {
         _effect = effect,
         _notes = notes;
 
-  PathComponent withLevel(Level newLevel) => PathComponent(path,
+  PathEffect withLevel(Level newLevel) => PathEffect(path,
       level: newLevel, inherent: _inherent, effect: _effect, notes: _notes);
 
-  PathComponent withEffect(Effect newEffect) => PathComponent(path,
+  PathEffect withEffect(Effect newEffect) => PathEffect(path,
       level: _level, inherent: _inherent, effect: newEffect, notes: _notes);
 
-  PathComponent withInherent(bool newInherent) => PathComponent(path,
+  PathEffect withInherent(bool newInherent) => PathEffect(path,
       level: _level, inherent: newInherent, effect: _effect, notes: _notes);
 
-  PathComponent withNotes(String text) => PathComponent(path,
+  PathEffect withNotes(String text) => PathEffect(path,
       level: _level, inherent: _inherent, effect: _effect, notes: text?.trim());
 
   final Path path;
@@ -56,7 +57,7 @@ class PathComponent {
 
   @override
   bool operator ==(Object any) {
-    return any is PathComponent &&
+    return any is PathEffect &&
         any.path == path &&
         any._level == _level &&
         any._effect == _effect &&

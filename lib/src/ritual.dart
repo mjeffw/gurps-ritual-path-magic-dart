@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import 'level.dart';
 import 'modifier_component.dart';
-import 'path_component.dart';
+import 'path_effect.dart';
 
 @immutable
 class Ritual {
@@ -11,7 +11,7 @@ class Ritual {
 
   final String name;
 
-  final List<PathComponent> effects;
+  final List<PathEffect> effects;
 
   final List<ModifierComponent> modifiers;
 

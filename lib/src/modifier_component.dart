@@ -23,13 +23,14 @@ class ModifierComponent {
   String get notes => '';
 
   static int _calculateLevel(RitualModifier m, int level) {
-    return m.isValidLevel(level) ? level : m.defaultLevel;
+    return null;
+    //m.isValidLevel(level) ? level : m.defaultLevel;
   }
 
   static String _validVariation(RitualModifier m, String variation) {
-    if (variation != null && !m.validVariation(variation)) {
-      throw 'Invalid variation "$variation" for modifier ${m.name}';
-    }
-    return variation;
+    // if (variation != null && !m.validVariation(variation)) {
+    throw 'Invalid variation "$variation" for modifier ${m.name}';
+    // }
+    // return variation;
   }
 }

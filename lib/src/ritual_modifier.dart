@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import 'ritual_modifier.dart';
+import 'trait.dart';
 
 /// Describes a modifier to an Ritual.
 ///
@@ -17,7 +17,7 @@ import 'ritual_modifier.dart';
 ///  modifier; this effect is inherent to the spell.
 @immutable
 abstract class RitualModifier {
-  const RitualModifier(this.name, {this.inherent});
+  const RitualModifier(this.name, {this.inherent, this.value});
 
   /// the name of this Modifier
   final String name;
@@ -31,68 +31,53 @@ abstract class RitualModifier {
   /// the current value of this modifier - depends on the modifier, it could
   /// represent character points, a time unit, distance unit, a percentage
   /// modifier, etc.
-  int get value;
-
-  // final int defaultLevel;
-
-  // ModifierDetail get specialization => null;
-
-  // @override
-  // String toString() => name;
-
-  // static const affliction = RitualModifier('Affliction');
-  // static const alteredTrait = RitualModifier('Altered Traits');
-  // static const areaOfEffect = RitualModifier('Area of Effect', defaultLevel: 1);
-  // static const bestowsBonus = const BestowsABonus();
-  // static const bestowsPenalty = RitualModifier('Bestows a Penalty');
-  // static const damage = RitualModifier('Damage');
-  // static const duration = RitualModifier('Duration');
-  // static const extraEnergy = RitualModifier('Extra Energy');
-  // static const healing = RitualModifier('Healing');
-  // static const metaMagic = RitualModifier('Meta-Magic');
-  // static const range = RitualModifier('Range');
-  // static const speed = RitualModifier('Speed');
-  // static const subjectWeight = RitualModifier('Subject Weight');
-  // static const traditionalTrappings = RitualModifier('Traditional Trappings');
-
-  // static Map<String, RitualModifier> _values = {
-  //   affliction.name: affliction,
-  //   alteredTrait.name: alteredTrait,
-  //   areaOfEffect.name: areaOfEffect,
-  //   bestowsBonus.name: bestowsBonus,
-  //   bestowsPenalty.name: bestowsPenalty,
-  //   damage.name: damage,
-  //   duration.name: duration,
-  //   extraEnergy.name: extraEnergy,
-  //   healing.name: healing,
-  //   metaMagic.name: metaMagic,
-  //   range.name: range,
-  //   speed.name: speed,
-  //   subjectWeight.name: subjectWeight,
-  //   traditionalTrappings.name: traditionalTrappings,
-  // };
-
-  // static RitualModifier fromString(String name) => _values[name];
-  // static Iterable<String> labels = _values.keys;
-
-  // bool isValidLevel(int level) {
-  //   return level == defaultLevel;
-  // }
-
-  // bool validVariation(String variation) {
-  //   return false;
-  // }
+  final int value;
 }
 
 class AfflictionStun extends RitualModifier {
   AfflictionStun({bool inherent: false})
       : super("Affliction, Stunning", inherent: inherent);
 
+  /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
+  /// energy; the spell effect is enough.
   @override
   int get energyCost => 0;
+}
+
+class Affliction extends RitualModifier {
+  Affliction(this.specialization, {int value: 0, bool inherent: false})
+      : super("Afflictions", value: value, inherent: inherent);
+
+  factory Affliction.copyWith(Affliction a,
+      {String specialization, int value, bool inherent}) {
+    return Affliction(specialization ?? a.specialization,
+        value: value ?? a.value, inherent: inherent ?? a.inherent);
+  }
+
+  final String specialization;
+
+  /// GURPS rpm.16: For the other states on pp. B428-429, this costs +1 energy
+  /// for every +5% it’s worth as an enhancement to Affliction (pp. B35-36).
+  @override
+  int get energyCost => (value / 5.0).ceil();
+}
+
+/// Any ritual that adds, removes or modifies advantages or disadvantages, or
+/// increases or lowers attributes or characteristics.
+class AlteredTraits extends RitualModifier {
+  AlteredTraits(this.trait, {bool inherent = false, int value = 0})
+      : super("Altered Traits", inherent: inherent, value: value);
+
+  factory AlteredTraits.copyWith(AlteredTraits src,
+      {Trait trait, bool inherent, int value}) {
+    return AlteredTraits(trait ?? src.trait,
+        inherent: inherent ?? src.inherent, value: value ?? src.value);
+  }
+
+  final Trait trait;
 
   @override
-  int get value => 0;
+  int get energyCost => throw UnimplementedError();
 }
 
 // class ModifierDetail {}

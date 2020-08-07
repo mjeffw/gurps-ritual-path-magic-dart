@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
 
-import '../lib/src/ritual_modifier.dart';
 import '../lib/src/modifier_component.dart';
 
 void main() {
@@ -9,11 +8,11 @@ void main() {
   });
 
   test('should require a Modifier', () {
-    ModifierComponent m = ModifierComponent(RitualModifier.range);
-    expect(m.modifier, same(RitualModifier.range));
-    expect(m.isInherent, equals(false));
-    expect(m.cost, equals(0));
-    expect(m.level, equals(0));
-    expect(m.notes, equals(''));
+    // ModifierComponent m = ModifierComponent(RitualModifier.range);
+    // expect(m.modifier, same(RitualModifier.range));
+    // expect(m.isInherent, equals(false));
+    // expect(m.cost, equals(0));
+    // expect(m.level, equals(0));
+    // expect(m.notes, equals(''));
   });
 }

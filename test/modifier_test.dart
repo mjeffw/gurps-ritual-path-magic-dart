@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 
 import '../lib/src/ritual_modifier.dart';
+import '../lib/src/trait.dart';
 
 void main() {
   group('Affliction, Stun', () {
@@ -20,6 +21,115 @@ void main() {
     test("should allow inherent to be set", () {
       AfflictionStun m2 = AfflictionStun(inherent: true);
       expect(m2.inherent, equals(true));
+    });
+  });
+
+  group('Afflictions', () {
+    Affliction m;
+
+    setUp(() async {
+      m = Affliction("Foo");
+    });
+
+    test("has initial state", () {
+      expect(m.inherent, equals(false));
+      expect(m.value, equals(0));
+      expect(m.name, equals("Afflictions"));
+      expect(m.energyCost, equals(0));
+    });
+
+    test("has inherent", () {
+      Affliction m2 = Affliction("Bar", inherent: true);
+      expect(m2.inherent, equals(true));
+    });
+
+    test("+1 SP for every +5% it’s worth as an enhancement to Affliction", () {
+      var aff = Affliction.copyWith(m, value: 10);
+
+      expect(aff.value, equals(10));
+      expect(aff.energyCost, equals(2));
+
+      aff = Affliction.copyWith(m, value: 9);
+      expect(aff.value, equals(9));
+      expect(aff.energyCost, equals(2));
+
+      aff = Affliction.copyWith(m, value: 11);
+      expect(aff.value, equals(11));
+      expect(aff.energyCost, equals(3));
+    });
+  });
+
+  group("Altered Traits", () {
+    AlteredTraits m;
+
+    setUp(() async {
+      Trait trait = Trait(name: "foo");
+      m = AlteredTraits(trait);
+    });
+
+    test("has initial state", () {
+      expect(m.inherent, equals(false));
+      expect(m.value, equals(0));
+      expect(m.name, equals("Altered Traits"));
+      expect(m.energyCost, equals(0));
+    });
+
+    test("has inherent", () {
+      var alt = AlteredTraits.copyWith(m, inherent: true);
+      expect(alt.inherent, equals(true));
+    });
+
+    test("adds +1 SP for every five character points removed", () {
+      var alt = AlteredTraits.copyWith(m, value: -1);
+      expect(alt.energyCost, equals(1));
+      alt = AlteredTraits.copyWith(m, value: -5);
+      expect(alt.energyCost, equals(1));
+      alt = AlteredTraits.copyWith(m, value: -6);
+      expect(m.energyCost, equals(2));
+      alt = AlteredTraits.copyWith(m, value: -10);
+      expect(m.energyCost, equals(2));
+      alt = AlteredTraits.copyWith(m, value: -11);
+      expect(m.energyCost, equals(3));
+    });
+
+    test("adds +1 SP for every character point added", () {
+      var alt = AlteredTraits.copyWith(m, value: 1);
+      expect(m.energyCost, equals(1));
+      alt = AlteredTraits.copyWith(m, value: 11);
+      expect(m.energyCost, equals(11));
+      alt = AlteredTraits.copyWith(m, value: 24);
+      expect(m.energyCost, equals(24));
+      alt = AlteredTraits.copyWith(m, value: 100);
+      expect(m.energyCost, equals(100));
+    });
+
+    test("allows for Limitations/Enhancements", () {
+      // m.value = 24;
+      // m.addTraitModifier(TraitModifier(name: "Ten percent", percent: 10));
+      // expect(m.spellPoints, equals(27));
+
+      // m.addTraitModifier(TraitModifier(name: "Another enhancer", percent: 5));
+      // expect(m.spellPoints, equals(28));
+
+      // m.addTraitModifier(TraitModifier(name: "Limitation", percent: -10));
+      // expect(m.spellPoints, equals(26));
+    });
+
+    test("another test for Limitations/Enhancements", () {
+      // m.addTraitModifier(TraitModifier(name: "foo", percent: 35));
+      // m.addTraitModifier(
+      //     TraitModifier(name: "bar", detail: "detail", percent: -10));
+
+      // m.value = 0;
+      // expect(m.spellPoints, equals(0));
+      // m.value = 30;
+      // expect(m.spellPoints, equals(38));
+      // m.value = 100;
+      // expect(m.spellPoints, equals(125));
+      // m.value = -10;
+      // expect(m.spellPoints, equals(3));
+      // m.value = -40;
+      // expect(m.spellPoints, equals(10));
     });
   });
 

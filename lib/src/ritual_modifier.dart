@@ -35,8 +35,8 @@ abstract class RitualModifier {
 }
 
 class AfflictionStun extends RitualModifier {
-  AfflictionStun({bool inherent: false})
-      : super("Affliction, Stunning", inherent: inherent);
+  AfflictionStun({bool inherent: false, int value: 0})
+      : super("Affliction, Stunning", inherent: inherent, value: value);
 
   /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
   /// energy; the spell effect is enough.
@@ -65,19 +65,27 @@ class Affliction extends RitualModifier {
 /// Any ritual that adds, removes or modifies advantages or disadvantages, or
 /// increases or lowers attributes or characteristics.
 class AlteredTraits extends RitualModifier {
-  AlteredTraits(this.trait, {bool inherent = false, int value = 0})
-      : super("Altered Traits", inherent: inherent, value: value);
+  AlteredTraits(this.trait, {bool inherent = false})
+      : super("Altered Traits", inherent: inherent);
 
   factory AlteredTraits.copyWith(AlteredTraits src,
-      {Trait trait, bool inherent, int value}) {
+      {Trait trait, bool inherent}) {
     return AlteredTraits(trait ?? src.trait,
-        inherent: inherent ?? src.inherent, value: value ?? src.value);
+        inherent: inherent ?? src.inherent);
   }
 
   final Trait trait;
 
+  /// GURPS rpm.16: Any spell that adds or worsens disadvantages, reduces or removes advantages, or lowers attributes or
+  /// characteristics adds +1 energy for every 5 character points removed.
+  ///
+  /// GURPS rpm.17: One that adds or improves advantages, reduces or removes disadvantages, or increases attributes or
+  /// characteristics adds +1 energy for every 1 character point added.
   @override
-  int get energyCost => throw UnimplementedError();
+  int get energyCost => (value.isNegative) ? (value.abs() / 5.0).ceil() : value;
+
+  @override
+  int get value => trait.totalCost;
 }
 
 // class ModifierDetail {}

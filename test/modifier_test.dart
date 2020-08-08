@@ -1,3 +1,4 @@
+import 'package:gurps_dart/gurps_dart.dart';
 import 'package:test/test.dart';
 
 import '../lib/src/ritual_modifier.dart';
@@ -80,41 +81,40 @@ void main() {
     });
 
     test('adds +1 SP for every 5 cps removed', () {
-      var alt =
-          AlteredTraits.copyWith(m, trait: Trait(name: 'Bar', baseCost: -1));
+      var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -1));
       print('${alt.energyCost}');
       expect(alt.energyCost, equals(1));
-      alt = AlteredTraits.copyWith(m, trait: Trait(name: 'Bar', baseCost: -5));
+      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -5));
       expect(alt.energyCost, equals(1));
-      alt = AlteredTraits.copyWith(m, trait: Trait(name: 'Bar', baseCost: -6));
+      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -6));
       expect(alt.energyCost, equals(2));
-      alt = AlteredTraits.copyWith(m, trait: Trait(name: 'Bar', baseCost: -10));
+      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -10));
       expect(alt.energyCost, equals(2));
-      alt = AlteredTraits.copyWith(m, trait: Trait(name: 'Bar', baseCost: -11));
+      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -11));
       expect(alt.energyCost, equals(3));
     });
 
-    test("adds +1 SP for every character point added", () {
-      // var alt = AlteredTraits.copyWith(m, value: 1);
-      // expect(alt.energyCost, equals(1));
-      // alt = AlteredTraits.copyWith(m, value: 11);
-      // expect(alt.energyCost, equals(11));
-      // alt = AlteredTraits.copyWith(m, value: 24);
-      // expect(alt.energyCost, equals(24));
-      // alt = AlteredTraits.copyWith(m, value: 100);
-      // expect(alt.energyCost, equals(100));
+    test("adds +1 SP for every cp added", () {
+      var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 1));
+      expect(alt.energyCost, equals(1));
+      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 11));
+      expect(alt.energyCost, equals(11));
+      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 24));
+      expect(alt.energyCost, equals(24));
+      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 100));
+      expect(alt.energyCost, equals(100));
     });
 
     test("allows for Limitations/Enhancements", () {
-      // m.value = 24;
-      // m.addTraitModifier(TraitModifier(name: "Ten percent", percent: 10));
-      // expect(m.spellPoints, equals(27));
+      var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 24));
+      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: 10));
+      expect(alt.energyCost, equals(27));
 
-      // m.addTraitModifier(TraitModifier(name: "Another enhancer", percent: 5));
-      // expect(m.spellPoints, equals(28));
+      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: 5));
+      expect(alt.energyCost, equals(28));
 
-      // m.addTraitModifier(TraitModifier(name: "Limitation", percent: -10));
-      // expect(m.spellPoints, equals(26));
+      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: -10));
+      expect(alt.energyCost, equals(26));
     });
 
     test("another test for Limitations/Enhancements", () {

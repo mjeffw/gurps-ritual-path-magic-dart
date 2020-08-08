@@ -1,3 +1,4 @@
+import 'package:gurps_dart/gurps_dart.dart';
 import 'package:meta/meta.dart';
 
 import 'trait.dart';
@@ -65,8 +66,11 @@ class Affliction extends RitualModifier {
 /// Any ritual that adds, removes or modifies advantages or disadvantages, or
 /// increases or lowers attributes or characteristics.
 class AlteredTraits extends RitualModifier {
-  AlteredTraits(this.trait, {bool inherent = false})
-      : super("Altered Traits", inherent: inherent);
+  AlteredTraits(this.trait,
+      {bool inherent = false, List<TraitModifier> modifiers})
+      : super("Altered Traits", inherent: inherent) {
+    _modifiers.addAll([if (modifiers != null) ...modifiers]);
+  }
 
   factory AlteredTraits.copyWith(AlteredTraits src,
       {Trait trait, bool inherent}) {
@@ -74,18 +78,37 @@ class AlteredTraits extends RitualModifier {
         inherent: inherent ?? src.inherent);
   }
 
+  factory AlteredTraits.addModifier(
+      AlteredTraits m, TraitModifier traitModifier) {
+    var modifiers = [if (m._modifiers != null) ...m._modifiers, traitModifier];
+
+    return AlteredTraits(m.trait, inherent: m.inherent, modifiers: modifiers);
+  }
+
   final Trait trait;
+
+  final List<TraitModifier> _modifiers = [];
+
+  @override
+  int get energyCost => (_baseEnergy * _modifierMultiplier).ceil();
+
+  @override
+  int get value => trait.totalCost;
 
   /// GURPS rpm.16: Any spell that adds or worsens disadvantages, reduces or removes advantages, or lowers attributes or
   /// characteristics adds +1 energy for every 5 character points removed.
   ///
   /// GURPS rpm.17: One that adds or improves advantages, reduces or removes disadvantages, or increases attributes or
   /// characteristics adds +1 energy for every 1 character point added.
-  @override
-  int get energyCost => (value.isNegative) ? (value.abs() / 5.0).ceil() : value;
+  int get _baseEnergy =>
+      (value.isNegative) ? (value.abs() / 5.0).ceil() : value;
 
-  @override
-  int get value => trait.totalCost;
+  double get _modifierMultiplier {
+    double x =
+        _modifiers.map((i) => i.percent / 100.0).fold(0.0, (a, b) => a + b);
+
+    return 1 + x;
+  }
 }
 
 // class ModifierDetail {}

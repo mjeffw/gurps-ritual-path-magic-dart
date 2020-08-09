@@ -16,7 +16,6 @@ void main() {
       expect(m.inherent, equals(false));
       expect(m.name, equals('Affliction, Stunning'));
       expect(m.energyCost, equals(0));
-      expect(m.value, equals(0));
     });
 
     test("should allow inherent to be set", () {
@@ -34,7 +33,7 @@ void main() {
 
     test("has initial state", () {
       expect(m.inherent, equals(false));
-      expect(m.value, equals(0));
+      expect(m.percent, equals(0));
       expect(m.name, equals("Afflictions"));
       expect(m.energyCost, equals(0));
     });
@@ -45,17 +44,17 @@ void main() {
     });
 
     test("+1 SP for every +5% it’s worth as an enhancement to Affliction", () {
-      var aff = Affliction.copyWith(m, value: 10);
+      var aff = Affliction.copyWith(m, percent: 10);
 
-      expect(aff.value, equals(10));
+      expect(aff.percent, equals(10));
       expect(aff.energyCost, equals(2));
 
-      aff = Affliction.copyWith(m, value: 9);
-      expect(aff.value, equals(9));
+      aff = Affliction.copyWith(m, percent: 9);
+      expect(aff.percent, equals(9));
       expect(aff.energyCost, equals(2));
 
-      aff = Affliction.copyWith(m, value: 11);
-      expect(aff.value, equals(11));
+      aff = Affliction.copyWith(m, percent: 11);
+      expect(aff.percent, equals(11));
       expect(aff.energyCost, equals(3));
     });
   });
@@ -70,7 +69,7 @@ void main() {
 
     test("has initial state", () {
       expect(m.inherent, equals(false));
-      expect(m.value, equals(0));
+      expect(m.characterPoints, equals(0));
       expect(m.name, equals("Altered Traits"));
       expect(m.energyCost, equals(0));
     });
@@ -118,23 +117,72 @@ void main() {
     });
 
     test("another test for Limitations/Enhancements", () {
-      // m.addTraitModifier(TraitModifier(name: "foo", percent: 35));
-      // m.addTraitModifier(
-      //     TraitModifier(name: "bar", detail: "detail", percent: -10));
+      var alt = AlteredTraits.addModifier(m, TraitModifier(percent: 35));
+      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: -10));
 
-      // m.value = 0;
-      // expect(m.spellPoints, equals(0));
-      // m.value = 30;
-      // expect(m.spellPoints, equals(38));
-      // m.value = 100;
-      // expect(m.spellPoints, equals(125));
-      // m.value = -10;
-      // expect(m.spellPoints, equals(3));
-      // m.value = -40;
-      // expect(m.spellPoints, equals(10));
+      expect(alt.energyCost, equals(0));
+
+      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: 30));
+      expect(alt.energyCost, equals(38));
+      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: 100));
+      expect(alt.energyCost, equals(125));
+      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: -10));
+      expect(alt.energyCost, equals(3));
+      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: -40));
+      expect(alt.energyCost, equals(10));
     });
   });
 
+  group("Area of Effect", () {
+    AreaOfEffect m;
+
+    setUp(() async {
+      m = AreaOfEffect();
+    });
+
+    test("has initial state", () {
+      expect(m.inherent, equals(false));
+      expect(m.radius, equals(0));
+      expect(m.name, equals("Area of Effect"));
+      expect(m.energyCost, equals(0));
+    });
+
+    test("has inherent", () {
+      var alt = AreaOfEffect.copyWith(m, inherent: true);
+      expect(alt.inherent, equals(true));
+    });
+
+    test("radius calculation", () {
+      var alt = AreaOfEffect.copyWith(m, radius: 1);
+      expect(alt.energyCost, equals(2));
+      alt = AreaOfEffect.copyWith(m, radius: 3);
+      expect(alt.energyCost, equals(2));
+      alt = AreaOfEffect.copyWith(m, radius: 4);
+      expect(alt.energyCost, equals(4));
+      alt = AreaOfEffect.copyWith(m, radius: 5);
+      expect(alt.energyCost, equals(4));
+      alt = AreaOfEffect.copyWith(m, radius: 6);
+      expect(alt.energyCost, equals(6));
+      alt = AreaOfEffect.copyWith(m, radius: 15);
+      expect(alt.energyCost, equals(10));
+      alt = AreaOfEffect.copyWith(m, radius: 20);
+      expect(alt.energyCost, equals(12));
+      alt = AreaOfEffect.copyWith(m, radius: 300);
+      expect(alt.energyCost, equals(26));
+    });
+
+    test("add +1 SP for every two specific subjects not affected", () {
+      fail('not implemented');
+      // m.value = 4;
+      // expect(m.spellPoints, equals(40));
+      // m.setTargetInfo(2, false);
+      // expect(m.spellPoints, equals(41));
+      // m.setTargetInfo(6, false);
+      // expect(m.spellPoints, equals(43));
+      // m.setTargetInfo(7, true);
+      // expect(m.spellPoints, equals(44));
+    });
+  });
   // test('should have label', () {
   //   expect(RitualModifier.affliction.name, equals('Affliction'));
   //   expect(RitualModifier.alteredTrait.name, equals('Altered Traits'));

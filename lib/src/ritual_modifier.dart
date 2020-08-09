@@ -18,7 +18,7 @@ import 'trait.dart';
 ///  modifier; this effect is inherent to the spell.
 @immutable
 abstract class RitualModifier {
-  const RitualModifier(this.name, {this.inherent, this.value});
+  const RitualModifier(this.name, {this.inherent});
 
   /// the name of this Modifier
   final String name;
@@ -28,16 +28,12 @@ abstract class RitualModifier {
 
   /// the energy cost of the modifier
   int get energyCost;
-
-  /// the current value of this modifier - depends on the modifier, it could
-  /// represent character points, a time unit, distance unit, a percentage
-  /// modifier, etc.
-  final int value;
 }
 
+/// Adds the Affliction: Stun (p. B36) effect to a spell.
 class AfflictionStun extends RitualModifier {
   AfflictionStun({bool inherent: false, int value: 0})
-      : super("Affliction, Stunning", inherent: inherent, value: value);
+      : super("Affliction, Stunning", inherent: inherent);
 
   /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
   /// energy; the spell effect is enough.
@@ -45,22 +41,29 @@ class AfflictionStun extends RitualModifier {
   int get energyCost => 0;
 }
 
+/// Adds an Affliction (p. B36) effect to a spell.
 class Affliction extends RitualModifier {
-  Affliction(this.specialization, {int value: 0, bool inherent: false})
-      : super("Afflictions", value: value, inherent: inherent);
+  Affliction(this.specialization, {int percent: 0, bool inherent: false})
+      : percent = percent ?? 0,
+        super("Afflictions", inherent: inherent);
 
   factory Affliction.copyWith(Affliction a,
-      {String specialization, int value, bool inherent}) {
-    return Affliction(specialization ?? a.specialization,
-        value: value ?? a.value, inherent: inherent ?? a.inherent);
+      {String specialization, int percent, bool inherent}) {
+    return Affliction(
+      specialization ?? a.specialization,
+      percent: percent ?? a.percent,
+      inherent: inherent ?? a.inherent,
+    );
   }
 
   final String specialization;
 
+  final int percent;
+
   /// GURPS rpm.16: For the other states on pp. B428-429, this costs +1 energy
   /// for every +5% it’s worth as an enhancement to Affliction (pp. B35-36).
   @override
-  int get energyCost => (value / 5.0).ceil();
+  int get energyCost => (percent / 5.0).ceil();
 }
 
 /// Any ritual that adds, removes or modifies advantages or disadvantages, or
@@ -73,17 +76,19 @@ class AlteredTraits extends RitualModifier {
   }
 
   factory AlteredTraits.copyWith(AlteredTraits src,
-      {Trait trait, bool inherent}) {
-    return AlteredTraits(trait ?? src.trait,
-        inherent: inherent ?? src.inherent);
-  }
+          {Trait trait, bool inherent}) =>
+      AlteredTraits(
+        trait ?? src.trait,
+        inherent: inherent ?? src.inherent,
+        modifiers: src._modifiers,
+      );
 
   factory AlteredTraits.addModifier(
-      AlteredTraits m, TraitModifier traitModifier) {
-    var modifiers = [if (m._modifiers != null) ...m._modifiers, traitModifier];
-
-    return AlteredTraits(m.trait, inherent: m.inherent, modifiers: modifiers);
-  }
+          AlteredTraits m, TraitModifier traitModifier) =>
+      AlteredTraits(m.trait, inherent: m.inherent, modifiers: [
+        if (m._modifiers != null) ...m._modifiers,
+        traitModifier
+      ]);
 
   final Trait trait;
 
@@ -92,22 +97,55 @@ class AlteredTraits extends RitualModifier {
   @override
   int get energyCost => (_baseEnergy * _modifierMultiplier).ceil();
 
-  @override
-  int get value => trait.totalCost;
+  int get characterPoints => trait.totalCost;
 
   /// GURPS rpm.16: Any spell that adds or worsens disadvantages, reduces or removes advantages, or lowers attributes or
   /// characteristics adds +1 energy for every 5 character points removed.
   ///
   /// GURPS rpm.17: One that adds or improves advantages, reduces or removes disadvantages, or increases attributes or
   /// characteristics adds +1 energy for every 1 character point added.
-  int get _baseEnergy =>
-      (value.isNegative) ? (value.abs() / 5.0).ceil() : value;
+  int get _baseEnergy => (characterPoints.isNegative)
+      ? (characterPoints.abs() / 5.0).ceil()
+      : characterPoints;
 
   double get _modifierMultiplier {
     double x =
         _modifiers.map((i) => i.percent / 100.0).fold(0.0, (a, b) => a + b);
 
     return 1 + x;
+  }
+}
+
+/// Adds an Area of Effect, optionally including or excluding specific targets in the area, to the spell.
+///
+/// Figure the circular area and add 10 SP per yard of radius from its center. Excluding potential targets is
+/// possible – add another +1 SP for every two specific subjects in the area that won’t be affected by the spell.
+/// Alternatively, you may exclude everyone in the area, but then include willing potential targets for +1 SP per
+/// two specific subjects
+class AreaOfEffect extends RitualModifier {
+  AreaOfEffect({int radius: 0, bool inherent: false})
+      : radius = radius ?? 0,
+        super('Area of Effect', inherent: inherent);
+
+  factory AreaOfEffect.copyWith(AreaOfEffect m, {int radius, bool inherent}) {
+    return AreaOfEffect(
+      inherent: inherent ?? m.inherent,
+      radius: radius ?? m.radius,
+    );
+  }
+
+  final int radius;
+
+  final _table = SizeAndSpeedRangeTable();
+
+  /// Figure the spherical area of effect, find its radius in yards on the Size
+  /// and Speed/Range Table (p. B550), and add twice the “Size” value for that
+  /// line to the energy cost (minimum +2).
+  @override
+  int get energyCost {
+    if (radius == 0) return 0;
+    var energy = _table.sizeForLinearMeasurement(radius) * 2;
+    return (energy < 2) ? 2 : energy;
   }
 }
 

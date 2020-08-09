@@ -123,29 +123,48 @@ class AlteredTraits extends RitualModifier {
 /// Alternatively, you may exclude everyone in the area, but then include willing potential targets for +1 SP per
 /// two specific subjects
 class AreaOfEffect extends RitualModifier {
-  AreaOfEffect({int radius: 0, bool inherent: false})
+  AreaOfEffect(
+      {int radius: 0,
+      int numberTargets: 0,
+      bool excludes: true,
+      bool inherent: false})
       : radius = radius ?? 0,
+        numberTargets = numberTargets ?? 0,
+        excludes = excludes ?? true,
         super('Area of Effect', inherent: inherent);
 
-  factory AreaOfEffect.copyWith(AreaOfEffect m, {int radius, bool inherent}) {
+  factory AreaOfEffect.copyWith(AreaOfEffect m,
+      {int radius, int numberTargets, bool excludes, bool inherent}) {
     return AreaOfEffect(
       inherent: inherent ?? m.inherent,
       radius: radius ?? m.radius,
+      numberTargets: numberTargets ?? m.numberTargets,
+      excludes: excludes ?? m.excludes,
     );
   }
 
   final int radius;
 
+  final int numberTargets;
+
+  final bool excludes;
+
   final _table = SizeAndSpeedRangeTable();
 
-  /// Figure the spherical area of effect, find its radius in yards on the Size
-  /// and Speed/Range Table (p. B550), and add twice the “Size” value for that
-  /// line to the energy cost (minimum +2).
+  /// GURPS rpm.17: Figure the spherical area of effect, find its radius in
+  /// yards on the Size and Speed/Range Table (p. B550), and add twice the
+  /// “Size” value for that line to the energy cost (minimum +2).
+  ///
+  /// GURPS rpm.17: Excluding potential targets is harder – add another +1
+  /// energy for every two specific subjects in the area that won’t be affected
+  /// by the spell.
   @override
   int get energyCost {
     if (radius == 0) return 0;
     var energy = _table.sizeForLinearMeasurement(radius) * 2;
-    return (energy < 2) ? 2 : energy;
+    var i = (energy < 2) ? 2 : energy;
+
+    return i + (numberTargets / 2.0).ceil();
   }
 }
 

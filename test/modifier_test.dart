@@ -171,18 +171,39 @@ void main() {
       expect(alt.energyCost, equals(26));
     });
 
-    test("add +1 SP for every two specific subjects not affected", () {
-      fail('not implemented');
-      // m.value = 4;
-      // expect(m.spellPoints, equals(40));
-      // m.setTargetInfo(2, false);
-      // expect(m.spellPoints, equals(41));
-      // m.setTargetInfo(6, false);
-      // expect(m.spellPoints, equals(43));
-      // m.setTargetInfo(7, true);
-      // expect(m.spellPoints, equals(44));
+    test("add +1 energy for every two specific subjects not affected", () {
+      var alt = AreaOfEffect.copyWith(m, radius: 15, numberTargets: 2);
+      expect(alt.energyCost, equals(11));
+
+      alt = AreaOfEffect.copyWith(alt, numberTargets: 6);
+      expect(alt.energyCost, equals(13));
+
+      alt = AreaOfEffect.copyWith(alt, numberTargets: 7);
+      expect(alt.energyCost, equals(14));
     });
+
+    // group("Bestows a (Bonus or Penalty)", () {
+    //   Bestows m;
+
+    //   setUp(() async {
+    //     m = new Bestows("Test");
+    //   });
+
+    //   test("has initial state", () {
+    //     expect(m.inherent, equals(false));
+    //     expect(m.value, equals(0));
+    //     expect(m.name, equals("Bestows a (Bonus or Penalty)"));
+    //     expect(m.spellPoints, equals(0));
+    //     expect(m.range, equals(BestowsRange.single));
+    //   });
+
+    //   test("has inherent", () {
+    //     m.inherent = true;
+    //     expect(m.inherent, equals(true));
+    //   });
+    // });
   });
+
   // test('should have label', () {
   //   expect(RitualModifier.affliction.name, equals('Affliction'));
   //   expect(RitualModifier.alteredTrait.name, equals('Altered Traits'));

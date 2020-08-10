@@ -18,7 +18,7 @@ void main() {
       expect(m.energyCost, equals(0));
     });
 
-    test("should allow inherent to be set", () {
+    test('sho uld allow inherent to be set', () {
       AfflictionStun m2 = AfflictionStun(inherent: true);
       expect(m2.inherent, equals(true));
     });
@@ -28,22 +28,23 @@ void main() {
     Affliction m;
 
     setUp(() async {
-      m = Affliction("Foo");
+      m = Affliction('Foo');
     });
 
-    test("has initial state", () {
+    test('has initial state', () {
       expect(m.inherent, equals(false));
       expect(m.percent, equals(0));
-      expect(m.name, equals("Afflictions"));
+      expect(m.name, equals('Afflictions'));
       expect(m.energyCost, equals(0));
     });
 
-    test("has inherent", () {
-      Affliction m2 = Affliction("Bar", inherent: true);
+    test('has inherent', () {
+      Affliction m2 = Affliction('Bar', inherent: true);
       expect(m2.inherent, equals(true));
     });
 
-    test("+1 SP for every +5% it’s worth as an enhancement to Affliction", () {
+    test('+1 energy for every +5% it’s worth as an enhancement to Affliction',
+        () {
       var aff = Affliction.copyWith(m, percent: 10);
 
       expect(aff.percent, equals(10));
@@ -59,22 +60,22 @@ void main() {
     });
   });
 
-  group("Altered Traits", () {
+  group('Altered Traits', () {
     AlteredTraits m;
 
     setUp(() async {
-      Trait trait = Trait(name: "foo");
+      Trait trait = Trait(name: 'foo');
       m = AlteredTraits(trait);
     });
 
-    test("has initial state", () {
+    test('has initial state', () {
       expect(m.inherent, equals(false));
       expect(m.characterPoints, equals(0));
-      expect(m.name, equals("Altered Traits"));
+      expect(m.name, equals('Altered Traits'));
       expect(m.energyCost, equals(0));
     });
 
-    test("has inherent", () {
+    test('has inherent', () {
       var alt = AlteredTraits.copyWith(m, inherent: true);
       expect(alt.inherent, equals(true));
     });
@@ -93,7 +94,7 @@ void main() {
       expect(alt.energyCost, equals(3));
     });
 
-    test("adds +1 SP for every cp added", () {
+    test('adds +1 energy for every cp added', () {
       var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 1));
       expect(alt.energyCost, equals(1));
       alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 11));
@@ -104,7 +105,7 @@ void main() {
       expect(alt.energyCost, equals(100));
     });
 
-    test("allows for Limitations/Enhancements", () {
+    test('allows for Limitations/Enhancements', () {
       var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 24));
       alt = AlteredTraits.addModifier(alt, TraitModifier(percent: 10));
       expect(alt.energyCost, equals(27));
@@ -116,7 +117,7 @@ void main() {
       expect(alt.energyCost, equals(26));
     });
 
-    test("another test for Limitations/Enhancements", () {
+    test('another test for Limitations/Enhancements', () {
       var alt = AlteredTraits.addModifier(m, TraitModifier(percent: 35));
       alt = AlteredTraits.addModifier(alt, TraitModifier(percent: -10));
 
@@ -133,26 +134,26 @@ void main() {
     });
   });
 
-  group("Area of Effect", () {
+  group('Area of Effect', () {
     AreaOfEffect m;
 
     setUp(() async {
       m = AreaOfEffect();
     });
 
-    test("has initial state", () {
+    test('has initial state', () {
       expect(m.inherent, equals(false));
       expect(m.radius, equals(0));
-      expect(m.name, equals("Area of Effect"));
+      expect(m.name, equals('Area of Effect'));
       expect(m.energyCost, equals(0));
     });
 
-    test("has inherent", () {
+    test('has inherent', () {
       var alt = AreaOfEffect.copyWith(m, inherent: true);
       expect(alt.inherent, equals(true));
     });
 
-    test("radius calculation", () {
+    test('radius calculation', () {
       var alt = AreaOfEffect.copyWith(m, radius: 1);
       expect(alt.energyCost, equals(2));
       alt = AreaOfEffect.copyWith(m, radius: 3);
@@ -171,7 +172,7 @@ void main() {
       expect(alt.energyCost, equals(26));
     });
 
-    test("add +1 energy for every two specific subjects not affected", () {
+    test('add +1 energy for every two specific subjects not affected', () {
       var alt = AreaOfEffect.copyWith(m, radius: 15, numberTargets: 2);
       expect(alt.energyCost, equals(11));
 
@@ -182,26 +183,26 @@ void main() {
       expect(alt.energyCost, equals(14));
     });
 
-    // group("Bestows a (Bonus or Penalty)", () {
-    //   Bestows m;
+    group('Bestows a (Bonus or Penalty)', () {
+      Bestows m;
 
-    //   setUp(() async {
-    //     m = new Bestows("Test");
-    //   });
+      //   setUp(() async {
+      //     m = new Bestows("Test");
+      //   });
 
-    //   test("has initial state", () {
-    //     expect(m.inherent, equals(false));
-    //     expect(m.value, equals(0));
-    //     expect(m.name, equals("Bestows a (Bonus or Penalty)"));
-    //     expect(m.spellPoints, equals(0));
-    //     expect(m.range, equals(BestowsRange.single));
-    //   });
+      //   test("has initial state", () {
+      //     expect(m.inherent, equals(false));
+      //     expect(m.value, equals(0));
+      //     expect(m.name, equals("Bestows a (Bonus or Penalty)"));
+      //     expect(m.spellPoints, equals(0));
+      //     expect(m.range, equals(BestowsRange.single));
+      //   });
 
-    //   test("has inherent", () {
-    //     m.inherent = true;
-    //     expect(m.inherent, equals(true));
-    //   });
-    // });
+      //   test("has inherent", () {
+      //     m.inherent = true;
+      //     expect(m.inherent, equals(true));
+      //   });
+    });
   });
 
   // test('should have label', () {

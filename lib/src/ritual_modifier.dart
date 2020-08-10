@@ -168,6 +168,14 @@ class AreaOfEffect extends RitualModifier {
   }
 }
 
+class Bestows extends RitualModifier {
+  Bestows() : super('Bestows a (Bonus or Penalty)');
+
+  @override
+  // TODO: implement energyCost
+  int get energyCost => throw UnimplementedError();
+}
+
 // class ModifierDetail {}
 
 // class AfflictionDetail extends ModifierDetail {}

@@ -116,12 +116,15 @@ class AlteredTraits extends RitualModifier {
   }
 }
 
-/// Adds an Area of Effect, optionally including or excluding specific targets in the area, to the spell.
+/// Adds an Area of Effect, optionally including or excluding specific targets
+/// in the area, to the spell.
 ///
-/// Figure the circular area and add 10 SP per yard of radius from its center. Excluding potential targets is
-/// possible – add another +1 SP for every two specific subjects in the area that won’t be affected by the spell.
-/// Alternatively, you may exclude everyone in the area, but then include willing potential targets for +1 SP per
-/// two specific subjects
+/// Figure the circular area and add 10 SP per yard of radius from its center.
+/// Excluding potential targets is possible – add another +1 SP for every two
+/// specific subjects in the area that won’t be affected by the spell.
+///
+/// Alternatively, you may exclude everyone in the area, but then include
+/// willing potential targets for +1 SP per two specific subjects.
 class AreaOfEffect extends RitualModifier {
   AreaOfEffect(
       {int radius: 0,
@@ -168,12 +171,24 @@ class AreaOfEffect extends RitualModifier {
   }
 }
 
+/// Range of rolls affected by a Bestows modifier.
+enum BestowsRange { single, moderate, broad }
+
+/// Add a bonus or penalty to some category of roll (active defense, sense,
+/// skills, social, etc).
 class Bestows extends RitualModifier {
-  Bestows() : super('Bestows a (Bonus or Penalty)');
+  Bestows(this.roll,
+      {BestowsRange range: BestowsRange.single, bool inherent: false})
+      : range = range ?? BestowsRange.single,
+        super('Bestows a (Bonus or Penalty)', inherent: inherent ?? false);
+
+  final String roll;
+
+  final BestowsRange range;
 
   @override
   // TODO: implement energyCost
-  int get energyCost => throw UnimplementedError();
+  int get energyCost => 0;
 }
 
 // class ModifierDetail {}

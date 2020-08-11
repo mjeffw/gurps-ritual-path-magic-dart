@@ -182,27 +182,26 @@ void main() {
       alt = AreaOfEffect.copyWith(alt, numberTargets: 7);
       expect(alt.energyCost, equals(14));
     });
+  });
 
-    group('Bestows a (Bonus or Penalty)', () {
-      Bestows m;
+  group('Bestows a (Bonus or Penalty)', () {
+    Bestows m;
 
-      //   setUp(() async {
-      //     m = new Bestows("Test");
-      //   });
-
-      //   test("has initial state", () {
-      //     expect(m.inherent, equals(false));
-      //     expect(m.value, equals(0));
-      //     expect(m.name, equals("Bestows a (Bonus or Penalty)"));
-      //     expect(m.spellPoints, equals(0));
-      //     expect(m.range, equals(BestowsRange.single));
-      //   });
-
-      //   test("has inherent", () {
-      //     m.inherent = true;
-      //     expect(m.inherent, equals(true));
-      //   });
+    setUp(() async {
+      m = new Bestows("Test");
     });
+
+    test("has initial state", () {
+      expect(m.inherent, equals(false));
+      expect(m.name, equals("Bestows a (Bonus or Penalty)"));
+      expect(m.energyCost, equals(0));
+      expect(m.range, equals(BestowsRange.single));
+    });
+
+    //   test("has inherent", () {
+    //     m.inherent = true;
+    //     expect(m.inherent, equals(true));
+    //   });
   });
 
   // test('should have label', () {

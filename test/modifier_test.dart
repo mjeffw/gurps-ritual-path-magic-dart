@@ -18,7 +18,7 @@ void main() {
       expect(m.energyCost, equals(0));
     });
 
-    test('sho uld allow inherent to be set', () {
+    test('should allow inherent to be set', () {
       AfflictionStun m2 = AfflictionStun(inherent: true);
       expect(m2.inherent, equals(true));
     });
@@ -28,7 +28,7 @@ void main() {
     Affliction m;
 
     setUp(() async {
-      m = Affliction('Foo');
+      m = Affliction(effect: 'Foo');
     });
 
     test('has initial state', () {
@@ -39,7 +39,7 @@ void main() {
     });
 
     test('has inherent', () {
-      Affliction m2 = Affliction('Bar', inherent: true);
+      Affliction m2 = Affliction(effect: 'Bar', inherent: true);
       expect(m2.inherent, equals(true));
     });
 
@@ -81,28 +81,27 @@ void main() {
     });
 
     test('adds +1 SP for every 5 cps removed', () {
-      var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -1));
-      print('${alt.energyCost}');
-      expect(alt.energyCost, equals(1));
-      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -5));
-      expect(alt.energyCost, equals(1));
-      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -6));
-      expect(alt.energyCost, equals(2));
-      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -10));
-      expect(alt.energyCost, equals(2));
-      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: -11));
-      expect(alt.energyCost, equals(3));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -1)).energyCost,
+          equals(1));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -5)).energyCost,
+          equals(1));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -6)).energyCost,
+          equals(2));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -10)).energyCost,
+          equals(2));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -11)).energyCost,
+          equals(3));
     });
 
     test('adds +1 energy for every cp added', () {
-      var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 1));
-      expect(alt.energyCost, equals(1));
-      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 11));
-      expect(alt.energyCost, equals(11));
-      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 24));
-      expect(alt.energyCost, equals(24));
-      alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 100));
-      expect(alt.energyCost, equals(100));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 1)).energyCost,
+          equals(1));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 11)).energyCost,
+          equals(11));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 24)).energyCost,
+          equals(24));
+      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 100)).energyCost,
+          equals(100));
     });
 
     test('allows for Limitations/Enhancements', () {
@@ -123,14 +122,17 @@ void main() {
 
       expect(alt.energyCost, equals(0));
 
-      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: 30));
-      expect(alt.energyCost, equals(38));
-      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: 100));
-      expect(alt.energyCost, equals(125));
-      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: -10));
-      expect(alt.energyCost, equals(3));
-      alt = AlteredTraits.copyWith(alt, trait: Trait(baseCost: -40));
-      expect(alt.energyCost, equals(10));
+      expect(AlteredTraits.copyWith(alt, trait: Trait(baseCost: 30)).energyCost,
+          equals(38));
+      expect(
+          AlteredTraits.copyWith(alt, trait: Trait(baseCost: 100)).energyCost,
+          equals(125));
+      expect(
+          AlteredTraits.copyWith(alt, trait: Trait(baseCost: -10)).energyCost,
+          equals(3));
+      expect(
+          AlteredTraits.copyWith(alt, trait: Trait(baseCost: -40)).energyCost,
+          equals(10));
     });
   });
 
@@ -149,38 +151,28 @@ void main() {
     });
 
     test('has inherent', () {
-      var alt = AreaOfEffect.copyWith(m, inherent: true);
-      expect(alt.inherent, equals(true));
+      expect(AreaOfEffect.copyWith(m, inherent: true).inherent, equals(true));
     });
 
     test('radius calculation', () {
-      var alt = AreaOfEffect.copyWith(m, radius: 1);
-      expect(alt.energyCost, equals(2));
-      alt = AreaOfEffect.copyWith(m, radius: 3);
-      expect(alt.energyCost, equals(2));
-      alt = AreaOfEffect.copyWith(m, radius: 4);
-      expect(alt.energyCost, equals(4));
-      alt = AreaOfEffect.copyWith(m, radius: 5);
-      expect(alt.energyCost, equals(4));
-      alt = AreaOfEffect.copyWith(m, radius: 6);
-      expect(alt.energyCost, equals(6));
-      alt = AreaOfEffect.copyWith(m, radius: 15);
-      expect(alt.energyCost, equals(10));
-      alt = AreaOfEffect.copyWith(m, radius: 20);
-      expect(alt.energyCost, equals(12));
-      alt = AreaOfEffect.copyWith(m, radius: 300);
-      expect(alt.energyCost, equals(26));
+      expect(AreaOfEffect.copyWith(m, radius: 1).energyCost, equals(2));
+      expect(AreaOfEffect.copyWith(m, radius: 3).energyCost, equals(2));
+      expect(AreaOfEffect.copyWith(m, radius: 4).energyCost, equals(4));
+      expect(AreaOfEffect.copyWith(m, radius: 5).energyCost, equals(4));
+      expect(AreaOfEffect.copyWith(m, radius: 6).energyCost, equals(6));
+      expect(AreaOfEffect.copyWith(m, radius: 15).energyCost, equals(10));
+      expect(AreaOfEffect.copyWith(m, radius: 20).energyCost, equals(12));
+      expect(AreaOfEffect.copyWith(m, radius: 300).energyCost, equals(26));
     });
 
     test('add +1 energy for every two specific subjects not affected', () {
       var alt = AreaOfEffect.copyWith(m, radius: 15, numberTargets: 2);
       expect(alt.energyCost, equals(11));
 
-      alt = AreaOfEffect.copyWith(alt, numberTargets: 6);
-      expect(alt.energyCost, equals(13));
-
-      alt = AreaOfEffect.copyWith(alt, numberTargets: 7);
-      expect(alt.energyCost, equals(14));
+      expect(
+          AreaOfEffect.copyWith(alt, numberTargets: 6).energyCost, equals(13));
+      expect(
+          AreaOfEffect.copyWith(alt, numberTargets: 7).energyCost, equals(14));
     });
   });
 
@@ -188,20 +180,67 @@ void main() {
     Bestows m;
 
     setUp(() async {
-      m = new Bestows("Test");
+      m = new Bestows('Test');
     });
 
-    test("has initial state", () {
+    test('has initial state', () {
       expect(m.inherent, equals(false));
       expect(m.name, equals("Bestows a (Bonus or Penalty)"));
       expect(m.energyCost, equals(0));
-      expect(m.range, equals(BestowsRange.single));
+      expect(m.roll, equals('Test'));
+      expect(m.range, equals(BestowsRange.narrow));
     });
 
-    //   test("has inherent", () {
-    //     m.inherent = true;
-    //     expect(m.inherent, equals(true));
-    //   });
+    test('has inherent', () {
+      expect(Bestows.copyWith(m, inherent: true).inherent, equals(true));
+    });
+
+    test('has range', () {
+      expect(Bestows.copyWith(m, range: BestowsRange.moderate).range,
+          equals(BestowsRange.moderate));
+      expect(Bestows.copyWith(m, range: BestowsRange.broad).range,
+          equals(BestowsRange.broad));
+    });
+
+    test('has Narrow roll cost', () {
+      expect(Bestows.copyWith(m, value: -4).energyCost, equals(8));
+      expect(Bestows.copyWith(m, value: -3).energyCost, equals(4));
+      expect(Bestows.copyWith(m, value: -2).energyCost, equals(2));
+      expect(Bestows.copyWith(m, value: -1).energyCost, equals(1));
+      expect(Bestows.copyWith(m, value: 0).energyCost, equals(0));
+      expect(Bestows.copyWith(m, value: 1).energyCost, equals(1));
+      expect(Bestows.copyWith(m, value: 2).energyCost, equals(2));
+      expect(Bestows.copyWith(m, value: 3).energyCost, equals(4));
+      expect(Bestows.copyWith(m, value: 4).energyCost, equals(8));
+    });
+
+    test("has Moderate cost", () {
+      var b = Bestows.copyWith(m, range: BestowsRange.moderate);
+
+      expect(Bestows.copyWith(b, value: -4).energyCost, equals(16));
+      expect(Bestows.copyWith(b, value: -3).energyCost, equals(8));
+      expect(Bestows.copyWith(b, value: -2).energyCost, equals(4));
+      expect(Bestows.copyWith(b, value: -1).energyCost, equals(2));
+      expect(Bestows.copyWith(b, value: 0).energyCost, equals(0));
+      expect(Bestows.copyWith(b, value: 1).energyCost, equals(2));
+      expect(Bestows.copyWith(b, value: 2).energyCost, equals(4));
+      expect(Bestows.copyWith(b, value: 3).energyCost, equals(8));
+      expect(Bestows.copyWith(b, value: 4).energyCost, equals(16));
+    });
+
+    test("has Broad cost", () {
+      var b = Bestows.copyWith(m, range: BestowsRange.broad);
+
+      expect(Bestows.copyWith(b, value: -4).energyCost, equals(40));
+      expect(Bestows.copyWith(b, value: -3).energyCost, equals(20));
+      expect(Bestows.copyWith(b, value: -2).energyCost, equals(10));
+      expect(Bestows.copyWith(b, value: -1).energyCost, equals(5));
+      expect(Bestows.copyWith(b, value: 0).energyCost, equals(0));
+      expect(Bestows.copyWith(b, value: 1).energyCost, equals(5));
+      expect(Bestows.copyWith(b, value: 2).energyCost, equals(10));
+      expect(Bestows.copyWith(b, value: 3).energyCost, equals(20));
+      expect(Bestows.copyWith(b, value: 4).energyCost, equals(40));
+    });
   });
 
   // test('should have label', () {

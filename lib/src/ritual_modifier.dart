@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:meta/meta.dart';
 
@@ -32,7 +34,7 @@ abstract class RitualModifier {
 
 /// Adds the Affliction: Stun (p. B36) effect to a spell.
 class AfflictionStun extends RitualModifier {
-  AfflictionStun({bool inherent: false, int value: 0})
+  AfflictionStun({bool inherent: false})
       : super("Affliction, Stunning", inherent: inherent);
 
   /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
@@ -43,20 +45,21 @@ class AfflictionStun extends RitualModifier {
 
 /// Adds an Affliction (p. B36) effect to a spell.
 class Affliction extends RitualModifier {
-  Affliction(this.specialization, {int percent: 0, bool inherent: false})
+  Affliction({this.effect, int percent: 0, bool inherent: false})
       : percent = percent ?? 0,
+        assert(effect != null),
         super("Afflictions", inherent: inherent);
 
   factory Affliction.copyWith(Affliction a,
-      {String specialization, int percent, bool inherent}) {
+      {String effect, int percent, bool inherent}) {
     return Affliction(
-      specialization ?? a.specialization,
+      effect: effect ?? a.effect,
       percent: percent ?? a.percent,
       inherent: inherent ?? a.inherent,
     );
   }
 
-  final String specialization;
+  final String effect;
 
   final int percent;
 
@@ -172,23 +175,53 @@ class AreaOfEffect extends RitualModifier {
 }
 
 /// Range of rolls affected by a Bestows modifier.
-enum BestowsRange { single, moderate, broad }
+enum BestowsRange { narrow, moderate, broad }
 
-/// Add a bonus or penalty to some category of roll (active defense, sense,
-/// skills, social, etc).
+typedef int EnergyFunction(int value);
+
+/// Use Bestows to determine the energy cost of bonuses or penalties, based on
+/// whether the ritual will add a modifier to a broad range of rolls (e.g.,
+/// active defense rolls, Sense rolls, or a wildcard skill), a moderate range
+/// (e.g., rolls to hide or Vision rolls), or a narrow range (e.g., Climbing
+/// rolls or social rolls affecting a specific person).
 class Bestows extends RitualModifier {
   Bestows(this.roll,
-      {BestowsRange range: BestowsRange.single, bool inherent: false})
-      : range = range ?? BestowsRange.single,
+      {BestowsRange range: BestowsRange.narrow,
+      int value: 0,
+      bool inherent: false})
+      : range = range ?? BestowsRange.narrow,
+        value = value ?? 0,
         super('Bestows a (Bonus or Penalty)', inherent: inherent ?? false);
 
+  factory Bestows.copyWith(Bestows src,
+      {int value, bool inherent, BestowsRange range}) {
+    return Bestows(src.roll,
+        value: value ?? src.value,
+        inherent: inherent ?? src.inherent,
+        range: range ?? src.range);
+  }
+
+  /// Name of range of traits being modified,
   final String roll;
 
+  /// Bonus or penalty value applied to the traits.
+  final int value;
+
+  /// "Range" of the bonus/penalty (or, how many traits are effected).
   final BestowsRange range;
 
+  static Map<BestowsRange, EnergyFunction> _rangeEnergy = {
+    BestowsRange.narrow: _narrowCost,
+    BestowsRange.moderate: _moderateCost,
+    BestowsRange.broad: _broadCost,
+  };
+
+  static int _narrowCost(int v) => pow(2, v.abs() - 1).toInt();
+  static int _moderateCost(int x) => pow(2, x.abs()).toInt();
+  static int _broadCost(int x) => _narrowCost(x) * 5;
+
   @override
-  // TODO: implement energyCost
-  int get energyCost => 0;
+  int get energyCost => value == 0 ? 0 : _rangeEnergy[range](value);
 }
 
 // class ModifierDetail {}

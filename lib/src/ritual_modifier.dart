@@ -223,16 +223,3 @@ class Bestows extends RitualModifier {
   @override
   int get energyCost => value == 0 ? 0 : _rangeEnergy[range](value);
 }
-
-// class ModifierDetail {}
-
-// class AfflictionDetail extends ModifierDetail {}
-
-// class BestowsABonus extends RitualModifier {
-//   const BestowsABonus() : super('Bestows a Bonus');
-
-//   static const variations = <String>['Broad', 'Moderate', 'Narrow'];
-
-//   @override
-//   bool validVariation(String variation) => variations.contains(variation);
-// }

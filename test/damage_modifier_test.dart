@@ -482,8 +482,8 @@ void main() {
       expect(t2.energyCost, equals(23));
     });
 
-    // If Damage costs 21 SP or more, apply the enhancement percentage to the SP cost for Damage only (not to the cost
-    // of the whole spell); round up.
+    // If Damage costs 21 SP or more, apply the enhancement percentage to the
+    // SP cost for Damage only (not to the cost of the whole spell); round up.
     test("should Add 1 energy cost Per 1 Percent", () {
       var t1 = Damage.copyWith(m, dice: (DieRoll(1, 21)));
       expect(t1.energyCost, equals(21));
@@ -496,7 +496,8 @@ void main() {
       expect(t1.energyCost, equals(28));
     });
 
-    // Added limitations reduce this surcharge, but will never provide a net SP discount.
+    // Added limitations reduce this surcharge, but will never provide a net SP
+    // discount.
     test("should Not Add 1 Point", () {
       var t1 = Damage.copyWith(m, dice: (DieRoll(1, 10)));
       t1 = Damage.addModifier(t1, TraitModifier(name: 'foo', percent: 10));

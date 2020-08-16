@@ -88,10 +88,8 @@ class AlteredTraits extends RitualModifier {
 
   factory AlteredTraits.addModifier(
           AlteredTraits m, TraitModifier traitModifier) =>
-      AlteredTraits(m.trait, inherent: m.inherent, modifiers: [
-        if (m._modifiers != null) ...m._modifiers,
-        traitModifier
-      ]);
+      AlteredTraits(m.trait,
+          inherent: m.inherent, modifiers: [...m._modifiers, traitModifier]);
 
   final Trait trait;
 

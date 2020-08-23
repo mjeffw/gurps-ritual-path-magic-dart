@@ -278,13 +278,14 @@ class DurationModifier extends RitualModifier {
   }
 }
 
-class ExtraEnergy extends RitualModifier {
-  ExtraEnergy({int energy: 0, bool inherent = false})
+class _EnergyPoolModifier extends RitualModifier {
+  _EnergyPoolModifier(String name, {int energy: 0, bool inherent = false})
       : energy = energy ?? 0,
-        super('Extra Energy', inherent: inherent);
+        super(name, inherent: inherent);
 
-  factory ExtraEnergy.copyWith(ExtraEnergy src, {int energy, bool inherent}) {
-    return ExtraEnergy(
+  factory _EnergyPoolModifier.copyWith(_EnergyPoolModifier src,
+      {int energy, bool inherent}) {
+    return _EnergyPoolModifier(src.name,
         energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
   }
 
@@ -294,11 +295,21 @@ class ExtraEnergy extends RitualModifier {
   int get energyCost => energy;
 }
 
-enum HealingType { HP, FP }
+class ExtraEnergy extends _EnergyPoolModifier {
+  ExtraEnergy({int energy: 0, bool inherent = false})
+      : super('Extra Energy', energy: energy, inherent: inherent);
+
+  factory ExtraEnergy.copyWith(ExtraEnergy src, {int energy, bool inherent}) {
+    return ExtraEnergy(
+        energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
+  }
+}
+
+enum HealingType { hp, fp }
 
 class Healing extends RitualModifier {
   Healing({HealingType type, DieRoll dice, bool inherent})
-      : type = type ?? HealingType.HP,
+      : type = type ?? HealingType.hp,
         dice = dice ?? DieRoll(1, 0),
         super('Healing', inherent: inherent);
 
@@ -316,4 +327,32 @@ class Healing extends RitualModifier {
 
   @override
   int get energyCost => DieRoll.denormalize(dice);
+}
+
+class MetaMagic extends _EnergyPoolModifier {
+  MetaMagic({int energy: 0, bool inherent = false})
+      : super('Meta-Magic', energy: energy, inherent: inherent);
+
+  factory MetaMagic.copyWith(MetaMagic src, {int energy, bool inherent}) {
+    return MetaMagic(
+        energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
+  }
+}
+
+class Range extends RitualModifier {
+  Range({GurpsDistance distance, bool inherent})
+      : distance = distance ?? GurpsDistance(yards: 2),
+        super('Range', inherent: inherent);
+
+  factory Range.copyWith(Range src, {GurpsDistance distance, bool inherent}) {
+    return Range(
+        distance: distance ?? src.distance, inherent: inherent ?? src.inherent);
+  }
+
+  final GurpsDistance distance;
+
+  static SizeAndSpeedRangeTable _table = SizeAndSpeedRangeTable();
+
+  @override
+  int get energyCost => _table.sizeForLinearMeasurement(distance.inYards);
 }

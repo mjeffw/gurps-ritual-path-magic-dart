@@ -12,7 +12,7 @@ dependencies:
   gurps_dart:
     git:
       url: https://github.com/mjeffw/gurps_dart
-    version: ^1.1.1
+    version: ^1.1.3
 
 dev_dependencies:
   pedantic: ^1.9.2

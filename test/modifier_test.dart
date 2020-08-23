@@ -243,108 +243,171 @@ void main() {
     });
   });
 
-  // test('should have label', () {
-  //   expect(RitualModifier.affliction.name, equals('Affliction'));
-  //   expect(RitualModifier.alteredTrait.name, equals('Altered Traits'));
-  //   expect(RitualModifier.areaOfEffect.name, equals('Area of Effect'));
-  //   expect(RitualModifier.bestowsBonus.name, equals('Bestows a Bonus'));
-  //   expect(RitualModifier.bestowsPenalty.name, equals('Bestows a Penalty'));
-  //   expect(RitualModifier.damage.name, equals('Damage'));
-  //   expect(RitualModifier.duration.name, equals('Duration'));
-  //   expect(RitualModifier.extraEnergy.name, equals('Extra Energy'));
-  //   expect(RitualModifier.healing.name, equals('Healing'));
-  //   expect(RitualModifier.metaMagic.name, equals('Meta-Magic'));
-  //   expect(RitualModifier.range.name, equals('Range'));
-  //   expect(RitualModifier.speed.name, equals('Speed'));
-  //   expect(RitualModifier.subjectWeight.name, equals('Subject Weight'));
-  //   expect(RitualModifier.traditionalTrappings.name,
-  //       equals('Traditional Trappings'));
-  // });
+  group('Duration', () {
+    DurationModifier dur;
 
-  // test('should allow lookup by name', () {
-  //   expect(RitualModifier.fromString('Affliction'),
-  //       same(RitualModifier.affliction));
-  //   expect(RitualModifier.fromString('Altered Traits'),
-  //       same(RitualModifier.alteredTrait));
-  //   expect(RitualModifier.fromString('Area of Effect'),
-  //       same(RitualModifier.areaOfEffect));
-  //   expect(RitualModifier.fromString('Bestows a Bonus'),
-  //       same(RitualModifier.bestowsBonus));
-  //   expect(RitualModifier.fromString('Bestows a Penalty'),
-  //       same(RitualModifier.bestowsPenalty));
-  //   expect(RitualModifier.fromString('Damage'), same(RitualModifier.damage));
-  //   expect(
-  //       RitualModifier.fromString('Duration'), same(RitualModifier.duration));
-  //   expect(RitualModifier.fromString('Extra Energy'),
-  //       same(RitualModifier.extraEnergy));
-  //   expect(RitualModifier.fromString('Healing'), same(RitualModifier.healing));
-  //   expect(RitualModifier.fromString('Meta-Magic'),
-  //       same(RitualModifier.metaMagic));
-  //   expect(RitualModifier.fromString('Range'), same(RitualModifier.range));
-  //   expect(RitualModifier.fromString('Speed'), same(RitualModifier.speed));
-  //   expect(RitualModifier.fromString('Subject Weight'),
-  //       same(RitualModifier.subjectWeight));
-  //   expect(RitualModifier.fromString('Traditional Trappings'),
-  //       same(RitualModifier.traditionalTrappings));
-  // });
+    setUp(() async {
+      dur = new DurationModifier();
+    });
 
-  // test('toString', () {
-  //   expect(RitualModifier.affliction.toString(), equals('Affliction'));
-  //   expect(RitualModifier.alteredTrait.toString(), equals('Altered Traits'));
-  //   expect(RitualModifier.areaOfEffect.toString(), equals('Area of Effect'));
-  //   expect(RitualModifier.bestowsBonus.toString(), equals('Bestows a Bonus'));
-  //   expect(
-  //       RitualModifier.bestowsPenalty.toString(), equals('Bestows a Penalty'));
-  //   expect(RitualModifier.damage.toString(), equals('Damage'));
-  //   expect(RitualModifier.duration.toString(), equals('Duration'));
-  //   expect(RitualModifier.extraEnergy.toString(), equals('Extra Energy'));
-  //   expect(RitualModifier.healing.toString(), equals('Healing'));
-  //   expect(RitualModifier.metaMagic.toString(), equals('Meta-Magic'));
-  //   expect(RitualModifier.range.toString(), equals('Range'));
-  //   expect(RitualModifier.speed.toString(), equals('Speed'));
-  //   expect(RitualModifier.subjectWeight.toString(), equals('Subject Weight'));
-  //   expect(
-  //       RitualModifier.traditionalTrappings.toString(),
-  //       equals('Traditional '
-  //           'Trappings'));
-  // });
+    test('has initial state', () {
+      expect(dur.inherent, equals(false));
+      expect(dur.name, equals('Duration'));
+      expect(dur.energyCost, equals(0));
+      expect(dur.duration, equals(GurpsDuration.momentary));
+    });
 
-  // test('default level', () {
-  //   expect(RitualModifier.affliction.defaultLevel, equals(0));
-  //   expect(RitualModifier.alteredTrait.defaultLevel, equals(0));
-  //   expect(RitualModifier.areaOfEffect.defaultLevel, equals(1));
-  //   expect(RitualModifier.bestowsBonus.defaultLevel, equals(0));
-  //   expect(RitualModifier.bestowsPenalty.defaultLevel, equals(0));
-  //   expect(RitualModifier.damage.defaultLevel, equals(0));
-  //   expect(RitualModifier.duration.defaultLevel, equals(0));
-  //   expect(RitualModifier.extraEnergy.defaultLevel, equals(0));
-  //   expect(RitualModifier.healing.defaultLevel, equals(0));
-  //   expect(RitualModifier.metaMagic.defaultLevel, equals(0));
-  //   expect(RitualModifier.range.defaultLevel, equals(0));
-  //   expect(RitualModifier.speed.defaultLevel, equals(0));
-  //   expect(RitualModifier.subjectWeight.defaultLevel, equals(0));
-  //   expect(RitualModifier.traditionalTrappings.defaultLevel, equals(0));
-  // });
+    test('has inherent', () {
+      var d = DurationModifier.copyWith(dur, inherent: true);
+      expect(d.inherent, equals(true));
+    });
 
-  // test('should publish labels', () {
-  //   expect(RitualModifier.labels.length, equals(14));
-  //   expect(
-  //       RitualModifier.labels,
-  //       containsAll(<String>[
-  //         "Affliction",
-  //         'Altered Traits',
-  //         'Area of Effect',
-  //         'Bestows a Bonus',
-  //         'Bestows a Penalty',
-  //         'Damage',
-  //         'Duration',
-  //         'Extra Energy',
-  //         'Healing',
-  //         'Meta-Magic',
-  //         'Range',
-  //         'Speed',
-  //         'Subject Weight',
-  //         'Traditional Trappings',
-  //       ]));
-  // });
+    /*
+       | Duration      | Energy |
+       | Momentary     |      0 |
+       | 10 minutes    |      1 |
+       | 30 minutes    |      2 |
+       | 1 hour        |      3 |
+       | 3 hours       |      4 |
+       | 6 hours       |      5 |
+       | 12 hours      |      6 |
+       | 1 day         |      7 |
+       | 3 days        |      8 |
+       | 1 week        |      9 |
+       | 2 weeks       |     10 |
+       | 1 month       |     11 |
+       | +1 month      |     +1 |
+       | 11 months     |     21 |
+       | 1 year        |     22 |
+       | +1 year       |     +1 |
+     */
+    test('should have Energy cost', () {
+      var d =
+          DurationModifier.copyWith(dur, duration: GurpsDuration(minutes: 10));
+      expect(d.energyCost, equals(1));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(minutes: 30));
+      expect(d.energyCost, equals(2));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 1));
+      expect(d.energyCost, equals(3));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 3));
+      expect(d.energyCost, equals(4));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 6));
+      expect(d.energyCost, equals(5));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 12));
+      expect(d.energyCost, equals(6));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(days: 1));
+      expect(d.energyCost, equals(7));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(days: 3));
+      expect(d.energyCost, equals(8));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(weeks: 1));
+      expect(d.energyCost, equals(9));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(weeks: 2));
+      expect(d.energyCost, equals(10));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 1));
+      expect(d.energyCost, equals(11));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 2));
+      expect(d.energyCost, equals(12));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 3));
+      expect(d.energyCost, equals(13));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 11));
+      expect(d.energyCost, equals(21));
+
+      d = DurationModifier.copyWith(dur,
+          duration: GurpsDuration(months: 11, seconds: 1));
+      expect(d.energyCost, equals(22));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(years: 1));
+      expect(d.energyCost, equals(22));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(years: 5));
+      expect(d.energyCost, equals(26));
+
+      d = DurationModifier.copyWith(dur, duration: GurpsDuration(years: 100));
+      expect(d.energyCost, equals(121));
+    });
+  });
+
+  group('Extra Energy', () {
+    ExtraEnergy energy;
+
+    setUp(() async {
+      energy = new ExtraEnergy();
+    });
+
+    test('has initial state', () {
+      expect(energy.inherent, equals(false));
+      expect(energy.name, equals('Extra Energy'));
+      expect(energy.energyCost, equals(0));
+      expect(energy.energy, 0);
+    });
+
+    test('has inherent', () {
+      var d = ExtraEnergy.copyWith(energy, inherent: true);
+      expect(d.inherent, equals(true));
+    });
+
+    test('has energy', () {
+      expect(ExtraEnergy.copyWith(energy, energy: 5).energy, equals(5));
+      expect(ExtraEnergy.copyWith(energy, energy: 7).energy, equals(7));
+      expect(ExtraEnergy.copyWith(energy, energy: 20).energy, equals(20));
+    });
+
+    test('has energy cost', () {
+      expect(ExtraEnergy.copyWith(energy, energy: 5).energyCost, equals(5));
+      expect(ExtraEnergy.copyWith(energy, energy: 7).energyCost, equals(7));
+      expect(ExtraEnergy.copyWith(energy, energy: 20).energyCost, equals(20));
+    });
+  });
+
+  group('Healing', () {
+    Healing heal;
+
+    setUp(() async {
+      heal = new Healing();
+    });
+
+    test('has initial state', () {
+      expect(heal.inherent, equals(false));
+      expect(heal.name, equals('Healing'));
+      expect(heal.energyCost, equals(0));
+      expect(heal.dice, equals(DieRoll(1, 0)));
+      expect(heal.type, equals(HealingType.HP));
+    });
+
+    test('has inherent', () {
+      var d = Healing.copyWith(heal, inherent: true);
+      expect(d.inherent, equals(true));
+    });
+
+    test('has Dice', () {
+      expect(Healing.copyWith(heal, dice: DieRoll(2, 0)).dice,
+          equals(DieRoll(2, 0)));
+      expect(Healing.copyWith(heal, dice: DieRoll(4, -1)).dice,
+          equals(DieRoll(4, -1)));
+    });
+
+    test('has energy cost', () {
+      expect(Healing.copyWith(heal, dice: DieRoll(2, 0)).energyCost, equals(4));
+      expect(
+          Healing.copyWith(heal, dice: DieRoll(4, -1)).energyCost, equals(11));
+    });
+
+    test('has type', () {
+      expect(Healing.copyWith(heal, type: HealingType.FP).type,
+          equals(HealingType.FP));
+    });
+  });
 }

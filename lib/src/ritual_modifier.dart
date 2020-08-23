@@ -20,7 +20,8 @@ import 'trait.dart';
 ///  modifier; this effect is inherent to the spell.
 @immutable
 abstract class RitualModifier {
-  const RitualModifier(this.name, {this.inherent});
+  const RitualModifier(this.name, {bool inherent})
+      : inherent = inherent ?? false;
 
   /// the name of this Modifier
   final String name;
@@ -35,7 +36,7 @@ abstract class RitualModifier {
 /// Adds the Affliction: Stun (p. B36) effect to a spell.
 class AfflictionStun extends RitualModifier {
   AfflictionStun({bool inherent: false})
-      : super("Affliction, Stunning", inherent: inherent);
+      : super('Affliction, Stunning', inherent: inherent);
 
   /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
   /// energy; the spell effect is enough.
@@ -48,7 +49,7 @@ class Affliction extends RitualModifier {
   Affliction({this.effect, int percent: 0, bool inherent: false})
       : percent = percent ?? 0,
         assert(effect != null),
-        super("Afflictions", inherent: inherent);
+        super('Afflictions', inherent: inherent);
 
   factory Affliction.copyWith(Affliction a,
       {String effect, int percent, bool inherent}) {
@@ -74,7 +75,7 @@ class Affliction extends RitualModifier {
 class AlteredTraits extends RitualModifier {
   AlteredTraits(this.trait,
       {bool inherent = false, List<TraitModifier> modifiers})
-      : super("Altered Traits", inherent: inherent) {
+      : super('Altered Traits', inherent: inherent) {
     _modifiers.addAll([if (modifiers != null) ...modifiers]);
   }
 
@@ -220,4 +221,99 @@ class Bestows extends RitualModifier {
 
   @override
   int get energyCost => value == 0 ? 0 : _rangeEnergy[range](value);
+}
+
+class DurationModifier extends RitualModifier {
+  DurationModifier(
+      {GurpsDuration duration: GurpsDuration.momentary, bool inherent: false})
+      : duration = duration ?? GurpsDuration.momentary,
+        super('Duration', inherent: inherent ?? false);
+
+  factory DurationModifier.copyWith(DurationModifier src,
+      {GurpsDuration duration, bool inherent}) {
+    return DurationModifier(
+        duration: duration ?? src.duration, inherent: inherent ?? src.inherent);
+  }
+
+  static List<GurpsDuration> array = [
+    GurpsDuration.momentary,
+    const GurpsDuration(minutes: 10),
+    const GurpsDuration(minutes: 30),
+    const GurpsDuration(hours: 1),
+    const GurpsDuration(hours: 3),
+    const GurpsDuration(hours: 6),
+    const GurpsDuration(hours: 12),
+    const GurpsDuration(days: 1),
+    const GurpsDuration(days: 3),
+    const GurpsDuration(weeks: 1),
+    const GurpsDuration(weeks: 2),
+    const GurpsDuration(months: 1),
+  ];
+
+  final GurpsDuration duration;
+
+  @override
+  int get energyCost {
+    int index = _indexOfLeastElementNoSmallerThan(duration, array);
+    if (index != null) return index;
+
+    index = _indexOfLeastElementNoSmallerThan(duration,
+        Iterable.generate(10, (index) => GurpsDuration(months: index + 2)));
+    if (index != null) return 12 + index;
+
+    int years = (duration.inSeconds / GurpsDuration.secondsPerYear).ceil();
+
+    return years + 21;
+  }
+
+  int _indexOfLeastElementNoSmallerThan(
+      GurpsDuration duration, Iterable<GurpsDuration> list) {
+    var temp = 0;
+    for (var d in list) {
+      if (duration == d) return temp;
+      if (d < duration) temp++;
+      if (d > duration) return temp - 1;
+    }
+    return null;
+  }
+}
+
+class ExtraEnergy extends RitualModifier {
+  ExtraEnergy({int energy: 0, bool inherent = false})
+      : energy = energy ?? 0,
+        super('Extra Energy', inherent: inherent);
+
+  factory ExtraEnergy.copyWith(ExtraEnergy src, {int energy, bool inherent}) {
+    return ExtraEnergy(
+        energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
+  }
+
+  final int energy;
+
+  @override
+  int get energyCost => energy;
+}
+
+enum HealingType { HP, FP }
+
+class Healing extends RitualModifier {
+  Healing({HealingType type, DieRoll dice, bool inherent})
+      : type = type ?? HealingType.HP,
+        dice = dice ?? DieRoll(1, 0),
+        super('Healing', inherent: inherent);
+
+  factory Healing.copyWith(Healing src,
+      {HealingType type, DieRoll dice, bool inherent}) {
+    return Healing(
+        type: type ?? src.type,
+        dice: dice ?? src.dice,
+        inherent: inherent ?? src.inherent);
+  }
+
+  final DieRoll dice;
+
+  final HealingType type;
+
+  @override
+  int get energyCost => DieRoll.denormalize(dice);
 }

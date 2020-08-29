@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:meta/meta.dart';
 
-import 'trait.dart';
+import '../trait.dart';
 
 /// Describes a modifier to an Ritual.
 ///
@@ -33,51 +33,13 @@ abstract class RitualModifier {
   int get energyCost;
 }
 
-/// Adds the Affliction: Stun (p. B36) effect to a spell.
-class AfflictionStun extends RitualModifier {
-  AfflictionStun({bool inherent: false})
-      : super('Affliction, Stunning', inherent: inherent);
-
-  /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
-  /// energy; the spell effect is enough.
-  @override
-  int get energyCost => 0;
-}
-
-/// Adds an Affliction (p. B36) effect to a spell.
-class Affliction extends RitualModifier {
-  Affliction({this.effect, int percent: 0, bool inherent: false})
-      : percent = percent ?? 0,
-        assert(effect != null),
-        super('Afflictions', inherent: inherent);
-
-  factory Affliction.copyWith(Affliction a,
-      {String effect, int percent, bool inherent}) {
-    return Affliction(
-      effect: effect ?? a.effect,
-      percent: percent ?? a.percent,
-      inherent: inherent ?? a.inherent,
-    );
-  }
-
-  final String effect;
-
-  final int percent;
-
-  /// GURPS rpm.16: For the other states on pp. B428-429, this costs +1 energy
-  /// for every +5% it’s worth as an enhancement to Affliction (pp. B35-36).
-  @override
-  int get energyCost => (percent / 5.0).ceil();
-}
-
 /// Any ritual that adds, removes or modifies advantages or disadvantages, or
 /// increases or lowers attributes or characteristics.
 class AlteredTraits extends RitualModifier {
-  AlteredTraits(this.trait,
+  const AlteredTraits(this.trait,
       {bool inherent = false, List<TraitModifier> modifiers})
-      : super('Altered Traits', inherent: inherent) {
-    _modifiers.addAll([if (modifiers != null) ...modifiers]);
-  }
+      : _modifiers = modifiers ?? const [],
+        super('Altered Traits', inherent: inherent);
 
   factory AlteredTraits.copyWith(AlteredTraits src,
           {Trait trait, bool inherent}) =>
@@ -94,18 +56,20 @@ class AlteredTraits extends RitualModifier {
 
   final Trait trait;
 
-  final List<TraitModifier> _modifiers = [];
+  final List<TraitModifier> _modifiers;
 
   @override
   int get energyCost => (_baseEnergy * _modifierMultiplier).ceil();
 
   int get characterPoints => trait.totalCost;
 
-  /// GURPS rpm.16: Any spell that adds or worsens disadvantages, reduces or removes advantages, or lowers attributes or
-  /// characteristics adds +1 energy for every 5 character points removed.
+  /// GURPS rpm.16: Any spell that adds or worsens disadvantages, reduces or
+  /// removes advantages, or lowers attributes or characteristics adds +1 energy
+  /// for every 5 character points removed.
   ///
-  /// GURPS rpm.17: One that adds or improves advantages, reduces or removes disadvantages, or increases attributes or
-  /// characteristics adds +1 energy for every 1 character point added.
+  /// GURPS rpm.17: One that adds or improves advantages, reduces or removes
+  /// disadvantages, or increases attributes or characteristics adds +1 energy
+  /// for every 1 character point added.
   int get _baseEnergy => (characterPoints.isNegative)
       ? (characterPoints.abs() / 5.0).ceil()
       : characterPoints;
@@ -128,7 +92,7 @@ class AlteredTraits extends RitualModifier {
 /// Alternatively, you may exclude everyone in the area, but then include
 /// willing potential targets for +1 SP per two specific subjects.
 class AreaOfEffect extends RitualModifier {
-  AreaOfEffect(
+  const AreaOfEffect(
       {int radius: 0,
       int numberTargets: 0,
       bool excludes: true,
@@ -154,7 +118,7 @@ class AreaOfEffect extends RitualModifier {
 
   final bool excludes;
 
-  final _table = SizeAndSpeedRangeTable();
+  final _table = const SizeAndSpeedRangeTable();
 
   /// GURPS rpm.17: Figure the spherical area of effect, find its radius in
   /// yards on the Size and Speed/Range Table (p. B550), and add twice the
@@ -184,7 +148,7 @@ typedef int EnergyFunction(int value);
 /// (e.g., rolls to hide or Vision rolls), or a narrow range (e.g., Climbing
 /// rolls or social rolls affecting a specific person).
 class Bestows extends RitualModifier {
-  Bestows(this.roll,
+  const Bestows(this.roll,
       {BestowsRange range: BestowsRange.narrow,
       int value: 0,
       bool inherent: false})
@@ -224,7 +188,7 @@ class Bestows extends RitualModifier {
 }
 
 class DurationModifier extends RitualModifier {
-  DurationModifier(
+  const DurationModifier(
       {GurpsDuration duration: GurpsDuration.momentary, bool inherent: false})
       : duration = duration ?? GurpsDuration.momentary,
         super('Duration', inherent: inherent ?? false);
@@ -279,15 +243,9 @@ class DurationModifier extends RitualModifier {
 }
 
 class _EnergyPoolModifier extends RitualModifier {
-  _EnergyPoolModifier(String name, {int energy: 0, bool inherent = false})
+  const _EnergyPoolModifier(String name, {int energy: 0, bool inherent = false})
       : energy = energy ?? 0,
         super(name, inherent: inherent);
-
-  factory _EnergyPoolModifier.copyWith(_EnergyPoolModifier src,
-      {int energy, bool inherent}) {
-    return _EnergyPoolModifier(src.name,
-        energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
-  }
 
   final int energy;
 
@@ -296,7 +254,7 @@ class _EnergyPoolModifier extends RitualModifier {
 }
 
 class ExtraEnergy extends _EnergyPoolModifier {
-  ExtraEnergy({int energy: 0, bool inherent = false})
+  const ExtraEnergy({int energy: 0, bool inherent = false})
       : super('Extra Energy', energy: energy, inherent: inherent);
 
   factory ExtraEnergy.copyWith(ExtraEnergy src, {int energy, bool inherent}) {
@@ -308,9 +266,9 @@ class ExtraEnergy extends _EnergyPoolModifier {
 enum HealingType { hp, fp }
 
 class Healing extends RitualModifier {
-  Healing({HealingType type, DieRoll dice, bool inherent})
+  const Healing({HealingType type, DieRoll dice, bool inherent})
       : type = type ?? HealingType.hp,
-        dice = dice ?? DieRoll(1, 0),
+        dice = dice ?? const DieRoll(1, 0),
         super('Healing', inherent: inherent);
 
   factory Healing.copyWith(Healing src,
@@ -330,29 +288,11 @@ class Healing extends RitualModifier {
 }
 
 class MetaMagic extends _EnergyPoolModifier {
-  MetaMagic({int energy: 0, bool inherent = false})
+  const MetaMagic({int energy: 0, bool inherent = false})
       : super('Meta-Magic', energy: energy, inherent: inherent);
 
   factory MetaMagic.copyWith(MetaMagic src, {int energy, bool inherent}) {
     return MetaMagic(
         energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
   }
-}
-
-class Range extends RitualModifier {
-  Range({GurpsDistance distance, bool inherent})
-      : distance = distance ?? GurpsDistance(yards: 2),
-        super('Range', inherent: inherent);
-
-  factory Range.copyWith(Range src, {GurpsDistance distance, bool inherent}) {
-    return Range(
-        distance: distance ?? src.distance, inherent: inherent ?? src.inherent);
-  }
-
-  final GurpsDistance distance;
-
-  static SizeAndSpeedRangeTable _table = SizeAndSpeedRangeTable();
-
-  @override
-  int get energyCost => _table.sizeForLinearMeasurement(distance.inYards);
 }

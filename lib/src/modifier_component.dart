@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import 'ritual_modifier.dart';
+import 'modifier/ritual_modifier.dart';
 
 @immutable
 class ModifierComponent {

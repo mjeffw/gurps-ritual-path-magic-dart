@@ -1,6 +1,6 @@
 import 'package:gurps_dart/gurps_dart.dart';
 
-import '../lib/src/damage_modifier.dart';
+import '../../lib/src/modifier/damage_modifier.dart';
 import "package:test/test.dart";
 
 void main() {

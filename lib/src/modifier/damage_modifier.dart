@@ -6,7 +6,7 @@ import 'ritual_modifier.dart';
 
 /// GURPS rpm.17: The spell will cause damage, whether directly or indirectly.
 class Damage extends RitualModifier {
-  Damage(
+  const Damage(
       {DamageType type: DamageType.crushing,
       DieRoll dice: const DieRoll(1, 0),
       List<TraitModifier> modifiers,
@@ -17,9 +17,8 @@ class Damage extends RitualModifier {
         direct = direct ?? true,
         type = type ?? DamageType.crushing,
         _explosive = explosive ?? false,
-        super('Damage', inherent: inherent ?? false) {
-    _modifiers.addAll([if (modifiers != null) ...modifiers]);
-  }
+        _modifiers = modifiers ?? const [],
+        super('Damage', inherent: inherent ?? false);
 
   factory Damage.copyWith(Damage src,
       {DamageType type,
@@ -54,7 +53,7 @@ class Damage extends RitualModifier {
 
   final bool _explosive;
 
-  final List<TraitModifier> _modifiers = [];
+  final List<TraitModifier> _modifiers;
 
   bool get explosive => direct ? false : _explosive;
 

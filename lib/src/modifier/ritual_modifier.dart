@@ -7,14 +7,14 @@ import '../trait.dart';
 
 /// Describes a modifier to an Ritual.
 ///
-/// Modifiers add Damage, Range, GurpsDuration, and other features to a ritual,
+/// Modifiers add Damage, Range, GDuration, and other features to a ritual,
 /// and the energy cost of the spell is adjusted by the value of the modifiers.
 /// Modifiers are identified by their name, and can be inherent (intrisic) or
 /// not.
 ///
 /// For example, a spell might momentarily open a Gate between dimensions; a
-/// GurpsDuration modifier can be added to make the Gate remain for a longer
-/// time. The GurpsDuration is not inherent or intrinsic in this case.
+/// GDuration modifier can be added to make the Gate remain for a longer
+/// time. The GDuration is not inherent or intrinsic in this case.
 ///
 /// A spell that adds +2 to the subject's Strength would need a Bestows a Bonus
 ///  modifier; this effect is inherent to the spell.
@@ -189,32 +189,32 @@ class Bestows extends RitualModifier {
 
 class DurationModifier extends RitualModifier {
   const DurationModifier(
-      {GurpsDuration duration: GurpsDuration.momentary, bool inherent: false})
-      : duration = duration ?? GurpsDuration.momentary,
+      {GDuration duration: GDuration.momentary, bool inherent: false})
+      : duration = duration ?? GDuration.momentary,
         super('Duration', inherent: inherent ?? false);
 
   factory DurationModifier.copyWith(DurationModifier src,
-      {GurpsDuration duration, bool inherent}) {
+      {GDuration duration, bool inherent}) {
     return DurationModifier(
         duration: duration ?? src.duration, inherent: inherent ?? src.inherent);
   }
 
-  static List<GurpsDuration> array = [
-    GurpsDuration.momentary,
-    const GurpsDuration(minutes: 10),
-    const GurpsDuration(minutes: 30),
-    const GurpsDuration(hours: 1),
-    const GurpsDuration(hours: 3),
-    const GurpsDuration(hours: 6),
-    const GurpsDuration(hours: 12),
-    const GurpsDuration(days: 1),
-    const GurpsDuration(days: 3),
-    const GurpsDuration(weeks: 1),
-    const GurpsDuration(weeks: 2),
-    const GurpsDuration(months: 1),
+  static List<GDuration> array = [
+    GDuration.momentary,
+    const GDuration(minutes: 10),
+    const GDuration(minutes: 30),
+    const GDuration(hours: 1),
+    const GDuration(hours: 3),
+    const GDuration(hours: 6),
+    const GDuration(hours: 12),
+    const GDuration(days: 1),
+    const GDuration(days: 3),
+    const GDuration(weeks: 1),
+    const GDuration(weeks: 2),
+    const GDuration(months: 1),
   ];
 
-  final GurpsDuration duration;
+  final GDuration duration;
 
   @override
   int get energyCost {
@@ -222,16 +222,16 @@ class DurationModifier extends RitualModifier {
     if (index != null) return index;
 
     index = _indexOfLeastElementNoSmallerThan(duration,
-        Iterable.generate(10, (index) => GurpsDuration(months: index + 2)));
+        Iterable.generate(10, (index) => GDuration(months: index + 2)));
     if (index != null) return 12 + index;
 
-    int years = (duration.inSeconds / GurpsDuration.secondsPerYear).ceil();
+    int years = (duration.inSeconds / GDuration.secondsPerYear).ceil();
 
     return years + 21;
   }
 
   int _indexOfLeastElementNoSmallerThan(
-      GurpsDuration duration, Iterable<GurpsDuration> list) {
+      GDuration duration, Iterable<GDuration> list) {
     var temp = 0;
     for (var d in list) {
       if (duration == d) return temp;

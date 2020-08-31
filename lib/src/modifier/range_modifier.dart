@@ -3,16 +3,16 @@ import 'package:gurps_dart/gurps_dart.dart';
 import 'ritual_modifier.dart';
 
 class Range extends RitualModifier {
-  const Range({GurpsDistance distance, bool inherent})
-      : distance = distance ?? const GurpsDistance(yards: 2),
+  const Range({GDistance distance, bool inherent})
+      : distance = distance ?? const GDistance(yards: 2),
         super('Range', inherent: inherent);
 
-  factory Range.copyWith(Range src, {GurpsDistance distance, bool inherent}) {
+  factory Range.copyWith(Range src, {GDistance distance, bool inherent}) {
     return Range(
         distance: distance ?? src.distance, inherent: inherent ?? src.inherent);
   }
 
-  final GurpsDistance distance;
+  final GDistance distance;
 
   static SizeAndSpeedRangeTable _table = SizeAndSpeedRangeTable();
 
@@ -20,12 +20,59 @@ class Range extends RitualModifier {
   int get energyCost => _table.sizeForLinearMeasurement(distance.inYards);
 }
 
-class RangeInformational extends RitualModifier {
-  const RangeInformational() : super('Range, Informational');
+class RangeInfo extends RitualModifier {
+  const RangeInfo({GDistance distance, bool inherent})
+      : distance = distance ?? const GDistance(yards: 200),
+        super('Range, Informational', inherent: inherent ?? false);
 
-  final GurpsDistance distance = const GurpsDistance(yards: 200);
+  factory RangeInfo.copyWith(RangeInfo src,
+      {GDistance distance, bool inherent}) {
+    return RangeInfo(
+        distance: distance ?? src.distance, inherent: inherent ?? src.inherent);
+  }
+
+  final GDistance distance;
 
   @override
   // TODO: implement energyCost
-  int get energyCost => 0;
+  int get energyCost {
+    if (distance <= GDistance(yards: 200)) return 0;
+    if (distance <= GDistance(yards: 1000)) return 1;
+    return _table.valueToOrdinal(
+            (distance.inYards / GDistance.yardsPerMile).ceil()) +
+        2;
+  }
+}
+
+// used by both RangeInfo and RangeCrossTime
+const _table = RepeatingSequenceConverter([1, 3]);
+
+class RangeCrossTime extends RitualModifier {
+  const RangeCrossTime(
+      {GDuration duration = const GDuration(hours: 2), bool inherent = false})
+      : duration = duration ?? const GDuration(hours: 2),
+        super('Range, Cross-Time', inherent: inherent ?? false);
+
+  factory RangeCrossTime.copyWith(RangeCrossTime src,
+      {GDuration duration, bool inherent}) {
+    return RangeCrossTime(
+        duration: duration ?? src.duration, inherent: inherent ?? src.inherent);
+  }
+
+  final GDuration duration;
+
+  @override
+  int get energyCost {
+    if (duration <= GDuration(hours: 2)) return 0;
+    if (duration <= GDuration(hours: 12)) return 1;
+    return _table.valueToOrdinal((duration.inHours / 24).ceil()) + 2;
+  }
+}
+
+class RangeDimensional extends RitualModifier {
+  RangeDimensional() : super('Range, Interdimensional');
+
+  @override
+  // TODO: implement energyCost
+  int get energyCost => throw UnimplementedError();
 }

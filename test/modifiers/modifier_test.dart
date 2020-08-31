@@ -199,7 +199,7 @@ void main() {
       expect(dur.inherent, equals(false));
       expect(dur.name, equals('Duration'));
       expect(dur.energyCost, equals(0));
-      expect(dur.duration, equals(GurpsDuration.momentary));
+      expect(dur.duration, equals(GDuration.momentary));
     });
 
     test('has inherent', () {
@@ -227,60 +227,59 @@ void main() {
        | +1 year       |     +1 |
      */
     test('should have Energy cost', () {
-      var d =
-          DurationModifier.copyWith(dur, duration: GurpsDuration(minutes: 10));
+      var d = DurationModifier.copyWith(dur, duration: GDuration(minutes: 10));
       expect(d.energyCost, equals(1));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(minutes: 30));
+      d = DurationModifier.copyWith(dur, duration: GDuration(minutes: 30));
       expect(d.energyCost, equals(2));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 1));
+      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 1));
       expect(d.energyCost, equals(3));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 3));
+      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 3));
       expect(d.energyCost, equals(4));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 6));
+      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 6));
       expect(d.energyCost, equals(5));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(hours: 12));
+      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 12));
       expect(d.energyCost, equals(6));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(days: 1));
+      d = DurationModifier.copyWith(dur, duration: GDuration(days: 1));
       expect(d.energyCost, equals(7));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(days: 3));
+      d = DurationModifier.copyWith(dur, duration: GDuration(days: 3));
       expect(d.energyCost, equals(8));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(weeks: 1));
+      d = DurationModifier.copyWith(dur, duration: GDuration(weeks: 1));
       expect(d.energyCost, equals(9));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(weeks: 2));
+      d = DurationModifier.copyWith(dur, duration: GDuration(weeks: 2));
       expect(d.energyCost, equals(10));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 1));
+      d = DurationModifier.copyWith(dur, duration: GDuration(months: 1));
       expect(d.energyCost, equals(11));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 2));
+      d = DurationModifier.copyWith(dur, duration: GDuration(months: 2));
       expect(d.energyCost, equals(12));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 3));
+      d = DurationModifier.copyWith(dur, duration: GDuration(months: 3));
       expect(d.energyCost, equals(13));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(months: 11));
+      d = DurationModifier.copyWith(dur, duration: GDuration(months: 11));
       expect(d.energyCost, equals(21));
 
       d = DurationModifier.copyWith(dur,
-          duration: GurpsDuration(months: 11, seconds: 1));
+          duration: GDuration(months: 11, seconds: 1));
       expect(d.energyCost, equals(22));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(years: 1));
+      d = DurationModifier.copyWith(dur, duration: GDuration(years: 1));
       expect(d.energyCost, equals(22));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(years: 5));
+      d = DurationModifier.copyWith(dur, duration: GDuration(years: 5));
       expect(d.energyCost, equals(26));
 
-      d = DurationModifier.copyWith(dur, duration: GurpsDuration(years: 100));
+      d = DurationModifier.copyWith(dur, duration: GDuration(years: 100));
       expect(d.energyCost, equals(121));
     });
   });

@@ -70,9 +70,19 @@ class RangeCrossTime extends RitualModifier {
 }
 
 class RangeDimensional extends RitualModifier {
-  RangeDimensional() : super('Range, Interdimensional');
+  RangeDimensional({int numberDimensions = 0, bool inherent = false})
+      : numberDimensions = numberDimensions ?? 0,
+        super('Range, Extradimensional', inherent: inherent ?? false);
+
+  factory RangeDimensional.copyWith(RangeDimensional src,
+      {int numberDimensions, bool inherent}) {
+    return RangeDimensional(
+        numberDimensions: numberDimensions ?? src.numberDimensions,
+        inherent: inherent ?? src.inherent);
+  }
+
+  final int numberDimensions;
 
   @override
-  // TODO: implement energyCost
-  int get energyCost => throw UnimplementedError();
+  int get energyCost => 10 * numberDimensions;
 }

@@ -1,7 +1,6 @@
 import 'package:gurps_dart/gurps_dart.dart';
+import 'package:gurps_ritual_path_magic_model/src/modifier/range_modifier.dart';
 import 'package:test/test.dart';
-
-import '../../lib/src/modifier/range_modifier.dart';
 
 void main() {
   group('Range', () {
@@ -200,29 +199,26 @@ void main() {
       m = new RangeDimensional();
     });
 
-    // test("has initial state", () {
-    //   expect(m.inherent, equals(false));
-    //   expect(m.value, equals(0));
-    //   expect(m.name, equals("Range, Extradimensional"));
-    //   expect(m.spellPoints, equals(0));
-    // });
+    test("has initial state", () {
+      expect(m.inherent, equals(false));
+      expect(m.numberDimensions, equals(0));
+      expect(m.name, equals("Range, Extradimensional"));
+      expect(m.energyCost, equals(0));
+    });
 
-    // test("has inherent", () {
-    //   m.inherent = true;
-    //   expect(m.inherent, equals(true));
-    // });
+    test("has inherent", () {
+      expect(
+          RangeDimensional.copyWith(m, inherent: true).inherent, equals(true));
+    });
 
-    // test("cost 10 spellPoints per Dimension crossed", () {
-    //   m.value = 1;
-    //   expect(m.spellPoints, equals(10));
-    //   m.value = 2;
-    //   expect(m.spellPoints, equals(20));
-    //   m.value = 3;
-    //   expect(m.spellPoints, equals(30));
-    // });
-
-    // test("should throw exception if negative", () {
-    //   expect(() => m.value = -1, throwsException);
-    // });
+    test("cost 10 energy per Dimension crossed", () {
+      //   m.value = 1;
+      expect(RangeDimensional.copyWith(m, numberDimensions: 1).energyCost,
+          equals(10));
+      expect(RangeDimensional.copyWith(m, numberDimensions: 2).energyCost,
+          equals(20));
+      expect(RangeDimensional.copyWith(m, numberDimensions: 5).energyCost,
+          equals(50));
+    });
   });
 }

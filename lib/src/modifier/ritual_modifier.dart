@@ -317,17 +317,24 @@ class Speed extends RitualModifier {
 }
 
 class SubjectWeight extends RitualModifier {
-  SubjectWeight({bool inherent = false})
-      : weight = 0,
-        super('Subject Weight', inherent: inherent ?? false);
+  SubjectWeight({GWeight weight, bool inherent = false})
+      : _weight = weight ?? GWeight(pounds: 10),
+        super('Subject GWeight', inherent: inherent ?? false);
 
-  factory SubjectWeight.copyWith(SubjectWeight src, {bool inherent}) {
-    return SubjectWeight(inherent: inherent ?? src.inherent);
+  factory SubjectWeight.copyWith(SubjectWeight src,
+      {GWeight weight, bool inherent}) {
+    return SubjectWeight(
+        weight: weight ?? src._weight, inherent: inherent ?? src.inherent);
   }
 
-  final int weight;
+  final GWeight _weight;
+
+  GWeight get weight => GWeight(
+      pounds: sequence.smallestTableValueGreaterThanOrEqualTo(energyCost));
 
   @override
-  // TODO: implement energyCost
-  int get energyCost => 0;
+  int get energyCost => sequence.valueToOrdinal(_weight.inPounds);
+
+  static RepeatingSequenceConverter sequence =
+      new RepeatingSequenceConverter([10, 30]);
 }

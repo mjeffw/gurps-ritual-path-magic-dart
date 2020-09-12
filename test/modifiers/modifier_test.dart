@@ -459,12 +459,44 @@ void main() {
     test("has initial state", () {
       expect(m.inherent, equals(false));
       expect(m.energyCost, equals(0));
-      expect(m.name, equals("Subject Weight"));
-      expect(m.weight, equals(0));
+      expect(m.name, equals("Subject GWeight"));
+      expect(m.weight, equals(GWeight(pounds: 10)));
     });
 
     test("has inherent", () {
       expect(SubjectWeight.copyWith(m, inherent: true).inherent, equals(true));
+    });
+
+    test("should have energyCost and weight", () {
+      var w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 0));
+      expect(w.energyCost, equals(0));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 10));
+      expect(w.energyCost, equals(0));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 11));
+      expect(w.energyCost, equals(1));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 30));
+      expect(w.energyCost, equals(1));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 31));
+      expect(w.energyCost, equals(2));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 100));
+      expect(w.energyCost, equals(2));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 300));
+      expect(w.energyCost, equals(3));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 1000));
+      expect(w.energyCost, equals(4));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(tons: 5));
+      expect(w.energyCost, equals(6));
+
+      w = SubjectWeight.copyWith(m, weight: GWeight(tons: 15));
+      expect(w.energyCost, equals(7));
     });
   });
 }

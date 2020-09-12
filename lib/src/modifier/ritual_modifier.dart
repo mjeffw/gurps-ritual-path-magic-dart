@@ -33,6 +33,9 @@ abstract class RitualModifier {
   int get energyCost;
 }
 
+/// SizeAndSpeedRange Table for use by modifiers
+final _sizeSpeedRangeTable = const SizeAndSpeedRangeTable();
+
 /// Any ritual that adds, removes or modifies advantages or disadvantages, or
 /// increases or lowers attributes or characteristics.
 class AlteredTraits extends RitualModifier {
@@ -118,8 +121,6 @@ class AreaOfEffect extends RitualModifier {
 
   final bool excludes;
 
-  final _table = const SizeAndSpeedRangeTable();
-
   /// GURPS rpm.17: Figure the spherical area of effect, find its radius in
   /// yards on the Size and Speed/Range Table (p. B550), and add twice the
   /// “Size” value for that line to the energy cost (minimum +2).
@@ -130,7 +131,7 @@ class AreaOfEffect extends RitualModifier {
   @override
   int get energyCost {
     if (radius == 0) return 0;
-    var energy = _table.sizeForLinearMeasurement(radius) * 2;
+    var energy = _sizeSpeedRangeTable.sizeForLinearMeasurement(radius) * 2;
     var i = (energy < 2) ? 2 : energy;
 
     return i + (numberTargets / 2.0).ceil();
@@ -295,4 +296,38 @@ class MetaMagic extends _EnergyPoolModifier {
     return MetaMagic(
         energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
   }
+}
+
+class Speed extends RitualModifier {
+  Speed({GDistance yardsPerSecond, bool inherent})
+      : yardsPerSecond = yardsPerSecond ?? GDistance(yards: 0),
+        super('Speed', inherent: inherent ?? false);
+
+  factory Speed.copyWith(Speed src, {GDistance yardsPerSecond, bool inherent}) {
+    return Speed(
+        yardsPerSecond: yardsPerSecond ?? GDistance(yards: 0),
+        inherent: inherent ?? false);
+  }
+
+  final GDistance yardsPerSecond;
+
+  @override
+  int get energyCost =>
+      _sizeSpeedRangeTable.sizeForLinearMeasurement(yardsPerSecond.inYards);
+}
+
+class SubjectWeight extends RitualModifier {
+  SubjectWeight({bool inherent = false})
+      : weight = 0,
+        super('Subject Weight', inherent: inherent ?? false);
+
+  factory SubjectWeight.copyWith(SubjectWeight src, {bool inherent}) {
+    return SubjectWeight(inherent: inherent ?? src.inherent);
+  }
+
+  final int weight;
+
+  @override
+  // TODO: implement energyCost
+  int get energyCost => 0;
 }

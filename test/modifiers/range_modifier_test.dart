@@ -212,7 +212,6 @@ void main() {
     });
 
     test("cost 10 energy per Dimension crossed", () {
-      //   m.value = 1;
       expect(RangeDimensional.copyWith(m, numberDimensions: 1).energyCost,
           equals(10));
       expect(RangeDimensional.copyWith(m, numberDimensions: 2).energyCost,

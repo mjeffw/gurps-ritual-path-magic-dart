@@ -386,4 +386,85 @@ void main() {
       expect(MetaMagic.copyWith(meta, energy: 20).energyCost, equals(20));
     });
   });
+
+  group('Speed', () {
+    Speed m;
+
+    setUp(() async {
+      m = new Speed();
+    });
+
+    test("has initial state", () {
+      expect(m.inherent, equals(false));
+      expect(m.energyCost, equals(0));
+      expect(m.name, equals("Speed"));
+      expect(m.yardsPerSecond, equals(GDistance()));
+    });
+
+    test("has inherent", () {
+      expect(Speed.copyWith(m, inherent: true).inherent, equals(true));
+    });
+
+    // For movement spells (e.g., spells that use telekinesis or allow a subject to fly), look up the speed
+    // in yards/second on the Size and Speed/Range Table (p. B550) and add the Size value for that line
+    // (minimum +0) to SP.
+    // Speed/Range Table:
+    //  | Range | Size || Range | Size || Range | Size |
+    //  |   0-2 |    0 ||    20 |    6 ||   200 |   12 |
+    //  |     3 |    1 ||    30 |    7 ||   300 |   13 |
+    //  |     5 |    2 ||    50 |    8 ||   500 |   14 |
+    //  |     7 |    3 ||    70 |    9 ||   700 |   15 |
+    //  |    10 |    4 ||   100 |   10 ||  1000 |   16 |
+    //  |    15 |    5 ||   150 |   11 ||  1500 |   17 |
+    test("has yardsPerSecond and energyCost", () {
+      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 0)).energyCost,
+          equals(0));
+
+      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 3)).energyCost,
+          equals(1));
+
+      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 5)).energyCost,
+          equals(2));
+
+      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 7)).energyCost,
+          equals(3));
+
+      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 10)).energyCost,
+          equals(4));
+
+      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 15)).energyCost,
+          equals(5));
+
+      expect(
+          Speed.copyWith(m, yardsPerSecond: GDistance(yards: 150)).energyCost,
+          equals(11));
+
+      expect(
+          Speed.copyWith(m, yardsPerSecond: GDistance(yards: 200)).energyCost,
+          equals(12));
+
+      expect(
+          Speed.copyWith(m, yardsPerSecond: GDistance(yards: 300)).energyCost,
+          equals(13));
+    });
+  });
+
+  group("SubjectWeight:", () {
+    SubjectWeight m;
+
+    setUp(() async {
+      m = SubjectWeight();
+    });
+
+    test("has initial state", () {
+      expect(m.inherent, equals(false));
+      expect(m.energyCost, equals(0));
+      expect(m.name, equals("Subject Weight"));
+      expect(m.weight, equals(0));
+    });
+
+    test("has inherent", () {
+      expect(SubjectWeight.copyWith(m, inherent: true).inherent, equals(true));
+    });
+  });
 }

@@ -20,28 +20,28 @@ class Damage extends RitualModifier {
         _modifiers = modifiers ?? const [],
         super('Damage', inherent: inherent ?? false);
 
-  factory Damage.copyWith(Damage src,
+  Damage copyWith(
       {DamageType type,
       DieRoll dice,
       bool direct,
       bool explosive,
       bool inherent}) {
     return Damage(
-        type: type ?? src.type,
-        dice: dice ?? src.dice,
-        modifiers: src._modifiers,
-        direct: direct ?? src.direct,
-        explosive: explosive ?? src._explosive,
-        inherent: inherent ?? src.inherent);
+        type: type ?? this.type,
+        dice: dice ?? this.dice,
+        modifiers: this._modifiers,
+        direct: direct ?? this.direct,
+        explosive: explosive ?? this._explosive,
+        inherent: inherent ?? this.inherent);
   }
 
-  factory Damage.addModifier(Damage src, TraitModifier traitModifier) => Damage(
-      type: src.type,
-      dice: src.dice,
-      direct: src.direct,
-      explosive: src.explosive,
-      inherent: src.inherent,
-      modifiers: [...src._modifiers, traitModifier]);
+  Damage addModifier(TraitModifier traitModifier) => Damage(
+      type: this.type,
+      dice: this.dice,
+      direct: this.direct,
+      explosive: this.explosive,
+      inherent: this.inherent,
+      modifiers: [...this._modifiers, traitModifier]);
 
   /// GURPS rpm.17: If a spell lists “damage” without specifying whether it’s
   /// direct (internal) or indirect (external), assume direct (internal).
@@ -89,4 +89,13 @@ class Damage extends RitualModifier {
     DamageType.smallPiercing: 0.5,
     DamageType.toxic: 1,
   };
+
+  @override
+  Damage incrementEffect(int value) => Damage(
+      dice: this.dice + value,
+      direct: this.direct,
+      explosive: this.explosive,
+      modifiers: this._modifiers,
+      type: this.type,
+      inherent: this.inherent);
 }

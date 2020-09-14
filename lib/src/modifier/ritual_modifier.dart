@@ -31,6 +31,12 @@ abstract class RitualModifier {
 
   /// the energy cost of the modifier
   int get energyCost;
+
+  /// Adjust the 'level' of this modifier. The meaning of level depends on the
+  /// modifier. E.g., +1 level to AreaOfEffect increases the radius to the next
+  /// Linear Measurement on the Size and Speed/Range table; +1 to an Affliction
+  /// gives another +5% to the value of the enhancement, etc.
+  RitualModifier incrementEffect(int value);
 }
 
 /// SizeAndSpeedRange Table for use by modifiers
@@ -44,18 +50,27 @@ class AlteredTraits extends RitualModifier {
       : _modifiers = modifiers ?? const [],
         super('Altered Traits', inherent: inherent);
 
-  factory AlteredTraits.copyWith(AlteredTraits src,
-          {Trait trait, bool inherent}) =>
-      AlteredTraits(
-        trait ?? src.trait,
-        inherent: inherent ?? src.inherent,
-        modifiers: src._modifiers,
+  AlteredTraits copyWith({Trait trait, bool inherent}) => AlteredTraits(
+        trait ?? this.trait,
+        inherent: inherent ?? this.inherent,
+        modifiers: this._modifiers,
       );
 
-  factory AlteredTraits.addModifier(
-          AlteredTraits m, TraitModifier traitModifier) =>
-      AlteredTraits(m.trait,
-          inherent: m.inherent, modifiers: [...m._modifiers, traitModifier]);
+  AlteredTraits addModifier(TraitModifier traitModifier) =>
+      AlteredTraits(this.trait,
+          inherent: this.inherent,
+          modifiers: [...this._modifiers, traitModifier]);
+
+  @override
+  AlteredTraits incrementEffect(int value) {
+    int energy = energyCost + value;
+    Trait t = Trait(
+        name: 'undefined',
+        baseCost: (characterPoints.isNegative) ? -5 * energy : energy,
+        hasLevels: false);
+
+    return AlteredTraits(t, inherent: this.inherent);
+  }
 
   final Trait trait;
 
@@ -105,15 +120,22 @@ class AreaOfEffect extends RitualModifier {
         excludes = excludes ?? true,
         super('Area of Effect', inherent: inherent);
 
-  factory AreaOfEffect.copyWith(AreaOfEffect m,
+  AreaOfEffect copyWith(
       {int radius, int numberTargets, bool excludes, bool inherent}) {
     return AreaOfEffect(
-      inherent: inherent ?? m.inherent,
-      radius: radius ?? m.radius,
-      numberTargets: numberTargets ?? m.numberTargets,
-      excludes: excludes ?? m.excludes,
+      inherent: inherent ?? this.inherent,
+      radius: radius ?? this.radius,
+      numberTargets: numberTargets ?? this.numberTargets,
+      excludes: excludes ?? this.excludes,
     );
   }
+
+  @override
+  AreaOfEffect incrementEffect(int value) => AreaOfEffect(
+      radius: radius + value,
+      numberTargets: this.numberTargets,
+      excludes: this.excludes,
+      inherent: this.inherent);
 
   final int radius;
 
@@ -157,12 +179,11 @@ class Bestows extends RitualModifier {
         value = value ?? 0,
         super('Bestows a (Bonus or Penalty)', inherent: inherent ?? false);
 
-  factory Bestows.copyWith(Bestows src,
-      {int value, bool inherent, BestowsRange range}) {
-    return Bestows(src.roll,
-        value: value ?? src.value,
-        inherent: inherent ?? src.inherent,
-        range: range ?? src.range);
+  Bestows copyWith({int value, bool inherent, BestowsRange range}) {
+    return Bestows(this.roll,
+        value: value ?? this.value,
+        inherent: inherent ?? this.inherent,
+        range: range ?? this.range);
   }
 
   /// Name of range of traits being modified,
@@ -186,6 +207,12 @@ class Bestows extends RitualModifier {
 
   @override
   int get energyCost => value == 0 ? 0 : _rangeEnergy[range](value);
+
+  @override
+  RitualModifier incrementEffect(int value) {
+    return Bestows(this.roll,
+        value: this.value + value, inherent: this.inherent, range: this.range);
+  }
 }
 
 class DurationModifier extends RitualModifier {
@@ -194,56 +221,58 @@ class DurationModifier extends RitualModifier {
       : duration = duration ?? GDuration.momentary,
         super('Duration', inherent: inherent ?? false);
 
-  factory DurationModifier.copyWith(DurationModifier src,
-      {GDuration duration, bool inherent}) {
+  DurationModifier copyWith({GDuration duration, bool inherent}) {
     return DurationModifier(
-        duration: duration ?? src.duration, inherent: inherent ?? src.inherent);
+        duration: duration ?? this.duration,
+        inherent: inherent ?? this.inherent);
   }
 
-  static List<GDuration> array = [
+  static List<GDuration> _durationTable = [
     GDuration.momentary,
-    const GDuration(minutes: 10),
-    const GDuration(minutes: 30),
-    const GDuration(hours: 1),
-    const GDuration(hours: 3),
-    const GDuration(hours: 6),
-    const GDuration(hours: 12),
-    const GDuration(days: 1),
-    const GDuration(days: 3),
-    const GDuration(weeks: 1),
-    const GDuration(weeks: 2),
-    const GDuration(months: 1),
+    GDuration(minutes: 10),
+    GDuration(minutes: 30),
+    GDuration(hours: 1),
+    GDuration(hours: 3),
+    GDuration(hours: 6),
+    GDuration(hours: 12),
+    GDuration(days: 1),
+    GDuration(days: 3),
+    GDuration(weeks: 1),
+    GDuration(weeks: 2),
+    ...List<GDuration>.generate(
+        12, (int index) => GDuration(months: index + 1)),
   ];
 
   final GDuration duration;
 
   @override
   int get energyCost {
-    int index = _indexOfLeastElementNoSmallerThan(duration, array);
-    if (index != null) return index;
-
-    index = _indexOfLeastElementNoSmallerThan(duration,
-        Iterable.generate(10, (index) => GDuration(months: index + 2)));
-    if (index != null) return 12 + index;
-
-    int years = (duration.inSeconds / GDuration.secondsPerYear).ceil();
-
-    return years + 21;
+    int index = _durationTableIndex(duration);
+    return (index != -1) ? index : _years + 21;
   }
 
-  int _indexOfLeastElementNoSmallerThan(
-      GDuration duration, Iterable<GDuration> list) {
-    var temp = 0;
-    for (var d in list) {
-      if (duration == d) return temp;
-      if (d < duration) temp++;
-      if (d > duration) return temp - 1;
-    }
-    return null;
+  int get _years => (duration.inSeconds / GDuration.secondsPerYear).ceil();
+
+  int _durationTableIndex(GDuration duration) =>
+      _durationTable.indexWhere((element) => element >= duration);
+
+  @override
+  DurationModifier incrementEffect(int value) {
+    int oldIndex = (duration > _durationTable.last)
+        ? _years + 21
+        : _durationTableIndex(duration);
+
+    int newIndex = (oldIndex + value < 0) ? 0 : oldIndex + value;
+
+    GDuration dur = (newIndex <= _durationTable.length)
+        ? _durationTable[newIndex]
+        : GDuration(years: newIndex - 21);
+
+    return DurationModifier(duration: dur, inherent: this.inherent);
   }
 }
 
-class _EnergyPoolModifier extends RitualModifier {
+abstract class _EnergyPoolModifier extends RitualModifier {
   const _EnergyPoolModifier(String name, {int energy: 0, bool inherent = false})
       : energy = energy ?? 0,
         super(name, inherent: inherent);
@@ -258,10 +287,12 @@ class ExtraEnergy extends _EnergyPoolModifier {
   const ExtraEnergy({int energy: 0, bool inherent = false})
       : super('Extra Energy', energy: energy, inherent: inherent);
 
-  factory ExtraEnergy.copyWith(ExtraEnergy src, {int energy, bool inherent}) {
-    return ExtraEnergy(
-        energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
-  }
+  ExtraEnergy copyWith({int energy, bool inherent}) => ExtraEnergy(
+      energy: energy ?? this.energy, inherent: inherent ?? this.inherent);
+
+  @override
+  ExtraEnergy incrementEffect(int value) =>
+      ExtraEnergy(energy: this.energy + value, inherent: this.inherent);
 }
 
 enum HealingType { hp, fp }
@@ -272,13 +303,10 @@ class Healing extends RitualModifier {
         dice = dice ?? const DieRoll(1, 0),
         super('Healing', inherent: inherent);
 
-  factory Healing.copyWith(Healing src,
-      {HealingType type, DieRoll dice, bool inherent}) {
-    return Healing(
-        type: type ?? src.type,
-        dice: dice ?? src.dice,
-        inherent: inherent ?? src.inherent);
-  }
+  Healing copyWith({HealingType type, DieRoll dice, bool inherent}) => Healing(
+      type: type ?? this.type,
+      dice: dice ?? this.dice,
+      inherent: inherent ?? this.inherent);
 
   final DieRoll dice;
 
@@ -286,55 +314,74 @@ class Healing extends RitualModifier {
 
   @override
   int get energyCost => DieRoll.denormalize(dice);
+
+  @override
+  Healing incrementEffect(int value) => Healing(
+      dice: this.dice + value, type: this.type, inherent: this.inherent);
 }
 
 class MetaMagic extends _EnergyPoolModifier {
   const MetaMagic({int energy: 0, bool inherent = false})
       : super('Meta-Magic', energy: energy, inherent: inherent);
 
-  factory MetaMagic.copyWith(MetaMagic src, {int energy, bool inherent}) {
-    return MetaMagic(
-        energy: energy ?? src.energy, inherent: inherent ?? src.inherent);
-  }
+  MetaMagic copyWith({int energy, bool inherent}) => MetaMagic(
+      energy: energy ?? this.energy, inherent: inherent ?? this.inherent);
+
+  @override
+  MetaMagic incrementEffect(int value) =>
+      MetaMagic(energy: this.energy + value, inherent: this.inherent);
 }
 
 class Speed extends RitualModifier {
-  Speed({GDistance yardsPerSecond, bool inherent})
-      : yardsPerSecond = yardsPerSecond ?? GDistance(yards: 0),
+  const Speed({GDistance yardsPerSecond, bool inherent})
+      : _yardsPerSecond = yardsPerSecond ?? const GDistance(yards: 0),
         super('Speed', inherent: inherent ?? false);
 
-  factory Speed.copyWith(Speed src, {GDistance yardsPerSecond, bool inherent}) {
-    return Speed(
-        yardsPerSecond: yardsPerSecond ?? GDistance(yards: 0),
-        inherent: inherent ?? false);
-  }
+  Speed copyWith({GDistance yardsPerSecond, bool inherent}) => Speed(
+      yardsPerSecond: yardsPerSecond ?? this._yardsPerSecond,
+      inherent: inherent ?? this.inherent);
 
-  final GDistance yardsPerSecond;
+  final GDistance _yardsPerSecond;
+
+  GDistance get yardsPerSecond => _sizeSpeedRangeTable
+      .linearMeasureFor(_sizeSpeedRangeTable.sizeFor(_yardsPerSecond));
 
   @override
-  int get energyCost =>
-      _sizeSpeedRangeTable.sizeForLinearMeasurement(yardsPerSecond.inYards);
+  int get energyCost => _sizeSpeedRangeTable.sizeFor(_yardsPerSecond);
+
+  @override
+  Speed incrementEffect(int value) {
+    int size = _sizeSpeedRangeTable.sizeFor(_yardsPerSecond) + value;
+    GDistance speed =
+        _sizeSpeedRangeTable.linearMeasureFor((size < 0) ? 0 : size);
+
+    return Speed(yardsPerSecond: speed, inherent: this.inherent);
+  }
 }
 
 class SubjectWeight extends RitualModifier {
-  SubjectWeight({GWeight weight, bool inherent = false})
-      : _weight = weight ?? GWeight(pounds: 10),
+  const SubjectWeight({GWeight weight, bool inherent = false})
+      : _weight = weight ?? const GWeight(pounds: 10),
         super('Subject GWeight', inherent: inherent ?? false);
 
-  factory SubjectWeight.copyWith(SubjectWeight src,
-      {GWeight weight, bool inherent}) {
-    return SubjectWeight(
-        weight: weight ?? src._weight, inherent: inherent ?? src.inherent);
-  }
+  SubjectWeight copyWith({GWeight weight, bool inherent}) => SubjectWeight(
+      weight: weight ?? this._weight, inherent: inherent ?? this.inherent);
 
   final GWeight _weight;
 
-  GWeight get weight => GWeight(
-      pounds: sequence.smallestTableValueGreaterThanOrEqualTo(energyCost));
+  GWeight get weight => GWeight(pounds: _sequence.ceil(_weight.inPounds));
 
   @override
-  int get energyCost => sequence.valueToOrdinal(_weight.inPounds);
+  int get energyCost => _sequence.valueToIndex(_weight.inPounds);
 
-  static RepeatingSequenceConverter sequence =
+  static RepeatingSequenceConverter _sequence =
       new RepeatingSequenceConverter([10, 30]);
+
+  @override
+  SubjectWeight incrementEffect(int value) {
+    int index = _sequence.valueToIndex(_weight.inPounds) + value;
+    int pounds = _sequence.indexToValue(index);
+    GWeight weight = GWeight(pounds: pounds);
+    return SubjectWeight(weight: weight, inherent: this.inherent);
+  }
 }

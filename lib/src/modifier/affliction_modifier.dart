@@ -9,22 +9,31 @@ class AfflictionStun extends RitualModifier {
   /// energy; the spell effect is enough.
   @override
   int get energyCost => 0;
+
+  @override
+  RitualModifier incrementEffect(int value) => this;
 }
 
 /// Adds an Affliction (p. B36) effect to a spell.
 class Affliction extends RitualModifier {
-  const Affliction({this.effect, int percent: 0, bool inherent: false})
+  const Affliction({String effect, int percent: 0, bool inherent: false})
       : percent = percent ?? 0,
-        assert(effect != null),
+        effect = effect ?? 'undefined',
         super('Afflictions', inherent: inherent);
 
-  factory Affliction.copyWith(Affliction a,
-      {String effect, int percent, bool inherent}) {
+  Affliction copyWith({String effect, int percent, bool inherent}) {
     return Affliction(
-      effect: effect ?? a.effect,
-      percent: percent ?? a.percent,
-      inherent: inherent ?? a.inherent,
+      effect: effect ?? this.effect,
+      percent: percent ?? this.percent,
+      inherent: inherent ?? this.inherent,
     );
+  }
+
+  @override
+  Affliction incrementEffect(int energyIncrement) {
+    int percent = (this.energyCost + energyIncrement) * 5;
+    return Affliction(
+        effect: 'undefined', percent: percent, inherent: this.inherent);
   }
 
   final String effect;

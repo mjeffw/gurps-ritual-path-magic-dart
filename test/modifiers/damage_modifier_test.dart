@@ -44,31 +44,37 @@ void main() {
     });
 
     test('has inherent', () {
-      expect(Damage.copyWith(m, inherent: true).inherent, equals(true));
+      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('has type', () {
-      expect(Damage.copyWith(m, type: DamageType.cutting).type,
+      expect(m.copyWith(type: DamageType.cutting).type,
           equals(DamageType.cutting));
     });
 
     test("has direct", () {
-      expect(Damage.copyWith(m, direct: false).direct, equals(false));
+      expect(m.copyWith(direct: false).direct, equals(false));
     });
 
     test('has explosive', () {
       // setting explosive to true when direct is also true has no effect
-      expect(Damage.copyWith(m, explosive: true).explosive, equals(false));
+      expect(m.copyWith(explosive: true).explosive, equals(false));
 
-      expect(Damage.copyWith(m, direct: false, explosive: true).explosive,
-          equals(true));
+      expect(
+          m.copyWith(direct: false, explosive: true).explosive, equals(true));
     });
 
     test('has damage dice', () {
       expect(m.damageDice, equals(DieRoll.fromString('1d')));
-      expect(Damage.copyWith(m, dice: d1p1).damageDice, equals(d1p1));
-      expect(Damage.copyWith(m, dice: d1p2).damageDice, equals(d1p2));
-      expect(Damage.copyWith(m, dice: d2m1).damageDice, equals(d2m1));
+      expect(m.copyWith(dice: d1p1).damageDice, equals(d1p1));
+      expect(m.copyWith(dice: d1p2).damageDice, equals(d1p2));
+      expect(m.copyWith(dice: d2m1).damageDice, equals(d2m1));
+    });
+
+    test('has increment effect', () {
+      expect(m.incrementEffect(3).damageDice, equals(d2m1));
+      expect(m.incrementEffect(7).damageDice, equals(d3m1));
+      expect(m.incrementEffect(3).incrementEffect(7).damageDice, equals(d3p2));
     });
 
     group('damage for burn, cr, pi, tox', () {
@@ -81,92 +87,91 @@ void main() {
 
       test('has energy costs and damage', () {
         for (var type in types) {
-          var t = Damage.copyWith(m, type: type);
+          var t = m.copyWith(type: type);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(d1));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(1));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d1p1));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(1));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d1p1));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d1p2));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d1p2));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(3));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d2m1));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(3));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d2m1));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(4));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d2));
+          expect(t.copyWith(dice: d2).energyCost, equals(4));
+          expect(t.copyWith(dice: d2).damageDice, equals(d2));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(5));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d2p1));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(5));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d2p1));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d2p2));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(6));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d2p2));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(7));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d3m1));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(7));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d3m1));
         }
       });
 
       test('triple damage for indirect damage', () {
         for (var type in types) {
-          var t = Damage.copyWith(m, type: type, direct: false);
+          var t = m.copyWith(type: type, direct: false);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(DieRoll(3, 0)));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(1));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d4m1));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(1));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d4p2));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d4p2));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(3));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d5p1));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(3));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d5p1));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(4));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d6));
+          expect(t.copyWith(dice: d2).energyCost, equals(4));
+          expect(t.copyWith(dice: d2).damageDice, equals(d6));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(5));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d7m1));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(5));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d7m1));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d7p2));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(6));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d7p2));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(7));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d8p1));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(7));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d8p1));
         }
       });
 
       test('double damage for indirect, explosive damage', () {
         for (var type in types) {
-          var t =
-              Damage.copyWith(m, type: type, direct: false, explosive: true);
+          var t = m.copyWith(type: type, direct: false, explosive: true);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(d2));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(1));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d2p2));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(1));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d2p2));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d3));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d3));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(3));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d3p2));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(3));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d3p2));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(4));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d4));
+          expect(t.copyWith(dice: d2).energyCost, equals(4));
+          expect(t.copyWith(dice: d2).damageDice, equals(d4));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(5));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d4p2));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(5));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d4p2));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d5));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(6));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d5));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(7));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d5p2));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(7));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d5p2));
         }
       });
     });
@@ -175,89 +180,89 @@ void main() {
       Damage t;
 
       setUp(() async {
-        t = Damage.copyWith(m, type: DamageType.smallPiercing);
+        t = m.copyWith(type: DamageType.smallPiercing);
       });
 
       test('has energy costs', () {
         expect(t.energyCost, equals(0));
         expect(t.damageDice, equals(d1));
 
-        expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(1));
-        expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d1p1));
+        expect(t.copyWith(dice: d1p1).energyCost, equals(1));
+        expect(t.copyWith(dice: d1p1).damageDice, equals(d1p1));
 
-        expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(1));
-        expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d1p2));
+        expect(t.copyWith(dice: d1p2).energyCost, equals(1));
+        expect(t.copyWith(dice: d1p2).damageDice, equals(d1p2));
 
-        expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(2));
-        expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d2m1));
+        expect(t.copyWith(dice: d2m1).energyCost, equals(2));
+        expect(t.copyWith(dice: d2m1).damageDice, equals(d2m1));
 
-        expect(Damage.copyWith(t, dice: d2).energyCost, equals(2));
-        expect(Damage.copyWith(t, dice: d2).damageDice, equals(d2));
+        expect(t.copyWith(dice: d2).energyCost, equals(2));
+        expect(t.copyWith(dice: d2).damageDice, equals(d2));
 
-        expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(3));
-        expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d2p1));
+        expect(t.copyWith(dice: d2p1).energyCost, equals(3));
+        expect(t.copyWith(dice: d2p1).damageDice, equals(d2p1));
 
-        expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(3));
-        expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d2p2));
+        expect(t.copyWith(dice: d2p2).energyCost, equals(3));
+        expect(t.copyWith(dice: d2p2).damageDice, equals(d2p2));
 
-        expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(4));
-        expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d3m1));
+        expect(t.copyWith(dice: d3m1).energyCost, equals(4));
+        expect(t.copyWith(dice: d3m1).damageDice, equals(d3m1));
       });
 
       test('triple damage for indirect damage', () {
-        t = Damage.copyWith(t, direct: false);
+        t = t.copyWith(direct: false);
 
         expect(t.energyCost, equals(0));
         expect(t.damageDice, equals(DieRoll(3, 0)));
 
-        expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(1));
-        expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d4m1));
+        expect(t.copyWith(dice: d1p1).energyCost, equals(1));
+        expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
 
-        expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(1));
-        expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d4p2));
+        expect(t.copyWith(dice: d1p2).energyCost, equals(1));
+        expect(t.copyWith(dice: d1p2).damageDice, equals(d4p2));
 
-        expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(2));
-        expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d5p1));
+        expect(t.copyWith(dice: d2m1).energyCost, equals(2));
+        expect(t.copyWith(dice: d2m1).damageDice, equals(d5p1));
 
-        expect(Damage.copyWith(t, dice: d2).energyCost, equals(2));
-        expect(Damage.copyWith(t, dice: d2).damageDice, equals(d6));
+        expect(t.copyWith(dice: d2).energyCost, equals(2));
+        expect(t.copyWith(dice: d2).damageDice, equals(d6));
 
-        expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(3));
-        expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d7m1));
+        expect(t.copyWith(dice: d2p1).energyCost, equals(3));
+        expect(t.copyWith(dice: d2p1).damageDice, equals(d7m1));
 
-        expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(3));
-        expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d7p2));
+        expect(t.copyWith(dice: d2p2).energyCost, equals(3));
+        expect(t.copyWith(dice: d2p2).damageDice, equals(d7p2));
 
-        expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(4));
-        expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d8p1));
+        expect(t.copyWith(dice: d3m1).energyCost, equals(4));
+        expect(t.copyWith(dice: d3m1).damageDice, equals(d8p1));
       });
 
       test('double damage for indirect, explosive damage', () {
-        t = Damage.copyWith(t, direct: false, explosive: true);
+        t = t.copyWith(direct: false, explosive: true);
 
         expect(t.energyCost, equals(0));
         expect(t.damageDice, equals(d2));
 
-        expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(1));
-        expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d2p2));
+        expect(t.copyWith(dice: d1p1).energyCost, equals(1));
+        expect(t.copyWith(dice: d1p1).damageDice, equals(d2p2));
 
-        expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(1));
-        expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d3));
+        expect(t.copyWith(dice: d1p2).energyCost, equals(1));
+        expect(t.copyWith(dice: d1p2).damageDice, equals(d3));
 
-        expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(2));
-        expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d3p2));
+        expect(t.copyWith(dice: d2m1).energyCost, equals(2));
+        expect(t.copyWith(dice: d2m1).damageDice, equals(d3p2));
 
-        expect(Damage.copyWith(t, dice: d2).energyCost, equals(2));
-        expect(Damage.copyWith(t, dice: d2).damageDice, equals(d4));
+        expect(t.copyWith(dice: d2).energyCost, equals(2));
+        expect(t.copyWith(dice: d2).damageDice, equals(d4));
 
-        expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(3));
-        expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d4p2));
+        expect(t.copyWith(dice: d2p1).energyCost, equals(3));
+        expect(t.copyWith(dice: d2p1).damageDice, equals(d4p2));
 
-        expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(3));
-        expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d5));
+        expect(t.copyWith(dice: d2p2).energyCost, equals(3));
+        expect(t.copyWith(dice: d2p2).damageDice, equals(d5));
 
-        expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(4));
-        expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d5p2));
+        expect(t.copyWith(dice: d3m1).energyCost, equals(4));
+        expect(t.copyWith(dice: d3m1).damageDice, equals(d5p2));
       });
     });
 
@@ -266,92 +271,91 @@ void main() {
 
       test('has energy costs', () {
         for (var type in types) {
-          var t = Damage.copyWith(m, type: type);
+          var t = m.copyWith(type: type);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(d1));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d1p1));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d1p1));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(3));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d1p2));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(3));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d1p2));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(5));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d2m1));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(5));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d2m1));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d2));
+          expect(t.copyWith(dice: d2).energyCost, equals(6));
+          expect(t.copyWith(dice: d2).damageDice, equals(d2));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(8));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d2p1));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(8));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d2p1));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(9));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d2p2));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(9));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d2p2));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(11));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d3m1));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(11));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d3m1));
         }
       });
 
       test('triple damage for indirect damage', () {
         for (var type in types) {
-          var t = Damage.copyWith(m, type: type, direct: false);
+          var t = m.copyWith(type: type, direct: false);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(DieRoll(3, 0)));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d4m1));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(3));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d4p2));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(3));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d4p2));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(5));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d5p1));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(5));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d5p1));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d6));
+          expect(t.copyWith(dice: d2).energyCost, equals(6));
+          expect(t.copyWith(dice: d2).damageDice, equals(d6));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(8));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d7m1));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(8));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d7m1));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(9));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d7p2));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(9));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d7p2));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(11));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d8p1));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(11));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d8p1));
         }
       });
 
       test('double damage for indirect, explosive damage', () {
         for (var type in types) {
-          var t =
-              Damage.copyWith(m, type: type, direct: false, explosive: true);
+          var t = m.copyWith(type: type, direct: false, explosive: true);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(d2));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d2p2));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d2p2));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(3));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d3));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(3));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d3));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(5));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d3p2));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(5));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d3p2));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d4));
+          expect(t.copyWith(dice: d2).energyCost, equals(6));
+          expect(t.copyWith(dice: d2).damageDice, equals(d4));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(8));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d4p2));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(8));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d4p2));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(9));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d5));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(9));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d5));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(11));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d5p2));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(11));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d5p2));
         }
       });
     });
@@ -366,151 +370,150 @@ void main() {
 
       test('has energy costs', () {
         for (var type in types) {
-          var t = Damage.copyWith(m, type: type);
+          var t = m.copyWith(type: type);
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(d1));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d1p1));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d1p1));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(4));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d1p2));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(4));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d1p2));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d2m1));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(6));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d2m1));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(8));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d2));
+          expect(t.copyWith(dice: d2).energyCost, equals(8));
+          expect(t.copyWith(dice: d2).damageDice, equals(d2));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(10));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d2p1));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(10));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d2p1));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(12));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d2p2));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(12));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d2p2));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(14));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d3m1));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(14));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d3m1));
         }
       });
 
       test('triple damage for indirect damage', () {
         for (var type in types) {
-          var t = Damage.copyWith(m, type: type, direct: false);
+          var t = m.copyWith(type: type, direct: false);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(DieRoll(3, 0)));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d4m1));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(4));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d4p2));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(4));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d4p2));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d5p1));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(6));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d5p1));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(8));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d6));
+          expect(t.copyWith(dice: d2).energyCost, equals(8));
+          expect(t.copyWith(dice: d2).damageDice, equals(d6));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(10));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d7m1));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(10));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d7m1));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(12));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d7p2));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(12));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d7p2));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(14));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d8p1));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(14));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d8p1));
         }
       });
 
       test('double damage for indirect, explosive damage', () {
         for (var type in types) {
-          var t =
-              Damage.copyWith(m, type: type, direct: false, explosive: true);
+          var t = m.copyWith(type: type, direct: false, explosive: true);
 
           expect(t.energyCost, equals(0));
           expect(t.damageDice, equals(d2));
 
-          expect(Damage.copyWith(t, dice: d1p1).energyCost, equals(2));
-          expect(Damage.copyWith(t, dice: d1p1).damageDice, equals(d2p2));
+          expect(t.copyWith(dice: d1p1).energyCost, equals(2));
+          expect(t.copyWith(dice: d1p1).damageDice, equals(d2p2));
 
-          expect(Damage.copyWith(t, dice: d1p2).energyCost, equals(4));
-          expect(Damage.copyWith(t, dice: d1p2).damageDice, equals(d3));
+          expect(t.copyWith(dice: d1p2).energyCost, equals(4));
+          expect(t.copyWith(dice: d1p2).damageDice, equals(d3));
 
-          expect(Damage.copyWith(t, dice: d2m1).energyCost, equals(6));
-          expect(Damage.copyWith(t, dice: d2m1).damageDice, equals(d3p2));
+          expect(t.copyWith(dice: d2m1).energyCost, equals(6));
+          expect(t.copyWith(dice: d2m1).damageDice, equals(d3p2));
 
-          expect(Damage.copyWith(t, dice: d2).energyCost, equals(8));
-          expect(Damage.copyWith(t, dice: d2).damageDice, equals(d4));
+          expect(t.copyWith(dice: d2).energyCost, equals(8));
+          expect(t.copyWith(dice: d2).damageDice, equals(d4));
 
-          expect(Damage.copyWith(t, dice: d2p1).energyCost, equals(10));
-          expect(Damage.copyWith(t, dice: d2p1).damageDice, equals(d4p2));
+          expect(t.copyWith(dice: d2p1).energyCost, equals(10));
+          expect(t.copyWith(dice: d2p1).damageDice, equals(d4p2));
 
-          expect(Damage.copyWith(t, dice: d2p2).energyCost, equals(12));
-          expect(Damage.copyWith(t, dice: d2p2).damageDice, equals(d5));
+          expect(t.copyWith(dice: d2p2).energyCost, equals(12));
+          expect(t.copyWith(dice: d2p2).damageDice, equals(d5));
 
-          expect(Damage.copyWith(t, dice: d3m1).energyCost, equals(14));
-          expect(Damage.copyWith(t, dice: d3m1).damageDice, equals(d5p2));
+          expect(t.copyWith(dice: d3m1).energyCost, equals(14));
+          expect(t.copyWith(dice: d3m1).damageDice, equals(d5p2));
         }
       });
     });
 
     // Each +5% adds 1 SP if the base cost for Damage is 20 SP or less.
     test('should add 1 energy per 5 Percent of Enhancers', () {
-      var t1 = Damage.copyWith(m, dice: (DieRoll(1, 10)));
+      var t1 = m.copyWith(dice: (DieRoll(1, 10)));
       expect(t1.energyCost, equals(10));
 
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'foo', percent: 1));
+      t1 = t1.addModifier(TraitModifier(name: 'foo', percent: 1));
       expect(t1.energyCost, equals(11));
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'bar', percent: 4));
+      t1 = t1.addModifier(TraitModifier(name: 'bar', percent: 4));
       expect(t1.energyCost, equals(11));
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'baz', percent: 2));
+      t1 = t1.addModifier(TraitModifier(name: 'baz', percent: 2));
       expect(t1.energyCost, equals(12));
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'qux', percent: 8));
+      t1 = t1.addModifier(TraitModifier(name: 'qux', percent: 8));
       expect(t1.energyCost, equals(13));
 
-      var t2 = Damage.copyWith(m, dice: (DieRoll(1, 20)));
+      var t2 = m.copyWith(dice: (DieRoll(1, 20)));
       expect(t2.energyCost, equals(20));
 
-      t2 = Damage.addModifier(t2, TraitModifier(name: 'foo', percent: 1));
+      t2 = t2.addModifier(TraitModifier(name: 'foo', percent: 1));
       expect(t2.energyCost, equals(21));
-      t2 = Damage.addModifier(t2, TraitModifier(name: 'bar', percent: 4));
+      t2 = t2.addModifier(TraitModifier(name: 'bar', percent: 4));
       expect(t2.energyCost, equals(21));
-      t2 = Damage.addModifier(t2, TraitModifier(name: 'baz', percent: 2));
+      t2 = t2.addModifier(TraitModifier(name: 'baz', percent: 2));
       expect(t2.energyCost, equals(22));
-      t2 = Damage.addModifier(t2, TraitModifier(name: 'qux', percent: 8));
+      t2 = t2.addModifier(TraitModifier(name: 'qux', percent: 8));
       expect(t2.energyCost, equals(23));
     });
 
     // If Damage costs 21 SP or more, apply the enhancement percentage to the
     // SP cost for Damage only (not to the cost of the whole spell); round up.
     test("should Add 1 energy cost Per 1 Percent", () {
-      var t1 = Damage.copyWith(m, dice: (DieRoll(1, 21)));
+      var t1 = m.copyWith(dice: (DieRoll(1, 21)));
       expect(t1.energyCost, equals(21));
 
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'foo', percent: 1));
+      t1 = t1.addModifier(TraitModifier(name: 'foo', percent: 1));
       expect(t1.energyCost, equals(22));
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'bar', percent: 4));
+      t1 = t1.addModifier(TraitModifier(name: 'bar', percent: 4));
       expect(t1.energyCost, equals(26));
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'baz', percent: 2));
+      t1 = t1.addModifier(TraitModifier(name: 'baz', percent: 2));
       expect(t1.energyCost, equals(28));
     });
 
     // Added limitations reduce this surcharge, but will never provide a net SP
     // discount.
     test("should Not Add 1 Point", () {
-      var t1 = Damage.copyWith(m, dice: (DieRoll(1, 10)));
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'foo', percent: 10));
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'bar', percent: -5));
+      var t1 = m.copyWith(dice: (DieRoll(1, 10)));
+      t1 = t1.addModifier(TraitModifier(name: 'foo', percent: 10));
+      t1 = t1.addModifier(TraitModifier(name: 'bar', percent: -5));
       expect(t1.energyCost, equals(11));
 
-      t1 = Damage.copyWith(t1, dice: (DieRoll(1, 30)));
+      t1 = t1.copyWith(dice: (DieRoll(1, 30)));
       expect(t1.energyCost, equals(35));
 
-      t1 = Damage.addModifier(t1, TraitModifier(name: 'baz', percent: -10));
+      t1 = t1.addModifier(TraitModifier(name: 'baz', percent: -10));
       expect(t1.energyCost, equals(30));
 
-      t1 = Damage.copyWith(m, dice: (DieRoll(1, 10)));
+      t1 = m.copyWith(dice: (DieRoll(1, 10)));
       expect(t1.energyCost, equals(10));
     });
   });

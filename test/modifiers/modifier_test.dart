@@ -18,66 +18,68 @@ void main() {
       expect(m.characterPoints, equals(0));
       expect(m.name, equals('Altered Traits'));
       expect(m.energyCost, equals(0));
+      expect(m.trait, equals(Trait(name: 'foo')));
     });
 
     test('has inherent', () {
-      var alt = AlteredTraits.copyWith(m, inherent: true);
+      var alt = m.copyWith(inherent: true);
       expect(alt.inherent, equals(true));
     });
 
-    test('adds +1 SP for every 5 cps removed', () {
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -1)).energyCost,
-          equals(1));
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -5)).energyCost,
-          equals(1));
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -6)).energyCost,
-          equals(2));
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -10)).energyCost,
-          equals(2));
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: -11)).energyCost,
-          equals(3));
+    test('adds +1 energy for every 5 cps removed', () {
+      expect(m.copyWith(trait: Trait(baseCost: -1)).energyCost, equals(1));
+      expect(m.copyWith(trait: Trait(baseCost: -5)).energyCost, equals(1));
+      expect(m.copyWith(trait: Trait(baseCost: -6)).energyCost, equals(2));
+      expect(m.copyWith(trait: Trait(baseCost: -10)).energyCost, equals(2));
+      expect(m.copyWith(trait: Trait(baseCost: -11)).energyCost, equals(3));
     });
 
     test('adds +1 energy for every cp added', () {
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 1)).energyCost,
-          equals(1));
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 11)).energyCost,
-          equals(11));
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 24)).energyCost,
-          equals(24));
-      expect(AlteredTraits.copyWith(m, trait: Trait(baseCost: 100)).energyCost,
-          equals(100));
+      expect(m.copyWith(trait: Trait(baseCost: 1)).energyCost, equals(1));
+      expect(m.copyWith(trait: Trait(baseCost: 11)).energyCost, equals(11));
+      expect(m.copyWith(trait: Trait(baseCost: 24)).energyCost, equals(24));
+      expect(m.copyWith(trait: Trait(baseCost: 100)).energyCost, equals(100));
     });
 
     test('allows for Limitations/Enhancements', () {
-      var alt = AlteredTraits.copyWith(m, trait: Trait(baseCost: 24));
-      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: 10));
+      var alt = m.copyWith(trait: Trait(baseCost: 24));
+      alt = alt.addModifier(TraitModifier(percent: 10));
       expect(alt.energyCost, equals(27));
 
-      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: 5));
+      alt = alt.addModifier(TraitModifier(percent: 5));
       expect(alt.energyCost, equals(28));
 
-      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: -10));
+      alt = alt.addModifier(TraitModifier(percent: -10));
       expect(alt.energyCost, equals(26));
     });
 
     test('another test for Limitations/Enhancements', () {
-      var alt = AlteredTraits.addModifier(m, TraitModifier(percent: 35));
-      alt = AlteredTraits.addModifier(alt, TraitModifier(percent: -10));
+      var alt = m.addModifier(TraitModifier(percent: 35));
+      alt = alt.addModifier(TraitModifier(percent: -10));
 
       expect(alt.energyCost, equals(0));
 
-      expect(AlteredTraits.copyWith(alt, trait: Trait(baseCost: 30)).energyCost,
-          equals(38));
-      expect(
-          AlteredTraits.copyWith(alt, trait: Trait(baseCost: 100)).energyCost,
-          equals(125));
-      expect(
-          AlteredTraits.copyWith(alt, trait: Trait(baseCost: -10)).energyCost,
-          equals(3));
-      expect(
-          AlteredTraits.copyWith(alt, trait: Trait(baseCost: -40)).energyCost,
-          equals(10));
+      expect(alt.copyWith(trait: Trait(baseCost: 30)).energyCost, equals(38));
+      expect(alt.copyWith(trait: Trait(baseCost: 100)).energyCost, equals(125));
+      expect(alt.copyWith(trait: Trait(baseCost: -10)).energyCost, equals(3));
+      expect(alt.copyWith(trait: Trait(baseCost: -40)).energyCost, equals(10));
+    });
+
+    test('incrementEnergy', () {
+      var alt = m.copyWith(trait: Trait(baseCost: -1));
+      expect(alt.incrementEffect(1).characterPoints, equals(-10));
+      expect(alt.incrementEffect(2).characterPoints, equals(-15));
+      expect(alt.incrementEffect(3).characterPoints, equals(-20));
+
+      alt = m.copyWith(trait: Trait(baseCost: 1));
+      expect(alt.incrementEffect(1).characterPoints, equals(2));
+      expect(alt.incrementEffect(2).characterPoints, equals(3));
+      expect(alt.incrementEffect(3).characterPoints, equals(4));
+
+      // zero-cost trait defaults to adding character points
+      expect(m.incrementEffect(1).characterPoints, equals(1));
+      expect(m.incrementEffect(2).characterPoints, equals(2));
+      expect(m.incrementEffect(3).characterPoints, equals(3));
     });
   });
 
@@ -96,28 +98,31 @@ void main() {
     });
 
     test('has inherent', () {
-      expect(AreaOfEffect.copyWith(m, inherent: true).inherent, equals(true));
+      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('radius calculation', () {
-      expect(AreaOfEffect.copyWith(m, radius: 1).energyCost, equals(2));
-      expect(AreaOfEffect.copyWith(m, radius: 3).energyCost, equals(2));
-      expect(AreaOfEffect.copyWith(m, radius: 4).energyCost, equals(4));
-      expect(AreaOfEffect.copyWith(m, radius: 5).energyCost, equals(4));
-      expect(AreaOfEffect.copyWith(m, radius: 6).energyCost, equals(6));
-      expect(AreaOfEffect.copyWith(m, radius: 15).energyCost, equals(10));
-      expect(AreaOfEffect.copyWith(m, radius: 20).energyCost, equals(12));
-      expect(AreaOfEffect.copyWith(m, radius: 300).energyCost, equals(26));
+      expect(m.copyWith(radius: 1).energyCost, equals(2));
+      expect(m.copyWith(radius: 3).energyCost, equals(2));
+      expect(m.copyWith(radius: 4).energyCost, equals(4));
+      expect(m.copyWith(radius: 5).energyCost, equals(4));
+      expect(m.copyWith(radius: 6).energyCost, equals(6));
+      expect(m.copyWith(radius: 15).energyCost, equals(10));
+      expect(m.copyWith(radius: 20).energyCost, equals(12));
+      expect(m.copyWith(radius: 300).energyCost, equals(26));
     });
 
     test('add +1 energy for every two specific subjects not affected', () {
-      var alt = AreaOfEffect.copyWith(m, radius: 15, numberTargets: 2);
+      var alt = m.copyWith(radius: 15, numberTargets: 2);
       expect(alt.energyCost, equals(11));
 
-      expect(
-          AreaOfEffect.copyWith(alt, numberTargets: 6).energyCost, equals(13));
-      expect(
-          AreaOfEffect.copyWith(alt, numberTargets: 7).energyCost, equals(14));
+      expect(alt.copyWith(numberTargets: 6).energyCost, equals(13));
+      expect(alt.copyWith(numberTargets: 7).energyCost, equals(14));
+    });
+
+    test('incrementRadius', () {
+      // minimum cost of 2
+      expect(m.incrementEffect(1).energyCost, equals(2));
     });
   });
 
@@ -125,7 +130,7 @@ void main() {
     Bestows m;
 
     setUp(() async {
-      m = new Bestows('Test');
+      m = Bestows('Test');
     });
 
     test('has initial state', () {
@@ -137,74 +142,73 @@ void main() {
     });
 
     test('has inherent', () {
-      expect(Bestows.copyWith(m, inherent: true).inherent, equals(true));
+      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('has range', () {
-      expect(Bestows.copyWith(m, range: BestowsRange.moderate).range,
+      expect(m.copyWith(range: BestowsRange.moderate).range,
           equals(BestowsRange.moderate));
-      expect(Bestows.copyWith(m, range: BestowsRange.broad).range,
+      expect(m.copyWith(range: BestowsRange.broad).range,
           equals(BestowsRange.broad));
     });
 
     test('has Narrow roll cost', () {
-      expect(Bestows.copyWith(m, value: -4).energyCost, equals(8));
-      expect(Bestows.copyWith(m, value: -3).energyCost, equals(4));
-      expect(Bestows.copyWith(m, value: -2).energyCost, equals(2));
-      expect(Bestows.copyWith(m, value: -1).energyCost, equals(1));
-      expect(Bestows.copyWith(m, value: 0).energyCost, equals(0));
-      expect(Bestows.copyWith(m, value: 1).energyCost, equals(1));
-      expect(Bestows.copyWith(m, value: 2).energyCost, equals(2));
-      expect(Bestows.copyWith(m, value: 3).energyCost, equals(4));
-      expect(Bestows.copyWith(m, value: 4).energyCost, equals(8));
+      expect(m.copyWith(value: -4).energyCost, equals(8));
+      expect(m.copyWith(value: -3).energyCost, equals(4));
+      expect(m.copyWith(value: -2).energyCost, equals(2));
+      expect(m.copyWith(value: -1).energyCost, equals(1));
+      expect(m.copyWith(value: 0).energyCost, equals(0));
+      expect(m.copyWith(value: 1).energyCost, equals(1));
+      expect(m.copyWith(value: 2).energyCost, equals(2));
+      expect(m.copyWith(value: 3).energyCost, equals(4));
+      expect(m.copyWith(value: 4).energyCost, equals(8));
     });
 
     test("has Moderate cost", () {
-      var b = Bestows.copyWith(m, range: BestowsRange.moderate);
+      var b = m.copyWith(range: BestowsRange.moderate);
 
-      expect(Bestows.copyWith(b, value: -4).energyCost, equals(16));
-      expect(Bestows.copyWith(b, value: -3).energyCost, equals(8));
-      expect(Bestows.copyWith(b, value: -2).energyCost, equals(4));
-      expect(Bestows.copyWith(b, value: -1).energyCost, equals(2));
-      expect(Bestows.copyWith(b, value: 0).energyCost, equals(0));
-      expect(Bestows.copyWith(b, value: 1).energyCost, equals(2));
-      expect(Bestows.copyWith(b, value: 2).energyCost, equals(4));
-      expect(Bestows.copyWith(b, value: 3).energyCost, equals(8));
-      expect(Bestows.copyWith(b, value: 4).energyCost, equals(16));
+      expect(b.copyWith(value: -4).energyCost, equals(16));
+      expect(b.copyWith(value: -3).energyCost, equals(8));
+      expect(b.copyWith(value: -2).energyCost, equals(4));
+      expect(b.copyWith(value: -1).energyCost, equals(2));
+      expect(b.copyWith(value: 0).energyCost, equals(0));
+      expect(b.copyWith(value: 1).energyCost, equals(2));
+      expect(b.copyWith(value: 2).energyCost, equals(4));
+      expect(b.copyWith(value: 3).energyCost, equals(8));
+      expect(b.copyWith(value: 4).energyCost, equals(16));
     });
 
     test("has Broad cost", () {
-      var b = Bestows.copyWith(m, range: BestowsRange.broad);
+      var b = m.copyWith(range: BestowsRange.broad);
 
-      expect(Bestows.copyWith(b, value: -4).energyCost, equals(40));
-      expect(Bestows.copyWith(b, value: -3).energyCost, equals(20));
-      expect(Bestows.copyWith(b, value: -2).energyCost, equals(10));
-      expect(Bestows.copyWith(b, value: -1).energyCost, equals(5));
-      expect(Bestows.copyWith(b, value: 0).energyCost, equals(0));
-      expect(Bestows.copyWith(b, value: 1).energyCost, equals(5));
-      expect(Bestows.copyWith(b, value: 2).energyCost, equals(10));
-      expect(Bestows.copyWith(b, value: 3).energyCost, equals(20));
-      expect(Bestows.copyWith(b, value: 4).energyCost, equals(40));
+      expect(b.copyWith(value: -4).energyCost, equals(40));
+      expect(b.copyWith(value: -3).energyCost, equals(20));
+      expect(b.copyWith(value: -2).energyCost, equals(10));
+      expect(b.copyWith(value: -1).energyCost, equals(5));
+      expect(b.copyWith(value: 0).energyCost, equals(0));
+      expect(b.copyWith(value: 1).energyCost, equals(5));
+      expect(b.copyWith(value: 2).energyCost, equals(10));
+      expect(b.copyWith(value: 3).energyCost, equals(20));
+      expect(b.copyWith(value: 4).energyCost, equals(40));
     });
   });
 
   group('Duration', () {
-    DurationModifier dur;
+    DurationModifier m;
 
     setUp(() async {
-      dur = new DurationModifier();
+      m = DurationModifier();
     });
 
     test('has initial state', () {
-      expect(dur.inherent, equals(false));
-      expect(dur.name, equals('Duration'));
-      expect(dur.energyCost, equals(0));
-      expect(dur.duration, equals(GDuration.momentary));
+      expect(m.inherent, equals(false));
+      expect(m.name, equals('Duration'));
+      expect(m.energyCost, equals(0));
+      expect(m.duration, equals(GDuration.momentary));
     });
 
     test('has inherent', () {
-      var d = DurationModifier.copyWith(dur, inherent: true);
-      expect(d.inherent, equals(true));
+      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     /*
@@ -227,60 +231,47 @@ void main() {
        | +1 year       |     +1 |
      */
     test('should have Energy cost', () {
-      var d = DurationModifier.copyWith(dur, duration: GDuration(minutes: 10));
-      expect(d.energyCost, equals(1));
+      expect(
+          m.copyWith(duration: GDuration(minutes: 10)).energyCost, equals(1));
+      expect(
+          m.copyWith(duration: GDuration(minutes: 30)).energyCost, equals(2));
+      expect(m.copyWith(duration: GDuration(hours: 1)).energyCost, equals(3));
+      expect(m.copyWith(duration: GDuration(hours: 3)).energyCost, equals(4));
+      expect(m.copyWith(duration: GDuration(hours: 6)).energyCost, equals(5));
+      expect(m.copyWith(duration: GDuration(hours: 12)).energyCost, equals(6));
+      expect(m.copyWith(duration: GDuration(days: 1)).energyCost, equals(7));
+      expect(m.copyWith(duration: GDuration(days: 3)).energyCost, equals(8));
+      expect(m.copyWith(duration: GDuration(weeks: 1)).energyCost, equals(9));
+      expect(m.copyWith(duration: GDuration(weeks: 2)).energyCost, equals(10));
+      expect(m.copyWith(duration: GDuration(months: 1)).energyCost, equals(11));
+      expect(m.copyWith(duration: GDuration(months: 2)).energyCost, equals(12));
+      expect(m.copyWith(duration: GDuration(months: 3)).energyCost, equals(13));
+      expect(
+          m.copyWith(duration: GDuration(months: 11)).energyCost, equals(21));
+      expect(m.copyWith(duration: GDuration(months: 11, seconds: 1)).energyCost,
+          equals(22));
+      expect(m.copyWith(duration: GDuration(years: 1)).energyCost, equals(22));
+      expect(m.copyWith(duration: GDuration(years: 5)).energyCost, equals(26));
+      expect(
+          m.copyWith(duration: GDuration(years: 100)).energyCost, equals(121));
+    });
 
-      d = DurationModifier.copyWith(dur, duration: GDuration(minutes: 30));
-      expect(d.energyCost, equals(2));
+    test('should have incrementEffect', () {
+      expect(m.incrementEffect(1).energyCost, equals(1));
+      expect(m.incrementEffect(1).duration, equals(GDuration(minutes: 10)));
 
-      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 1));
-      expect(d.energyCost, equals(3));
+      expect(m.incrementEffect(11).energyCost, equals(11));
+      expect(m.incrementEffect(11).duration, equals(GDuration(months: 1)));
 
-      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 3));
-      expect(d.energyCost, equals(4));
+      expect(m.incrementEffect(21).energyCost, equals(21));
+      expect(m.incrementEffect(21).duration, equals(GDuration(months: 11)));
 
-      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 6));
-      expect(d.energyCost, equals(5));
+      expect(m.incrementEffect(25).energyCost, equals(25));
+      expect(m.incrementEffect(25).duration, equals(GDuration(years: 4)));
 
-      d = DurationModifier.copyWith(dur, duration: GDuration(hours: 12));
-      expect(d.energyCost, equals(6));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(days: 1));
-      expect(d.energyCost, equals(7));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(days: 3));
-      expect(d.energyCost, equals(8));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(weeks: 1));
-      expect(d.energyCost, equals(9));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(weeks: 2));
-      expect(d.energyCost, equals(10));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(months: 1));
-      expect(d.energyCost, equals(11));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(months: 2));
-      expect(d.energyCost, equals(12));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(months: 3));
-      expect(d.energyCost, equals(13));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(months: 11));
-      expect(d.energyCost, equals(21));
-
-      d = DurationModifier.copyWith(dur,
-          duration: GDuration(months: 11, seconds: 1));
-      expect(d.energyCost, equals(22));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(years: 1));
-      expect(d.energyCost, equals(22));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(years: 5));
-      expect(d.energyCost, equals(26));
-
-      d = DurationModifier.copyWith(dur, duration: GDuration(years: 100));
-      expect(d.energyCost, equals(121));
+      // can't go below zero
+      expect(m.incrementEffect(-4).energyCost, equals(0));
+      expect(m.incrementEffect(-4).duration, equals(GDuration.momentary));
     });
   });
 
@@ -288,7 +279,7 @@ void main() {
     ExtraEnergy energy;
 
     setUp(() async {
-      energy = new ExtraEnergy();
+      energy = ExtraEnergy();
     });
 
     test('has initial state', () {
@@ -299,20 +290,26 @@ void main() {
     });
 
     test('has inherent', () {
-      var d = ExtraEnergy.copyWith(energy, inherent: true);
+      var d = energy.copyWith(inherent: true);
       expect(d.inherent, equals(true));
     });
 
     test('has energy', () {
-      expect(ExtraEnergy.copyWith(energy, energy: 5).energy, equals(5));
-      expect(ExtraEnergy.copyWith(energy, energy: 7).energy, equals(7));
-      expect(ExtraEnergy.copyWith(energy, energy: 20).energy, equals(20));
+      expect(energy.copyWith(energy: 5).energy, equals(5));
+      expect(energy.copyWith(energy: 7).energy, equals(7));
+      expect(energy.copyWith(energy: 20).energy, equals(20));
     });
 
     test('has energy cost', () {
-      expect(ExtraEnergy.copyWith(energy, energy: 5).energyCost, equals(5));
-      expect(ExtraEnergy.copyWith(energy, energy: 7).energyCost, equals(7));
-      expect(ExtraEnergy.copyWith(energy, energy: 20).energyCost, equals(20));
+      expect(energy.copyWith(energy: 5).energyCost, equals(5));
+      expect(energy.copyWith(energy: 7).energyCost, equals(7));
+      expect(energy.copyWith(energy: 20).energyCost, equals(20));
+    });
+
+    test('has increment effect', () {
+      expect(energy.incrementEffect(5).energyCost, equals(5));
+      expect(energy.incrementEffect(7).energy, equals(7));
+      expect(energy.incrementEffect(20).energyCost, equals(20));
     });
   });
 
@@ -332,26 +329,27 @@ void main() {
     });
 
     test('has inherent', () {
-      var d = Healing.copyWith(heal, inherent: true);
+      var d = heal.copyWith(inherent: true);
       expect(d.inherent, equals(true));
     });
 
     test('has Dice', () {
-      expect(Healing.copyWith(heal, dice: DieRoll(2, 0)).dice,
-          equals(DieRoll(2, 0)));
-      expect(Healing.copyWith(heal, dice: DieRoll(4, -1)).dice,
-          equals(DieRoll(4, -1)));
+      expect(heal.copyWith(dice: DieRoll(2, 0)).dice, equals(DieRoll(2, 0)));
+      expect(heal.copyWith(dice: DieRoll(4, -1)).dice, equals(DieRoll(4, -1)));
     });
 
     test('has energy cost', () {
-      expect(Healing.copyWith(heal, dice: DieRoll(2, 0)).energyCost, equals(4));
-      expect(
-          Healing.copyWith(heal, dice: DieRoll(4, -1)).energyCost, equals(11));
+      expect(heal.copyWith(dice: DieRoll(2, 0)).energyCost, equals(4));
+      expect(heal.copyWith(dice: DieRoll(4, -1)).energyCost, equals(11));
     });
 
     test('has type', () {
-      expect(Healing.copyWith(heal, type: HealingType.fp).type,
-          equals(HealingType.fp));
+      expect(heal.copyWith(type: HealingType.fp).type, equals(HealingType.fp));
+    });
+
+    test('has increment effect', () {
+      expect(heal.incrementEffect(2).dice, equals(DieRoll(1, 2)));
+      expect(heal.incrementEffect(8).dice, equals(DieRoll(3, 0)));
     });
   });
 
@@ -370,20 +368,26 @@ void main() {
     });
 
     test('has inherent', () {
-      var d = MetaMagic.copyWith(meta, inherent: true);
+      var d = meta.copyWith(inherent: true);
       expect(d.inherent, equals(true));
     });
 
     test('has energy', () {
-      expect(MetaMagic.copyWith(meta, energy: 5).energy, equals(5));
-      expect(MetaMagic.copyWith(meta, energy: 7).energy, equals(7));
-      expect(MetaMagic.copyWith(meta, energy: 20).energy, equals(20));
+      expect(meta.copyWith(energy: 5).energy, equals(5));
+      expect(meta.copyWith(energy: 7).energy, equals(7));
+      expect(meta.copyWith(energy: 20).energy, equals(20));
     });
 
     test('has energy cost', () {
-      expect(MetaMagic.copyWith(meta, energy: 5).energyCost, equals(5));
-      expect(MetaMagic.copyWith(meta, energy: 7).energyCost, equals(7));
-      expect(MetaMagic.copyWith(meta, energy: 20).energyCost, equals(20));
+      expect(meta.copyWith(energy: 5).energyCost, equals(5));
+      expect(meta.copyWith(energy: 7).energyCost, equals(7));
+      expect(meta.copyWith(energy: 20).energyCost, equals(20));
+    });
+
+    test('has increment effect', () {
+      expect(meta.incrementEffect(5).energyCost, equals(5));
+      expect(meta.incrementEffect(7).energyCost, equals(7));
+      expect(meta.incrementEffect(20).energyCost, equals(20));
     });
   });
 
@@ -398,11 +402,11 @@ void main() {
       expect(m.inherent, equals(false));
       expect(m.energyCost, equals(0));
       expect(m.name, equals("Speed"));
-      expect(m.yardsPerSecond, equals(GDistance()));
+      expect(m.yardsPerSecond, equals(GDistance(yards: 2)));
     });
 
     test("has inherent", () {
-      expect(Speed.copyWith(m, inherent: true).inherent, equals(true));
+      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     // For movement spells (e.g., spells that use telekinesis or allow a subject to fly), look up the speed
@@ -417,35 +421,40 @@ void main() {
     //  |    10 |    4 ||   100 |   10 ||  1000 |   16 |
     //  |    15 |    5 ||   150 |   11 ||  1500 |   17 |
     test("has yardsPerSecond and energyCost", () {
-      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 0)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 0)).energyCost,
           equals(0));
 
-      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 3)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 3)).energyCost,
           equals(1));
 
-      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 5)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 5)).energyCost,
           equals(2));
 
-      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 7)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 7)).energyCost,
           equals(3));
 
-      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 10)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 10)).energyCost,
           equals(4));
 
-      expect(Speed.copyWith(m, yardsPerSecond: GDistance(yards: 15)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 15)).energyCost,
           equals(5));
 
-      expect(
-          Speed.copyWith(m, yardsPerSecond: GDistance(yards: 150)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 150)).energyCost,
           equals(11));
 
-      expect(
-          Speed.copyWith(m, yardsPerSecond: GDistance(yards: 200)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 200)).energyCost,
           equals(12));
 
-      expect(
-          Speed.copyWith(m, yardsPerSecond: GDistance(yards: 300)).energyCost,
+      expect(m.copyWith(yardsPerSecond: GDistance(yards: 300)).energyCost,
           equals(13));
+    });
+
+    test('has increment Effect', () {
+      expect(m.incrementEffect(1).yardsPerSecond, equals(GDistance(yards: 3)));
+      expect(
+          m.incrementEffect(10).yardsPerSecond, equals(GDistance(yards: 100)));
+      expect(
+          m.incrementEffect(26).yardsPerSecond, equals(GDistance(miles: 25)));
     });
   });
 
@@ -464,39 +473,38 @@ void main() {
     });
 
     test("has inherent", () {
-      expect(SubjectWeight.copyWith(m, inherent: true).inherent, equals(true));
+      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test("should have energyCost and weight", () {
-      var w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 0));
-      expect(w.energyCost, equals(0));
+      expect(m.copyWith(weight: GWeight(pounds: 0)).energyCost, equals(0));
+      expect(m.copyWith(weight: GWeight(pounds: 0)).weight,
+          equals(GWeight(pounds: 10)));
+      expect(m.copyWith(weight: GWeight(pounds: 10)).energyCost, equals(0));
+      expect(m.copyWith(weight: GWeight(pounds: 10)).weight,
+          equals(GWeight(pounds: 10)));
+      expect(m.copyWith(weight: GWeight(pounds: 11)).energyCost, equals(1));
+      expect(m.copyWith(weight: GWeight(pounds: 11)).weight,
+          equals(GWeight(pounds: 30)));
+      expect(m.copyWith(weight: GWeight(pounds: 30)).energyCost, equals(1));
+      expect(m.copyWith(weight: GWeight(pounds: 30)).weight,
+          equals(GWeight(pounds: 30)));
+      expect(m.copyWith(weight: GWeight(pounds: 31)).energyCost, equals(2));
+      expect(m.copyWith(weight: GWeight(pounds: 31)).weight,
+          equals(GWeight(pounds: 100)));
+      expect(m.copyWith(weight: GWeight(pounds: 100)).energyCost, equals(2));
+      expect(m.copyWith(weight: GWeight(pounds: 300)).energyCost, equals(3));
+      expect(m.copyWith(weight: GWeight(pounds: 1000)).energyCost, equals(4));
+      expect(m.copyWith(weight: GWeight(tons: 5)).energyCost, equals(6));
+      expect(m.copyWith(weight: GWeight(tons: 15)).energyCost, equals(7));
+    });
 
-      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 10));
-      expect(w.energyCost, equals(0));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 11));
-      expect(w.energyCost, equals(1));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 30));
-      expect(w.energyCost, equals(1));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 31));
-      expect(w.energyCost, equals(2));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 100));
-      expect(w.energyCost, equals(2));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 300));
-      expect(w.energyCost, equals(3));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(pounds: 1000));
-      expect(w.energyCost, equals(4));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(tons: 5));
-      expect(w.energyCost, equals(6));
-
-      w = SubjectWeight.copyWith(m, weight: GWeight(tons: 15));
-      expect(w.energyCost, equals(7));
+    test('should have increment effect', () {
+      expect(m.incrementEffect(1).weight, equals(GWeight(pounds: 30)));
+      expect(m.incrementEffect(2).weight, equals(GWeight(pounds: 100)));
+      expect(m.incrementEffect(3).weight, equals(GWeight(pounds: 300)));
+      expect(m.incrementEffect(5).weight, equals(GWeight(pounds: 3000)));
+      expect(m.incrementEffect(8).weight, equals(GWeight(tons: 50)));
     });
   });
 }

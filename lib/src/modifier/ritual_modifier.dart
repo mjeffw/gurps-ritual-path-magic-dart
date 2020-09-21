@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
 import '../trait.dart';
+import '../util/list_wrapper.dart';
 
 /// Describes a modifier to an Ritual.
 ///
@@ -83,13 +84,13 @@ class AlteredTraits extends RitualModifier {
   }
 
   @override
-  int get hashCode => hash2(trait, _modifiers);
+  int get hashCode => hash2(trait, ListWrapper(_modifiers));
 
   @override
   bool operator ==(Object other) {
     return other is AlteredTraits &&
         trait == other.trait &&
-        _modifiers == other._modifiers;
+        ListWrapper(_modifiers).equals(other._modifiers);
   }
 }
 

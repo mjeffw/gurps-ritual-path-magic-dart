@@ -12,20 +12,18 @@ import 'package:test/test.dart';
 
 void main() {
   test('Air Jet', () {
-    Ritual r = Ritual(
-      name: 'Air Jet',
-      effects: [
-        SpellEffect(Path.matter,
-            effect: Effect.control, level: Level.greater, inherent: true)
-      ],
-      modifiers: [
-        Damage(direct: false, modifiers: <TraitModifier>[
-          TraitModifier(name: 'Double Knockback', percent: 20),
-          TraitModifier(name: 'Jet', percent: 0),
-          TraitModifier(name: 'No Wounding', percent: -50),
-        ]),
-      ],
-    );
+    Ritual r = Ritual(name: 'Air Jet');
+    r = r.copyWith(effects: [
+      SpellEffect(Path.matter, effect: Effect.control, level: Level.greater)
+    ]);
+
+    r = r.copyWith(modifiers: [
+      Damage(direct: false, modifiers: <TraitModifier>[
+        TraitModifier(name: 'Double Knockback', percent: 20),
+        TraitModifier(name: 'Jet', percent: 0),
+        TraitModifier(name: 'No Wounding', percent: -50),
+      ]),
+    ]);
 
     expect(r.name, equals('Air Jet'));
     expect(r.greaterEffects, 1);
@@ -34,15 +32,11 @@ void main() {
   });
 
   test('Alertness', () {
-    Ritual r = new Ritual(
-      name: 'Alertness',
-      effects: [
-        SpellEffect(Path.mind, effect: Effect.strengthen, inherent: true)
-      ],
-      modifiers: [
-        Bestows('Sense rolls', range: BestowsRange.broad, value: 2),
-      ],
-    );
+    Ritual r = Ritual(name: 'Alertness', modifiers: [
+      Bestows('Sense rolls', range: BestowsRange.broad, value: 2)
+    ]);
+
+    r = r.addPathEffect(SpellEffect(Path.mind, effect: Effect.strengthen));
 
     expect(r.name, equals('Alertness'));
     expect(r.effectsMultiplier, equals(1));
@@ -53,10 +47,33 @@ void main() {
     expect(r.energyCost, equals(14));
   });
 
+  test('has == and hashCode', () {
+    Ritual r1 = Ritual();
+    r1 = r1.copyWith(name: 'Alertness');
+    // r1 = r1
+    //     .copyWith(effects: [SpellEffect(Path.mind, effect: Effect.strengthen)]);
+    r1 = r1.copyWith(
+      modifiers: [Bestows('Sense rolls', range: BestowsRange.broad, value: 2)],
+    );
+
+    Ritual r2 = Ritual(
+      name: 'Alertness',
+      // effects: [SpellEffect(Path.mind, effect: Effect.strengthen)],
+      modifiers: [Bestows('Sense rolls', range: BestowsRange.broad, value: 2)],
+    );
+
+    expect(r1, equals(r2));
+    expect(r1.hashCode, equals(r2.hashCode));
+
+    r2 = r2.copyWith(notes: 'grekk tesdts fas ot dfk');
+
+    expect(r1, isNot(equals(r2)));
+    expect(r1.hashCode, isNot(equals(r2.hashCode)));
+  });
+
   test('Amplify Injury', () {
     Ritual r = Ritual(name: 'Amplify Injury', effects: [
-      SpellEffect(Path.body,
-          level: Level.greater, effect: Effect.destroy, inherent: true)
+      SpellEffect(Path.body, level: Level.greater, effect: Effect.destroy)
     ], modifiers: [
       AlteredTraits(
           Trait(name: 'Vulnerability to Physical Attacks, x2', baseCost: -40)),
@@ -69,9 +86,8 @@ void main() {
 
   test('Bag of Bones', () {
     Ritual ritual = new Ritual(name: 'Bag of Bones', effects: [
-      SpellEffect(Path.undead,
-          level: Level.greater, effect: Effect.control, inherent: true),
-      SpellEffect(Path.undead, effect: Effect.create, inherent: true)
+      SpellEffect(Path.undead, level: Level.greater, effect: Effect.control),
+      SpellEffect(Path.undead, effect: Effect.create)
     ]);
 
     ritual = ritual.copyWith(notes: '''
@@ -101,8 +117,8 @@ no skills, and other traits appropriate to an animated skeleton.
         typical.effects,
         containsAll(<SpellEffect>[
           SpellEffect(Path.undead,
-              level: Level.greater, effect: Effect.control, inherent: true),
-          SpellEffect(Path.undead, effect: Effect.create, inherent: true),
+              level: Level.greater, effect: Effect.control),
+          SpellEffect(Path.undead, effect: Effect.create),
           SpellEffect(Path.magic, effect: Effect.control),
         ]));
 

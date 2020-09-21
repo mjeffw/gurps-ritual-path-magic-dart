@@ -117,9 +117,6 @@ class RangeDimensional extends RitualModifier {
       : numberDimensions = numberDimensions ?? 0,
         super('Range, Extradimensional');
 
-  RangeDimensional copyWith({int numberDimensions}) => RangeDimensional(
-      numberDimensions: numberDimensions ?? this.numberDimensions);
-
   final int numberDimensions;
 
   @override

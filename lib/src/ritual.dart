@@ -4,12 +4,17 @@ import 'package:quiver/core.dart';
 import 'level.dart';
 import 'modifier/ritual_modifier.dart';
 import 'spell_effect.dart';
+import 'util/list_wrapper.dart';
 
 @immutable
 class Ritual {
   const Ritual(
-      {this.name, this.effects, List<RitualModifier> modifiers, this.notes})
-      : this.modifiers = modifiers ?? const <RitualModifier>[];
+      {this.name,
+      List<SpellEffect> effects,
+      List<RitualModifier> modifiers,
+      this.notes})
+      : this.modifiers = modifiers ?? const <RitualModifier>[],
+        this.effects = effects ?? const <SpellEffect>[];
 
   final String name;
 
@@ -53,13 +58,14 @@ class Ritual {
           notes: notes ?? this.notes);
 
   @override
-  int get hashCode => hash4(name, effects, modifiers, notes);
+  int get hashCode =>
+      hash4(name, ListWrapper(effects), ListWrapper(modifiers), notes);
 
   @override
   bool operator ==(Object other) =>
       other is Ritual &&
       other.name == name &&
-      other.effects == effects &&
-      other.modifiers == modifiers &&
+      ListWrapper(effects).equals(other.effects) &&
+      ListWrapper(modifiers).equals(other.modifiers) &&
       other.notes == notes;
 }

@@ -51,15 +51,6 @@ void main() {
       expect(p.level, equals(Level.greater));
     });
 
-    test('has default inherent of false', () {
-      expect(p.inherent, equals(false));
-    });
-
-    test('can change inherent', () {
-      p = p.withInherent(true);
-      expect(p.inherent, equals(true));
-    });
-
     test('has blank notes by default', () {
       expect(p.notes, equals(''));
     });
@@ -100,14 +91,12 @@ void main() {
       expect(p, equals(SpellEffect(Path.body)));
       expect(p, isNot(equals(SpellEffect(Path.chance))));
       expect(p, isNot(equals(p.withEffect(Effect.create))));
-      expect(p, isNot(equals(p.withInherent(true))));
       expect(p, isNot(equals(p.withLevel(Level.greater))));
       expect(p, isNot(equals(p.withNotes('Path.chance'))));
 
       expect(p.hashCode, equals(SpellEffect(Path.body).hashCode));
       expect(p.hashCode, isNot(equals(SpellEffect(Path.chance).hashCode)));
       expect(p.hashCode, isNot(equals(p.withEffect(Effect.create).hashCode)));
-      expect(p.hashCode, isNot(equals(p.withInherent(true).hashCode)));
       expect(p.hashCode, isNot(equals(p.withLevel(Level.greater).hashCode)));
       expect(p.hashCode, isNot(equals(p.withNotes('Path.chance').hashCode)));
     });

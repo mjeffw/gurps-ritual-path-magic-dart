@@ -505,9 +505,7 @@ void main() {
   group("SubjectWeight:", () {
     SubjectWeight m;
 
-    setUp(() async {
-      m = SubjectWeight();
-    });
+    setUp(() async => m = SubjectWeight());
 
     test("has initial state", () {
       expect(m.energyCost, equals(0));

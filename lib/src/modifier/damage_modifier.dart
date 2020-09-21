@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:quiver/core.dart';
 
+import '../util/list_wrapper.dart';
 import 'ritual_modifier.dart';
 
 /// GURPS rpm.17: The spell will cause damage, whether directly or indirectly.
@@ -93,8 +94,8 @@ class Damage extends RitualModifier {
       type: this.type);
 
   @override
-  int get hashCode =>
-      hashObjects(<dynamic>[dice, direct, explosive, _modifiers, type]);
+  int get hashCode => hashObjects(
+      <dynamic>[dice, direct, explosive, ListWrapper(_modifiers), type]);
 
   @override
   bool operator ==(Object other) {
@@ -103,6 +104,6 @@ class Damage extends RitualModifier {
         other.direct == direct &&
         other.type == type &&
         other._explosive == _explosive &&
-        other._modifiers == _modifiers;
+        ListWrapper(_modifiers).equals(other._modifiers);
   }
 }

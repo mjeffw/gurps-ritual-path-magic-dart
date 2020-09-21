@@ -200,9 +200,9 @@ void main() {
     });
 
     test("cost 10 energy per Dimension crossed", () {
-      expect(m.copyWith(numberDimensions: 1).energyCost, equals(10));
-      expect(m.copyWith(numberDimensions: 2).energyCost, equals(20));
-      expect(m.copyWith(numberDimensions: 5).energyCost, equals(50));
+      expect(RangeDimensional(numberDimensions: 1).energyCost, equals(10));
+      expect(RangeDimensional(numberDimensions: 2).energyCost, equals(20));
+      expect(RangeDimensional(numberDimensions: 5).energyCost, equals(50));
     });
 
     test('has increment effect', () {
@@ -217,8 +217,8 @@ void main() {
       expect(m.hashCode,
           isNot(equals(RangeDimensional(numberDimensions: 1).hashCode)));
 
-      expect(m, equals(m.copyWith(numberDimensions: 0)));
-      expect(m, isNot(equals(m.copyWith(numberDimensions: 3))));
+      expect(m, equals(RangeDimensional(numberDimensions: 0)));
+      expect(m, isNot(equals(RangeDimensional(numberDimensions: 3))));
     });
   });
 }

@@ -1,8 +1,4 @@
 import 'package:gurps_ritual_path_magic_model/ritual_path_magic.dart';
-import 'package:gurps_ritual_path_magic_model/src/level.dart';
-import 'package:gurps_ritual_path_magic_model/src/path.dart';
-import 'package:gurps_ritual_path_magic_model/src/path_effect.dart';
-import 'package:gurps_ritual_path_magic_model/src/ritual.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -26,13 +22,13 @@ void main() {
   });
 
   test('Alertness', () {
-    // Ritual r = new Ritual(name: 'Alertness', effects: <PathEffect>[
-    //   PathEffect(Path.mind, effect: Effect.strengthen)
-    // ], modifiers: <ModifierComponent>[
-    //   ModifierComponent(RitualModifier.bestowsBonus,
-    //       level: 2, variation: 'Moderate', detail: 'Sense rolls')
-    // ]);
+    Ritual r = new Ritual(name: 'Alertness', effects: <PathEffect>[
+      PathEffect(Path.mind, effect: Effect.strengthen),
+    ], modifiers: <ModifierComponent>[
+      ModifierComponent(Bestows('Sense rolls',
+          inherent: true, range: BestowsRange.moderate, value: 2)),
+    ]);
 
-    // expect(r.name, 'Alertness');
+    expect(r.name, 'Alertness');
   });
 }

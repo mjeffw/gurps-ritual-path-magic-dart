@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:quiver/core.dart';
 
 import 'level.dart';
 import 'modifier/ritual_modifier.dart';
@@ -6,7 +7,8 @@ import 'spell_effect.dart';
 
 @immutable
 class Ritual {
-  const Ritual({this.name, this.effects, List<RitualModifier> modifiers})
+  const Ritual(
+      {this.name, this.effects, List<RitualModifier> modifiers, this.notes})
       : this.modifiers = modifiers ?? const <RitualModifier>[];
 
   final String name;
@@ -15,18 +17,19 @@ class Ritual {
 
   final List<RitualModifier> modifiers;
 
+  final String notes;
+
   int get greaterEffects =>
       effects.where((it) => it.level == Level.greater).length;
 
   int get effectsMultiplier => 1 + (greaterEffects * 2);
 
-  int get energyCost {
-    int cost = effects.fold(
-        0, (previousValue, element) => previousValue + element.cost);
-    cost = modifiers.fold(
-        cost, (previousValue, element) => previousValue + element.energyCost);
-    return cost * effectsMultiplier;
-  }
+  int get energyCost => baseEnergyCost * effectsMultiplier;
+
+  int get baseEnergyCost =>
+      effects.fold<int>(0, (previous, element) => previous + element.cost) +
+      modifiers.fold<int>(
+          0, (previous, element) => previous + element.energyCost);
 
   Ritual addModifier(RitualModifier modifier) => Ritual(
       name: this.name,
@@ -37,4 +40,26 @@ class Ritual {
       name: this.name,
       effects: [...this.effects, if (effect != null) effect],
       modifiers: this.modifiers);
+
+  Ritual copyWith(
+          {String name,
+          List<SpellEffect> effects,
+          List<RitualModifier> modifiers,
+          String notes}) =>
+      Ritual(
+          name: name ?? this.name,
+          effects: effects ?? this.effects,
+          modifiers: modifiers ?? this.modifiers,
+          notes: notes ?? this.notes);
+
+  @override
+  int get hashCode => hash4(name, effects, modifiers, notes);
+
+  @override
+  bool operator ==(Object other) =>
+      other is Ritual &&
+      other.name == name &&
+      other.effects == effects &&
+      other.modifiers == modifiers &&
+      other.notes == notes;
 }

@@ -62,7 +62,7 @@ class RangeInfo extends RitualModifier {
   RangeInfo incrementEffect(int value) {
     int newIndex = energyCost + value;
 
-    GDistance d = (newIndex == 0)
+    GDistance d = (newIndex <= 0)
         ? GDistance(yards: 200)
         : (newIndex == 1)
             ? GDistance(yards: 1000)

@@ -516,5 +516,13 @@ void main() {
       t1 = m.copyWith(dice: (DieRoll(1, 10)));
       expect(t1.energyCost, equals(10));
     });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(Damage()));
+      expect(m.hashCode, equals(Damage(dice: DieRoll(1, 0)).hashCode));
+      expect(m, isNot(equals(m.copyWith(dice: DieRoll(2, 0)))));
+      expect(m, isNot(equals(m.copyWith(direct: false))));
+      expect(m.hashCode, isNot(equals(Damage(inherent: true).inherent)));
+    });
   });
 }

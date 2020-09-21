@@ -4,20 +4,20 @@ import 'package:test/test.dart';
 
 import '../lib/src/effect.dart';
 import '../lib/src/level.dart';
-import '../lib/src/util/list_events.dart';
 import '../lib/src/path.dart';
-import '../lib/src/path_effect.dart';
+import '../lib/src/spell_effect.dart';
+import '../lib/src/util/list_events.dart';
 
 void main() {
-  ObservableList<PathEffect> emptyList;
-  ObservableList<PathEffect> filledList;
-  var body = PathEffect(Path.body);
-  var chance = PathEffect(Path.chance);
-  var crossroads = PathEffect(Path.crossroads);
+  ObservableList<SpellEffect> emptyList;
+  ObservableList<SpellEffect> filledList;
+  var body = SpellEffect(Path.body);
+  var chance = SpellEffect(Path.chance);
+  var crossroads = SpellEffect(Path.crossroads);
 
   setUp(() async {
-    emptyList = ObservableList<PathEffect>();
-    filledList = ObservableList<PathEffect>();
+    emptyList = ObservableList<SpellEffect>();
+    filledList = ObservableList<SpellEffect>();
     filledList.addAll([body, chance, crossroads]);
     await filledList.onChange.take(3);
   });
@@ -59,7 +59,7 @@ void main() {
     });
 
     test('should allow replacing', () {
-      PathEffect p = filledList[0];
+      SpellEffect p = filledList[0];
 
       expect(p.path, equals(Path.body));
       expect(p.effect, equals(Effect.sense));
@@ -79,7 +79,8 @@ void main() {
       expect(p.effect, equals(Effect.control));
       expect(p.level, equals(Level.greater));
 
-      filledList[0] = PathEffect(Path.energy, level: p.level, effect: p.effect);
+      filledList[0] =
+          SpellEffect(Path.energy, level: p.level, effect: p.effect);
       p = filledList[0];
 
       expect(p.path, equals(Path.energy));
@@ -96,7 +97,7 @@ void main() {
         emptyList..add(body)..add(chance)..add(crossroads);
       });
 
-      List<ListChangeEvent<PathEffect>> events =
+      List<ListChangeEvent<SpellEffect>> events =
           await emptyList.onChange.take(3).toList();
 
       verifyEvent(events[0], Action.insert, 0, null, body);
@@ -109,7 +110,7 @@ void main() {
         filledList.remove(chance);
       });
 
-      ListChangeEvent<PathEffect> event = await filledList.onChange.first;
+      ListChangeEvent<SpellEffect> event = await filledList.onChange.first;
 
       verifyEvent(event, Action.remove, 1, chance, null);
     });
@@ -117,7 +118,7 @@ void main() {
     test('should fire event for each component on clear', () async {
       Timer.run(() => filledList.clear());
 
-      List<ListChangeEvent<PathEffect>> events =
+      List<ListChangeEvent<SpellEffect>> events =
           await filledList.onChange.take(3).toList();
 
       verifyEvent(events[0], Action.remove, 0, body, null);
@@ -136,7 +137,7 @@ void main() {
 
     test('should fire event when replacing', () async {
       var pathComponent =
-          PathEffect(Path.magic, level: Level.greater, effect: Effect.destroy);
+          SpellEffect(Path.magic, level: Level.greater, effect: Effect.destroy);
 
       Timer.run(() {
         filledList[1] = pathComponent;
@@ -149,7 +150,7 @@ void main() {
 }
 
 void verifyEvent(ListChangeEvent event, Action action, int index,
-    PathEffect oldValue, PathEffect newValue) {
+    SpellEffect oldValue, SpellEffect newValue) {
   expect(event.action, equals(action));
   expect(event.index, equals(index));
   expect(event.oldValue, equals(oldValue));

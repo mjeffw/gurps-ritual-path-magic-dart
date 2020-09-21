@@ -203,12 +203,11 @@ class Bestows extends RitualModifier {
         value = value ?? 0,
         super('Bestows a (Bonus or Penalty)', inherent: inherent ?? false);
 
-  Bestows copyWith({int value, bool inherent, BestowsRange range}) {
-    return Bestows(this.roll,
-        value: value ?? this.value,
-        inherent: inherent ?? this.inherent,
-        range: range ?? this.range);
-  }
+  Bestows copyWith({int value, bool inherent, BestowsRange range}) =>
+      Bestows(this.roll,
+          value: value ?? this.value,
+          inherent: inherent ?? this.inherent,
+          range: range ?? this.range);
 
   /// Name of range of traits being modified,
   final String roll;
@@ -233,22 +232,19 @@ class Bestows extends RitualModifier {
   int get energyCost => value == 0 ? 0 : _rangeEnergy[range](value);
 
   @override
-  RitualModifier incrementEffect(int value) {
-    return Bestows(this.roll,
-        value: this.value + value, inherent: this.inherent, range: this.range);
-  }
+  Bestows incrementEffect(int value) => Bestows(this.roll,
+      value: this.value + value, inherent: this.inherent, range: this.range);
 
   @override
   int get hashCode => hash4(inherent, range, roll, value);
 
   @override
-  bool operator ==(Object other) {
-    return other is Bestows &&
-        other.inherent == inherent &&
-        other.range == range &&
-        other.roll == roll &&
-        other.value == value;
-  }
+  bool operator ==(Object other) =>
+      other is Bestows &&
+      other.inherent == inherent &&
+      other.range == range &&
+      other.roll == roll &&
+      other.value == value;
 }
 
 class DurationModifier extends RitualModifier {
@@ -380,7 +376,10 @@ class Healing extends RitualModifier {
 
   @override
   bool operator ==(Object other) {
-    return other is Healing && other.dice == dice && other.inherent == inherent;
+    return other is Healing &&
+        other.dice == dice &&
+        other.inherent == inherent &&
+        other.type == type;
   }
 }
 

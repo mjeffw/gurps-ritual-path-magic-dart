@@ -1,9 +1,8 @@
-import 'package:gurps_ritual_path_magic_model/src/modifier/ritual_modifier.dart';
 import 'package:meta/meta.dart';
 
 import 'level.dart';
-import 'modifier_component.dart';
-import 'path_effect.dart';
+import 'modifier/ritual_modifier.dart';
+import 'spell_effect.dart';
 
 @immutable
 class Ritual {
@@ -12,7 +11,7 @@ class Ritual {
 
   final String name;
 
-  final List<PathEffect> effects;
+  final List<SpellEffect> effects;
 
   final List<RitualModifier> modifiers;
 
@@ -34,7 +33,7 @@ class Ritual {
       effects: this.effects,
       modifiers: [...modifiers, if (modifier != null) modifier]);
 
-  Ritual addPathEffect(PathEffect effect) => Ritual(
+  Ritual addPathEffect(SpellEffect effect) => Ritual(
       name: this.name,
       effects: [...this.effects, if (effect != null) effect],
       modifiers: this.modifiers);

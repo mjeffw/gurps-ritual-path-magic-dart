@@ -4,21 +4,21 @@ import 'package:gurps_ritual_path_magic_model/src/level.dart';
 import 'package:gurps_ritual_path_magic_model/src/modifier/damage_modifier.dart';
 import 'package:gurps_ritual_path_magic_model/src/modifier/ritual_modifier.dart';
 import 'package:gurps_ritual_path_magic_model/src/path.dart';
-import 'package:gurps_ritual_path_magic_model/src/path_effect.dart';
+import 'package:gurps_ritual_path_magic_model/src/spell_effect.dart';
 import 'package:gurps_ritual_path_magic_model/src/ritual.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('Bag of Bones', () {
     Ritual r = new Ritual(name: 'Bag of Bones', effects: [
-      PathEffect(Path.undead,
+      SpellEffect(Path.undead,
           level: Level.greater, effect: Effect.control, inherent: true),
-      PathEffect(Path.undead, effect: Effect.create, inherent: true)
+      SpellEffect(Path.undead, effect: Effect.create, inherent: true)
     ]);
 
     expect(r.energyCost, equals(33));
 
-    r = r.addPathEffect(PathEffect(Path.magic, effect: Effect.control));
+    r = r.addPathEffect(SpellEffect(Path.magic, effect: Effect.control));
     expect(r.energyCost, equals(48));
 
     r = r.addModifier(DurationModifier(duration: GDuration(days: 1)));
@@ -28,11 +28,11 @@ void main() {
 
     expect(
         r.effects,
-        containsAll(<PathEffect>[
-          PathEffect(Path.undead,
+        containsAll(<SpellEffect>[
+          SpellEffect(Path.undead,
               level: Level.greater, effect: Effect.control, inherent: true),
-          PathEffect(Path.undead, effect: Effect.create, inherent: true),
-          PathEffect(Path.magic, effect: Effect.control)
+          SpellEffect(Path.undead, effect: Effect.create, inherent: true),
+          SpellEffect(Path.magic, effect: Effect.control)
         ]));
 
     expect(r.name, equals('Bag of Bones'));
@@ -52,7 +52,7 @@ void main() {
     Ritual r = new Ritual(
       name: 'Alertness',
       effects: [
-        PathEffect(Path.mind, effect: Effect.strengthen, inherent: true)
+        SpellEffect(Path.mind, effect: Effect.strengthen, inherent: true)
       ],
       modifiers: [
         Bestows('Sense rolls',
@@ -73,7 +73,7 @@ void main() {
     Ritual r = Ritual(
       name: 'Air Jet',
       effects: [
-        PathEffect(Path.matter,
+        SpellEffect(Path.matter,
             effect: Effect.control, level: Level.greater, inherent: true)
       ],
       modifiers: [
@@ -91,5 +91,10 @@ void main() {
     expect(r.energyCost, 15);
   });
 
-  test('Amplify Injury', () {});
+  test('Amplify Injury', () {
+    Ritual r = Ritual(name: 'Amplify Injury', effects: [
+      SpellEffect(Path.body,
+          level: Level.greater, effect: Effect.destroy, inherent: true)
+    ]);
+  });
 }

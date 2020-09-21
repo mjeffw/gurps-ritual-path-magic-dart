@@ -16,8 +16,8 @@ import 'path.dart';
 /// Also optional is a free-form notes field, for explaining what the
 /// PathEffect adds to the ritual, in way of an explanation.
 @immutable
-class PathEffect {
-  const PathEffect(
+class SpellEffect {
+  const SpellEffect(
     this.path, {
     Level level: Level.lesser,
     bool inherent: false,
@@ -28,16 +28,16 @@ class PathEffect {
         _effect = effect,
         _notes = notes;
 
-  PathEffect withLevel(Level newLevel) => PathEffect(path,
+  SpellEffect withLevel(Level newLevel) => SpellEffect(path,
       level: newLevel, inherent: _inherent, effect: _effect, notes: _notes);
 
-  PathEffect withEffect(Effect newEffect) => PathEffect(path,
+  SpellEffect withEffect(Effect newEffect) => SpellEffect(path,
       level: _level, inherent: _inherent, effect: newEffect, notes: _notes);
 
-  PathEffect withInherent(bool newInherent) => PathEffect(path,
+  SpellEffect withInherent(bool newInherent) => SpellEffect(path,
       level: _level, inherent: newInherent, effect: _effect, notes: _notes);
 
-  PathEffect withNotes(String text) => PathEffect(path,
+  SpellEffect withNotes(String text) => SpellEffect(path,
       level: _level, inherent: _inherent, effect: _effect, notes: text?.trim());
 
   final Path path;
@@ -57,7 +57,7 @@ class PathEffect {
 
   @override
   bool operator ==(Object any) {
-    return any is PathEffect &&
+    return any is SpellEffect &&
         any.path == path &&
         any._level == _level &&
         any._effect == _effect &&

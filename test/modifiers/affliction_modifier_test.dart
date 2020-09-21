@@ -20,6 +20,18 @@ void main() {
       AfflictionStun m2 = AfflictionStun(inherent: true);
       expect(m2.inherent, equals(true));
     });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(AfflictionStun()));
+      expect(m.hashCode, equals(AfflictionStun().hashCode));
+      expect(m, isNot(equals(AfflictionStun(inherent: true))));
+      expect(
+          m.hashCode, isNot(equals(AfflictionStun(inherent: true).inherent)));
+    });
+
+    test('incrementValue does nothing', () {
+      expect(m, same(m.incrementEffect(1)));
+    });
   });
 
   group('Afflictions', () {
@@ -67,6 +79,15 @@ void main() {
       expect(aff.percent, equals(25));
 
       expect(aff.incrementEffect(-1).percent, equals(20));
+    });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(Affliction(effect: 'Foo')));
+      expect(m.hashCode, equals(Affliction(effect: 'Foo').hashCode));
+      expect(m, isNot(equals(m.copyWith(effect: 'Bar'))));
+      expect(m, isNot(equals(m.copyWith(percent: 10))));
+      expect(m.hashCode,
+          isNot(equals(Affliction(effect: 'Foo', inherent: true).inherent)));
     });
   });
 }

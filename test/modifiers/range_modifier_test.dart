@@ -61,6 +61,17 @@ void main() {
       var x = m.incrementEffect(9);
       expect(x.incrementEffect(10).distance, equals(GDistance(yards: 3000)));
     });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(Range(distance: GDistance(yards: 2))));
+      expect(m, isNot(equals(Range(distance: GDistance(yards: 3)))));
+      expect(m.hashCode, equals(Range(distance: GDistance(yards: 2)).hashCode));
+      expect(m.hashCode,
+          isNot(equals(Range(distance: GDistance(yards: 3)).hashCode)));
+
+      expect(m, isNot(equals(m.copyWith(distance: GDistance(yards: 5)))));
+      expect(m, isNot(equals(m.copyWith(inherent: true))));
+    });
   });
 
   group('Range, Informational', () {
@@ -97,6 +108,7 @@ void main() {
 
       var x = r.incrementEffect(4);
       expect(x.incrementEffect(2).distance, equals(GDistance(miles: 100)));
+      expect(x.incrementEffect(-6).distance, equals(GDistance(yards: 200)));
     });
 
     test('cost energy', () {
@@ -115,6 +127,19 @@ void main() {
           r.copyWith(distance: GDistance(miles: 3000)).energyCost, equals(9));
       expect(
           r.copyWith(distance: GDistance(miles: 10000)).energyCost, equals(10));
+    });
+
+    test('implements == and hashCode', () {
+      expect(r, equals(RangeInfo(distance: GDistance(yards: 200))));
+      expect(r, isNot(equals(RangeInfo(distance: GDistance(yards: 1000)))));
+      expect(r.hashCode,
+          equals(RangeInfo(distance: GDistance(yards: 200)).hashCode));
+      expect(r.hashCode,
+          isNot(equals(RangeInfo(distance: GDistance(yards: 1000)).hashCode)));
+
+      expect(r, equals(r.copyWith(distance: GDistance(yards: 200))));
+      expect(r, isNot(equals(r.copyWith(distance: GDistance(miles: 1)))));
+      expect(r, isNot(equals(r.copyWith(inherent: true))));
     });
   });
 
@@ -162,6 +187,21 @@ void main() {
       var x = m.incrementEffect(3);
       expect(x.incrementEffect(3).duration, equals(GDuration(days: 100)));
     });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(RangeCrossTime(duration: GDuration(hours: 2))));
+      expect(m, isNot(equals(RangeCrossTime(duration: GDuration(hours: 12)))));
+      expect(m.hashCode,
+          equals(RangeCrossTime(duration: GDuration(hours: 2)).hashCode));
+      expect(
+          m.hashCode,
+          isNot(
+              equals(RangeCrossTime(duration: GDuration(hours: 12)).hashCode)));
+
+      expect(m, equals(m.copyWith(duration: GDuration(hours: 2))));
+      expect(m, isNot(equals(m.copyWith(duration: GDuration(days: 1)))));
+      expect(m, isNot(equals(m.copyWith(inherent: true))));
+    });
   });
 
   group("Range, Extradimensional:", () {
@@ -192,6 +232,17 @@ void main() {
       expect(m.incrementEffect(3).numberDimensions, equals(3));
       expect(
           m.incrementEffect(3).incrementEffect(4).numberDimensions, equals(7));
+    });
+    test('implements == and hashCode', () {
+      expect(m, equals(RangeDimensional(numberDimensions: 0)));
+      expect(m, isNot(equals(RangeDimensional(numberDimensions: 1))));
+      expect(m.hashCode, equals(RangeDimensional().hashCode));
+      expect(m.hashCode,
+          isNot(equals(RangeDimensional(numberDimensions: 1).hashCode)));
+
+      expect(m, equals(m.copyWith(numberDimensions: 0)));
+      expect(m, isNot(equals(m.copyWith(numberDimensions: 3))));
+      expect(m, isNot(equals(m.copyWith(inherent: true))));
     });
   });
 }

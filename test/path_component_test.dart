@@ -3,14 +3,14 @@ import 'package:test/test.dart';
 import '../lib/src/effect.dart';
 import '../lib/src/level.dart';
 import '../lib/src/path.dart';
-import '../lib/src/path_effect.dart';
+import '../lib/src/spell_effect.dart';
 
 void main() {
-  group('PathEffect', () {
-    PathEffect p;
+  group('SpellEffect', () {
+    SpellEffect p;
 
     setUp(() async {
-      p = PathEffect(Path.body);
+      p = SpellEffect(Path.body);
     });
 
     test('has Path of Body', () {
@@ -28,7 +28,7 @@ void main() {
     });
 
     test('has Path of Chance', () {
-      PathEffect p = PathEffect(Path.chance);
+      SpellEffect p = SpellEffect(Path.chance);
       expect(p.path, equals(Path.chance));
       expect(p.toString(), equals('Lesser Sense Chance'));
     });

@@ -81,6 +81,14 @@ void main() {
       expect(m.incrementEffect(2).characterPoints, equals(2));
       expect(m.incrementEffect(3).characterPoints, equals(3));
     });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(AlteredTraits(Trait(name: 'foo'))));
+      expect(m, isNot(equals(AlteredTraits(Trait(name: 'bar')))));
+      expect(m.hashCode, equals(AlteredTraits(Trait(name: 'foo')).hashCode));
+      expect(m.hashCode,
+          isNot(equals(AlteredTraits(Trait(name: 'bar')).hashCode)));
+    });
   });
 
   group('Area of Effect', () {
@@ -123,6 +131,13 @@ void main() {
     test('incrementRadius', () {
       // minimum cost of 2
       expect(m.incrementEffect(1).energyCost, equals(2));
+    });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(AreaOfEffect()));
+      expect(m, isNot(equals(AreaOfEffect(radius: 5))));
+      expect(m.hashCode, equals(AreaOfEffect().hashCode));
+      expect(m.hashCode, isNot(equals(AreaOfEffect(radius: 3).hashCode)));
     });
   });
 
@@ -190,6 +205,30 @@ void main() {
       expect(b.copyWith(value: 2).energyCost, equals(10));
       expect(b.copyWith(value: 3).energyCost, equals(20));
       expect(b.copyWith(value: 4).energyCost, equals(40));
+    });
+
+    test('has incrementEffect', () {
+      expect(m.incrementEffect(2).energyCost, equals(2));
+      expect(m.incrementEffect(2).value, equals(2));
+      expect(m.incrementEffect(-2).energyCost, equals(2));
+      expect(m.incrementEffect(-2).value, equals(-2));
+      expect(m.incrementEffect(6).energyCost, equals(32));
+      expect(m.incrementEffect(6).value, equals(6));
+    });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(Bestows('Test')));
+      expect(m, isNot(equals(Bestows('Bar'))));
+      expect(m, isNot(equals(m.copyWith(inherent: true))));
+      expect(m, isNot(equals(m.copyWith(value: 1))));
+      expect(m, isNot(equals(m.copyWith(range: BestowsRange.moderate))));
+
+      expect(m.hashCode, equals(Bestows('Test').hashCode));
+      expect(m.hashCode, isNot(equals(Bestows('Bar').hashCode)));
+      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
+      expect(m.hashCode, isNot(equals(m.copyWith(value: 1).hashCode)));
+      expect(m.hashCode,
+          isNot(equals(m.copyWith(range: BestowsRange.moderate).hashCode)));
     });
   });
 
@@ -266,12 +305,25 @@ void main() {
       expect(m.incrementEffect(21).energyCost, equals(21));
       expect(m.incrementEffect(21).duration, equals(GDuration(months: 11)));
 
-      expect(m.incrementEffect(25).energyCost, equals(25));
-      expect(m.incrementEffect(25).duration, equals(GDuration(years: 4)));
-
+      var years = m.incrementEffect(25);
+      expect(years.energyCost, equals(25));
+      expect(years.duration, equals(GDuration(years: 4)));
+      expect(years.incrementEffect(-4).duration, equals(GDuration(months: 11)));
       // can't go below zero
       expect(m.incrementEffect(-4).energyCost, equals(0));
       expect(m.incrementEffect(-4).duration, equals(GDuration.momentary));
+    });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(DurationModifier()));
+      expect(
+          m, isNot(equals(DurationModifier(duration: GDuration(minutes: 10)))));
+      expect(m, isNot(equals(m.copyWith(inherent: true))));
+
+      expect(m.hashCode, equals(DurationModifier().hashCode));
+      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
+      expect(m.hashCode,
+          isNot(equals(m.copyWith(duration: GDuration(hours: 1)).hashCode)));
     });
   });
 
@@ -310,6 +362,18 @@ void main() {
       expect(energy.incrementEffect(5).energyCost, equals(5));
       expect(energy.incrementEffect(7).energy, equals(7));
       expect(energy.incrementEffect(20).energyCost, equals(20));
+    });
+
+    test('implements == and hashCode', () {
+      expect(energy, equals(ExtraEnergy()));
+      expect(energy, isNot(equals(ExtraEnergy(energy: 2))));
+      expect(energy, isNot(equals(energy.copyWith(inherent: true))));
+
+      expect(energy.hashCode, equals(ExtraEnergy().hashCode));
+      expect(energy.hashCode,
+          isNot(equals(energy.copyWith(inherent: true).hashCode)));
+      expect(
+          energy.hashCode, isNot(equals(energy.copyWith(energy: 3).hashCode)));
     });
   });
 
@@ -351,6 +415,21 @@ void main() {
       expect(heal.incrementEffect(2).dice, equals(DieRoll(1, 2)));
       expect(heal.incrementEffect(8).dice, equals(DieRoll(3, 0)));
     });
+
+    test('implements == and hashCode', () {
+      expect(heal, equals(Healing()));
+      expect(heal, isNot(equals(Healing(dice: DieRoll(2, 0)))));
+      expect(heal, isNot(equals(heal.copyWith(inherent: true))));
+      expect(heal, isNot(equals(heal.copyWith(type: HealingType.fp))));
+
+      expect(heal.hashCode, equals(Healing().hashCode));
+      expect(
+          heal.hashCode, isNot(equals(heal.copyWith(inherent: true).hashCode)));
+      expect(heal.hashCode,
+          isNot(equals(heal.copyWith(dice: DieRoll(2, 0)).hashCode)));
+      expect(heal.hashCode,
+          isNot(equals(heal.copyWith(type: HealingType.fp).hashCode)));
+    });
   });
 
   group('Meta-Magic', () {
@@ -388,6 +467,17 @@ void main() {
       expect(meta.incrementEffect(5).energyCost, equals(5));
       expect(meta.incrementEffect(7).energyCost, equals(7));
       expect(meta.incrementEffect(20).energyCost, equals(20));
+    });
+
+    test('implements == and hashCode', () {
+      expect(meta, equals(MetaMagic()));
+      expect(meta, isNot(equals(MetaMagic(energy: 2))));
+      expect(meta, isNot(equals(meta.copyWith(inherent: true))));
+
+      expect(meta.hashCode, equals(MetaMagic().hashCode));
+      expect(
+          meta.hashCode, isNot(equals(meta.copyWith(inherent: true).hashCode)));
+      expect(meta.hashCode, isNot(equals(meta.copyWith(energy: 3).hashCode)));
     });
   });
 
@@ -456,6 +546,19 @@ void main() {
       expect(
           m.incrementEffect(26).yardsPerSecond, equals(GDistance(miles: 25)));
     });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(Speed()));
+      expect(m, isNot(equals(Speed(yardsPerSecond: GDistance(yards: 3)))));
+      expect(m, isNot(equals(m.copyWith(inherent: true))));
+
+      expect(m.hashCode, equals(Speed().hashCode));
+      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
+      expect(
+          m.hashCode,
+          isNot(equals(
+              m.copyWith(yardsPerSecond: GDistance(yards: 3)).hashCode)));
+    });
   });
 
   group("SubjectWeight:", () {
@@ -505,6 +608,17 @@ void main() {
       expect(m.incrementEffect(3).weight, equals(GWeight(pounds: 300)));
       expect(m.incrementEffect(5).weight, equals(GWeight(pounds: 3000)));
       expect(m.incrementEffect(8).weight, equals(GWeight(tons: 50)));
+    });
+
+    test('implements == and hashCode', () {
+      expect(m, equals(SubjectWeight()));
+      expect(m, isNot(equals(SubjectWeight(weight: GWeight(pounds: 30)))));
+      expect(m, isNot(equals(m.copyWith(inherent: true))));
+
+      expect(m.hashCode, equals(SubjectWeight().hashCode));
+      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
+      expect(m.hashCode,
+          isNot(equals(m.copyWith(weight: GWeight(pounds: 30)).hashCode)));
     });
   });
 }

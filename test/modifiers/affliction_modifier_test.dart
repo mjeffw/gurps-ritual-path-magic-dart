@@ -11,27 +11,19 @@ void main() {
     });
 
     test('should have initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.name, equals('Affliction, Stunning'));
       expect(m.energyCost, equals(0));
-    });
-
-    test('should allow inherent to be set', () {
-      AfflictionStun m2 = AfflictionStun(inherent: true);
-      expect(m2.inherent, equals(true));
     });
 
     test('implements == and hashCode', () {
       expect(m, equals(AfflictionStun()));
       expect(m.hashCode, equals(AfflictionStun().hashCode));
-      expect(m, isNot(equals(AfflictionStun(inherent: true))));
-      expect(
-          m.hashCode, isNot(equals(AfflictionStun(inherent: true).inherent)));
+      expect(m, isNot(equals(Affliction())));
+      expect(m.hashCode, isNot(equals(Affliction().hashCode)));
     });
 
-    test('incrementValue does nothing', () {
-      expect(m, same(m.incrementEffect(1)));
-    });
+    test('incrementValue does nothing',
+        () => expect(m, same(m.incrementEffect(1))));
   });
 
   group('Afflictions', () {
@@ -42,15 +34,10 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.percent, equals(0));
       expect(m.effect, equals('Foo'));
       expect(m.name, equals('Afflictions'));
       expect(m.energyCost, equals(0));
-    });
-
-    test('has inherent', () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('+1 energy for every +5% worth as an enhancement to Affliction', () {
@@ -86,8 +73,6 @@ void main() {
       expect(m.hashCode, equals(Affliction(effect: 'Foo').hashCode));
       expect(m, isNot(equals(m.copyWith(effect: 'Bar'))));
       expect(m, isNot(equals(m.copyWith(percent: 10))));
-      expect(m.hashCode,
-          isNot(equals(Affliction(effect: 'Foo', inherent: true).inherent)));
     });
   });
 }

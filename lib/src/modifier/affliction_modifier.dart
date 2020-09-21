@@ -4,8 +4,7 @@ import 'ritual_modifier.dart';
 
 /// Adds the Affliction: Stun (p. B36) effect to a spell.
 class AfflictionStun extends RitualModifier {
-  const AfflictionStun({bool inherent: false})
-      : super('Affliction, Stunning', inherent: inherent);
+  const AfflictionStun() : super('Affliction, Stunning');
 
   /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
   /// energy; the spell effect is enough.
@@ -16,34 +15,27 @@ class AfflictionStun extends RitualModifier {
   RitualModifier incrementEffect(int value) => this;
 
   @override
-  int get hashCode => inherent.hashCode;
+  int get hashCode => name.hashCode;
 
   @override
-  bool operator ==(Object other) =>
-      other is AfflictionStun && other.inherent == inherent;
+  bool operator ==(Object other) => other is AfflictionStun;
 }
 
 /// Adds an Affliction (p. B36) effect to a spell.
 class Affliction extends RitualModifier {
-  const Affliction({String effect, int percent: 0, bool inherent: false})
+  const Affliction({String effect, int percent: 0})
       : percent = percent ?? 0,
         effect = effect ?? 'undefined',
-        super('Afflictions', inherent: inherent);
+        super('Afflictions');
 
-  Affliction copyWith({String effect, int percent, bool inherent}) {
+  Affliction copyWith({String effect, int percent}) {
     return Affliction(
-      effect: effect ?? this.effect,
-      percent: percent ?? this.percent,
-      inherent: inherent ?? this.inherent,
-    );
+        effect: effect ?? this.effect, percent: percent ?? this.percent);
   }
 
   @override
-  Affliction incrementEffect(int energyIncrement) {
-    int percent = (this.energyCost + energyIncrement) * 5;
-    return Affliction(
-        effect: 'undefined', percent: percent, inherent: this.inherent);
-  }
+  Affliction incrementEffect(int energyIncrement) => Affliction(
+      effect: 'undefined', percent: (this.energyCost + energyIncrement) * 5);
 
   final String effect;
 
@@ -55,12 +47,9 @@ class Affliction extends RitualModifier {
   int get energyCost => (percent / 5.0).ceil();
 
   @override
-  int get hashCode => hash3(effect, percent, inherent);
+  int get hashCode => hash2(effect, percent);
 
   @override
   bool operator ==(Object other) =>
-      other is Affliction &&
-      other.effect == effect &&
-      other.percent == percent &&
-      other.inherent == inherent;
+      other is Affliction && other.effect == effect && other.percent == percent;
 }

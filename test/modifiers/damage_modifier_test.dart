@@ -33,7 +33,6 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.dice, equals(d1));
       expect(m.name, equals('Damage'));
       expect(m.energyCost, equals(0));
@@ -41,10 +40,6 @@ void main() {
       expect(m.type, equals((DamageType.crushing)));
       expect(m.direct, equals((true)));
       expect(m.explosive, equals((false)));
-    });
-
-    test('has inherent', () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('has type', () {
@@ -522,7 +517,6 @@ void main() {
       expect(m.hashCode, equals(Damage(dice: DieRoll(1, 0)).hashCode));
       expect(m, isNot(equals(m.copyWith(dice: DieRoll(2, 0)))));
       expect(m, isNot(equals(m.copyWith(direct: false))));
-      expect(m.hashCode, isNot(equals(Damage(inherent: true).inherent)));
     });
   });
 }

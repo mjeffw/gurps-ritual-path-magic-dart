@@ -12,28 +12,22 @@ class Damage extends RitualModifier {
       DieRoll dice: const DieRoll(1, 0),
       List<TraitModifier> modifiers,
       bool direct: true,
-      bool explosive: false,
-      bool inherent: false})
+      bool explosive: false})
       : dice = dice ?? const DieRoll(1, 0),
         direct = direct ?? true,
         type = type ?? DamageType.crushing,
         _explosive = explosive ?? false,
         _modifiers = modifiers ?? const [],
-        super('Damage', inherent: inherent ?? false);
+        super('Damage');
 
   Damage copyWith(
-      {DamageType type,
-      DieRoll dice,
-      bool direct,
-      bool explosive,
-      bool inherent}) {
+      {DamageType type, DieRoll dice, bool direct, bool explosive}) {
     return Damage(
         type: type ?? this.type,
         dice: dice ?? this.dice,
         modifiers: this._modifiers,
         direct: direct ?? this.direct,
-        explosive: explosive ?? this._explosive,
-        inherent: inherent ?? this.inherent);
+        explosive: explosive ?? this._explosive);
   }
 
   Damage addModifier(TraitModifier traitModifier) => Damage(
@@ -41,7 +35,6 @@ class Damage extends RitualModifier {
       dice: this.dice,
       direct: this.direct,
       explosive: this.explosive,
-      inherent: this.inherent,
       modifiers: [...this._modifiers, traitModifier]);
 
   /// GURPS rpm.17: If a spell lists “damage” without specifying whether it’s
@@ -97,12 +90,11 @@ class Damage extends RitualModifier {
       direct: this.direct,
       explosive: this.explosive,
       modifiers: this._modifiers,
-      type: this.type,
-      inherent: this.inherent);
+      type: this.type);
 
   @override
-  int get hashCode => hashObjects(
-      <dynamic>[dice, direct, explosive, _modifiers, type, inherent]);
+  int get hashCode =>
+      hashObjects(<dynamic>[dice, direct, explosive, _modifiers, type]);
 
   @override
   bool operator ==(Object other) {
@@ -111,7 +103,6 @@ class Damage extends RitualModifier {
         other.direct == direct &&
         other.type == type &&
         other._explosive == _explosive &&
-        other._modifiers == _modifiers &&
-        other.inherent == inherent;
+        other._modifiers == _modifiers;
   }
 }

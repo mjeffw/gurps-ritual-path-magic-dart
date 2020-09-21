@@ -14,16 +14,10 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.characterPoints, equals(0));
       expect(m.name, equals('Altered Traits'));
       expect(m.energyCost, equals(0));
       expect(m.trait, equals(Trait(name: 'foo')));
-    });
-
-    test('has inherent', () {
-      var alt = m.copyWith(inherent: true);
-      expect(alt.inherent, equals(true));
     });
 
     test('adds +1 energy for every 5 cps removed', () {
@@ -99,14 +93,9 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.radius, equals(0));
       expect(m.name, equals('Area of Effect'));
       expect(m.energyCost, equals(0));
-    });
-
-    test('has inherent', () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('radius calculation', () {
@@ -149,15 +138,10 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.name, equals("Bestows a (Bonus or Penalty)"));
       expect(m.energyCost, equals(0));
       expect(m.roll, equals('Test'));
       expect(m.range, equals(BestowsRange.narrow));
-    });
-
-    test('has inherent', () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('has range', () {
@@ -219,13 +203,11 @@ void main() {
     test('implements == and hashCode', () {
       expect(m, equals(Bestows('Test')));
       expect(m, isNot(equals(Bestows('Bar'))));
-      expect(m, isNot(equals(m.copyWith(inherent: true))));
       expect(m, isNot(equals(m.copyWith(value: 1))));
       expect(m, isNot(equals(m.copyWith(range: BestowsRange.moderate))));
 
       expect(m.hashCode, equals(Bestows('Test').hashCode));
       expect(m.hashCode, isNot(equals(Bestows('Bar').hashCode)));
-      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
       expect(m.hashCode, isNot(equals(m.copyWith(value: 1).hashCode)));
       expect(m.hashCode,
           isNot(equals(m.copyWith(range: BestowsRange.moderate).hashCode)));
@@ -240,14 +222,9 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.name, equals('Duration'));
       expect(m.energyCost, equals(0));
       expect(m.duration, equals(GDuration.momentary));
-    });
-
-    test('has inherent', () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     /*
@@ -318,10 +295,8 @@ void main() {
       expect(m, equals(DurationModifier()));
       expect(
           m, isNot(equals(DurationModifier(duration: GDuration(minutes: 10)))));
-      expect(m, isNot(equals(m.copyWith(inherent: true))));
 
       expect(m.hashCode, equals(DurationModifier().hashCode));
-      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
       expect(m.hashCode,
           isNot(equals(m.copyWith(duration: GDuration(hours: 1)).hashCode)));
     });
@@ -335,15 +310,9 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(energy.inherent, equals(false));
       expect(energy.name, equals('Extra Energy'));
       expect(energy.energyCost, equals(0));
       expect(energy.energy, 0);
-    });
-
-    test('has inherent', () {
-      var d = energy.copyWith(inherent: true);
-      expect(d.inherent, equals(true));
     });
 
     test('has energy', () {
@@ -367,11 +336,8 @@ void main() {
     test('implements == and hashCode', () {
       expect(energy, equals(ExtraEnergy()));
       expect(energy, isNot(equals(ExtraEnergy(energy: 2))));
-      expect(energy, isNot(equals(energy.copyWith(inherent: true))));
 
       expect(energy.hashCode, equals(ExtraEnergy().hashCode));
-      expect(energy.hashCode,
-          isNot(equals(energy.copyWith(inherent: true).hashCode)));
       expect(
           energy.hashCode, isNot(equals(energy.copyWith(energy: 3).hashCode)));
     });
@@ -385,16 +351,10 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(heal.inherent, equals(false));
       expect(heal.name, equals('Healing'));
       expect(heal.energyCost, equals(0));
       expect(heal.dice, equals(DieRoll(1, 0)));
       expect(heal.type, equals(HealingType.hp));
-    });
-
-    test('has inherent', () {
-      var d = heal.copyWith(inherent: true);
-      expect(d.inherent, equals(true));
     });
 
     test('has Dice', () {
@@ -419,12 +379,9 @@ void main() {
     test('implements == and hashCode', () {
       expect(heal, equals(Healing()));
       expect(heal, isNot(equals(Healing(dice: DieRoll(2, 0)))));
-      expect(heal, isNot(equals(heal.copyWith(inherent: true))));
       expect(heal, isNot(equals(heal.copyWith(type: HealingType.fp))));
 
       expect(heal.hashCode, equals(Healing().hashCode));
-      expect(
-          heal.hashCode, isNot(equals(heal.copyWith(inherent: true).hashCode)));
       expect(heal.hashCode,
           isNot(equals(heal.copyWith(dice: DieRoll(2, 0)).hashCode)));
       expect(heal.hashCode,
@@ -440,15 +397,9 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(meta.inherent, equals(false));
       expect(meta.name, equals('Meta-Magic'));
       expect(meta.energyCost, equals(0));
       expect(meta.energy, 0);
-    });
-
-    test('has inherent', () {
-      var d = meta.copyWith(inherent: true);
-      expect(d.inherent, equals(true));
     });
 
     test('has energy', () {
@@ -472,11 +423,8 @@ void main() {
     test('implements == and hashCode', () {
       expect(meta, equals(MetaMagic()));
       expect(meta, isNot(equals(MetaMagic(energy: 2))));
-      expect(meta, isNot(equals(meta.copyWith(inherent: true))));
 
       expect(meta.hashCode, equals(MetaMagic().hashCode));
-      expect(
-          meta.hashCode, isNot(equals(meta.copyWith(inherent: true).hashCode)));
       expect(meta.hashCode, isNot(equals(meta.copyWith(energy: 3).hashCode)));
     });
   });
@@ -489,14 +437,9 @@ void main() {
     });
 
     test("has initial state", () {
-      expect(m.inherent, equals(false));
       expect(m.energyCost, equals(0));
       expect(m.name, equals("Speed"));
       expect(m.yardsPerSecond, equals(GDistance(yards: 2)));
-    });
-
-    test("has inherent", () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     // For movement spells (e.g., spells that use telekinesis or allow a subject to fly), look up the speed
@@ -550,10 +493,8 @@ void main() {
     test('implements == and hashCode', () {
       expect(m, equals(Speed()));
       expect(m, isNot(equals(Speed(yardsPerSecond: GDistance(yards: 3)))));
-      expect(m, isNot(equals(m.copyWith(inherent: true))));
 
       expect(m.hashCode, equals(Speed().hashCode));
-      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
       expect(
           m.hashCode,
           isNot(equals(
@@ -569,14 +510,9 @@ void main() {
     });
 
     test("has initial state", () {
-      expect(m.inherent, equals(false));
       expect(m.energyCost, equals(0));
-      expect(m.name, equals("Subject GWeight"));
+      expect(m.name, equals("Subject Weight"));
       expect(m.weight, equals(GWeight(pounds: 10)));
-    });
-
-    test("has inherent", () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test("should have energyCost and weight", () {
@@ -613,10 +549,8 @@ void main() {
     test('implements == and hashCode', () {
       expect(m, equals(SubjectWeight()));
       expect(m, isNot(equals(SubjectWeight(weight: GWeight(pounds: 30)))));
-      expect(m, isNot(equals(m.copyWith(inherent: true))));
 
       expect(m.hashCode, equals(SubjectWeight().hashCode));
-      expect(m.hashCode, isNot(equals(m.copyWith(inherent: true).hashCode)));
       expect(m.hashCode,
           isNot(equals(m.copyWith(weight: GWeight(pounds: 30)).hashCode)));
     });

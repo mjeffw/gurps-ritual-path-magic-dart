@@ -11,14 +11,9 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.energyCost, equals(0));
       expect(m.name, equals('Range'));
       expect(m.distance, equals(GDistance(yards: 2)));
-    });
-
-    test('has inherent', () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('has distance', () {
@@ -70,7 +65,6 @@ void main() {
           isNot(equals(Range(distance: GDistance(yards: 3)).hashCode)));
 
       expect(m, isNot(equals(m.copyWith(distance: GDistance(yards: 5)))));
-      expect(m, isNot(equals(m.copyWith(inherent: true))));
     });
   });
 
@@ -82,14 +76,9 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(r.inherent, equals(false));
       expect(r.energyCost, equals(0));
       expect(r.name, equals('Range, Informational'));
       expect(r.distance, equals(GDistance(yards: 200)));
-    });
-
-    test('has inherent', () {
-      expect(r.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('has distance', () {
@@ -139,7 +128,6 @@ void main() {
 
       expect(r, equals(r.copyWith(distance: GDistance(yards: 200))));
       expect(r, isNot(equals(r.copyWith(distance: GDistance(miles: 1)))));
-      expect(r, isNot(equals(r.copyWith(inherent: true))));
     });
   });
 
@@ -151,14 +139,9 @@ void main() {
     });
 
     test('has initial state', () {
-      expect(m.inherent, equals(false));
       expect(m.duration, equals(GDuration(hours: 2)));
       expect(m.name, equals('Range, Cross-Time'));
       expect(m.energyCost, equals(0));
-    });
-
-    test('has inherent', () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test('has duration', () {
@@ -200,7 +183,6 @@ void main() {
 
       expect(m, equals(m.copyWith(duration: GDuration(hours: 2))));
       expect(m, isNot(equals(m.copyWith(duration: GDuration(days: 1)))));
-      expect(m, isNot(equals(m.copyWith(inherent: true))));
     });
   });
 
@@ -212,14 +194,9 @@ void main() {
     });
 
     test("has initial state", () {
-      expect(m.inherent, equals(false));
       expect(m.numberDimensions, equals(0));
       expect(m.name, equals("Range, Extradimensional"));
       expect(m.energyCost, equals(0));
-    });
-
-    test("has inherent", () {
-      expect(m.copyWith(inherent: true).inherent, equals(true));
     });
 
     test("cost 10 energy per Dimension crossed", () {
@@ -242,7 +219,6 @@ void main() {
 
       expect(m, equals(m.copyWith(numberDimensions: 0)));
       expect(m, isNot(equals(m.copyWith(numberDimensions: 3))));
-      expect(m, isNot(equals(m.copyWith(inherent: true))));
     });
   });
 }

@@ -10,25 +10,13 @@ import '../trait.dart';
 ///
 /// Modifiers add Damage, Range, GDuration, and other features to a ritual,
 /// and the energy cost of the spell is adjusted by the value of the modifiers.
-/// Modifiers are identified by their name, and can be inherent (intrisic) or
-/// not.
-///
-/// For example, a spell might momentarily open a Gate between dimensions; a
-/// GDuration modifier can be added to make the Gate remain for a longer
-/// time. The GDuration is not inherent or intrinsic in this case.
-///
-/// A spell that adds +2 to the subject's Strength would need a Bestows a Bonus
-///  modifier; this effect is inherent to the spell.
+/// Modifiers are identified by their name.
 @immutable
 abstract class RitualModifier {
-  const RitualModifier(this.name, {bool inherent})
-      : inherent = inherent ?? false;
+  const RitualModifier(this.name);
 
   /// the name of this Modifier
   final String name;
-
-  /// is this Modifier instance inherent to the spell?
-  final bool inherent;
 
   /// the energy cost of the modifier
   int get energyCost;
@@ -46,21 +34,15 @@ final _sizeSpeedRangeTable = const SizeAndSpeedRangeTable();
 /// Any ritual that adds, removes or modifies advantages or disadvantages, or
 /// increases or lowers attributes or characteristics.
 class AlteredTraits extends RitualModifier {
-  const AlteredTraits(this.trait,
-      {bool inherent = false, List<TraitModifier> modifiers})
+  const AlteredTraits(this.trait, {List<TraitModifier> modifiers})
       : _modifiers = modifiers ?? const [],
-        super('Altered Traits', inherent: inherent);
+        super('Altered Traits');
 
-  AlteredTraits copyWith({Trait trait, bool inherent}) => AlteredTraits(
-        trait ?? this.trait,
-        inherent: inherent ?? this.inherent,
-        modifiers: this._modifiers,
-      );
+  AlteredTraits copyWith({Trait trait}) =>
+      AlteredTraits(trait ?? this.trait, modifiers: this._modifiers);
 
   AlteredTraits addModifier(TraitModifier traitModifier) =>
-      AlteredTraits(this.trait,
-          inherent: this.inherent,
-          modifiers: [...this._modifiers, traitModifier]);
+      AlteredTraits(this.trait, modifiers: [...this._modifiers, traitModifier]);
 
   @override
   AlteredTraits incrementEffect(int value) {
@@ -70,7 +52,7 @@ class AlteredTraits extends RitualModifier {
         baseCost: (characterPoints.isNegative) ? -5 * energy : energy,
         hasLevels: false);
 
-    return AlteredTraits(t, inherent: this.inherent);
+    return AlteredTraits(t);
   }
 
   final Trait trait;
@@ -101,14 +83,13 @@ class AlteredTraits extends RitualModifier {
   }
 
   @override
-  int get hashCode => hash3(trait, _modifiers, inherent);
+  int get hashCode => hash2(trait, _modifiers);
 
   @override
   bool operator ==(Object other) {
     return other is AlteredTraits &&
         trait == other.trait &&
-        _modifiers == other._modifiers &&
-        inherent == other.inherent;
+        _modifiers == other._modifiers;
   }
 }
 
@@ -122,20 +103,17 @@ class AlteredTraits extends RitualModifier {
 /// Alternatively, you may exclude everyone in the area, but then include
 /// willing potential targets for +1 SP per two specific subjects.
 class AreaOfEffect extends RitualModifier {
-  const AreaOfEffect(
-      {int radius: 0,
-      int numberTargets: 0,
-      bool excludes: true,
-      bool inherent: false})
-      : radius = radius ?? 0,
+  const AreaOfEffect({
+    int radius: 0,
+    int numberTargets: 0,
+    bool excludes: true,
+  })  : radius = radius ?? 0,
         numberTargets = numberTargets ?? 0,
         excludes = excludes ?? true,
-        super('Area of Effect', inherent: inherent);
+        super('Area of Effect');
 
-  AreaOfEffect copyWith(
-      {int radius, int numberTargets, bool excludes, bool inherent}) {
+  AreaOfEffect copyWith({int radius, int numberTargets, bool excludes}) {
     return AreaOfEffect(
-      inherent: inherent ?? this.inherent,
       radius: radius ?? this.radius,
       numberTargets: numberTargets ?? this.numberTargets,
       excludes: excludes ?? this.excludes,
@@ -146,8 +124,7 @@ class AreaOfEffect extends RitualModifier {
   AreaOfEffect incrementEffect(int value) => AreaOfEffect(
       radius: radius + value,
       numberTargets: this.numberTargets,
-      excludes: this.excludes,
-      inherent: this.inherent);
+      excludes: this.excludes);
 
   final int radius;
 
@@ -172,15 +149,14 @@ class AreaOfEffect extends RitualModifier {
   }
 
   @override
-  int get hashCode => hash4(radius, numberTargets, excludes, inherent);
+  int get hashCode => hash3(radius, numberTargets, excludes);
 
   @override
   bool operator ==(Object other) {
     return other is AreaOfEffect &&
         other.radius == radius &&
         other.numberTargets == numberTargets &&
-        other.excludes == excludes &&
-        other.inherent == inherent;
+        other.excludes == excludes;
   }
 }
 
@@ -196,18 +172,13 @@ typedef int EnergyFunction(int value);
 /// rolls or social rolls affecting a specific person).
 class Bestows extends RitualModifier {
   const Bestows(this.roll,
-      {BestowsRange range: BestowsRange.narrow,
-      int value: 0,
-      bool inherent: false})
+      {BestowsRange range: BestowsRange.narrow, int value: 0})
       : range = range ?? BestowsRange.narrow,
         value = value ?? 0,
-        super('Bestows a (Bonus or Penalty)', inherent: inherent ?? false);
+        super('Bestows a (Bonus or Penalty)');
 
-  Bestows copyWith({int value, bool inherent, BestowsRange range}) =>
-      Bestows(this.roll,
-          value: value ?? this.value,
-          inherent: inherent ?? this.inherent,
-          range: range ?? this.range);
+  Bestows copyWith({int value, BestowsRange range}) => Bestows(this.roll,
+      value: value ?? this.value, range: range ?? this.range);
 
   /// Name of range of traits being modified,
   final String roll;
@@ -232,32 +203,27 @@ class Bestows extends RitualModifier {
   int get energyCost => value == 0 ? 0 : _rangeEnergy[range](value);
 
   @override
-  Bestows incrementEffect(int value) => Bestows(this.roll,
-      value: this.value + value, inherent: this.inherent, range: this.range);
+  Bestows incrementEffect(int value) =>
+      Bestows(this.roll, value: this.value + value, range: this.range);
 
   @override
-  int get hashCode => hash4(inherent, range, roll, value);
+  int get hashCode => hash3(range, roll, value);
 
   @override
   bool operator ==(Object other) =>
       other is Bestows &&
-      other.inherent == inherent &&
       other.range == range &&
       other.roll == roll &&
       other.value == value;
 }
 
 class DurationModifier extends RitualModifier {
-  const DurationModifier(
-      {GDuration duration: GDuration.momentary, bool inherent: false})
+  const DurationModifier({GDuration duration: GDuration.momentary})
       : duration = duration ?? GDuration.momentary,
-        super('Duration', inherent: inherent ?? false);
+        super('Duration');
 
-  DurationModifier copyWith({GDuration duration, bool inherent}) {
-    return DurationModifier(
-        duration: duration ?? this.duration,
-        inherent: inherent ?? this.inherent);
-  }
+  DurationModifier copyWith({GDuration duration}) =>
+      DurationModifier(duration: duration ?? this.duration);
 
   static List<GDuration> _durationTable = [
     GDuration.momentary,
@@ -300,24 +266,21 @@ class DurationModifier extends RitualModifier {
         ? _durationTable[newIndex]
         : GDuration(years: newIndex - 21);
 
-    return DurationModifier(duration: dur, inherent: this.inherent);
+    return DurationModifier(duration: dur);
   }
 
   @override
-  int get hashCode => hash2(duration, inherent);
+  int get hashCode => duration.hashCode;
 
   @override
-  bool operator ==(Object other) {
-    return other is DurationModifier &&
-        other.duration == duration &&
-        other.inherent == inherent;
-  }
+  bool operator ==(Object other) =>
+      other is DurationModifier && other.duration == duration;
 }
 
 abstract class _EnergyPoolModifier extends RitualModifier {
-  const _EnergyPoolModifier(String name, {int energy: 0, bool inherent = false})
+  const _EnergyPoolModifier(String name, {int energy: 0})
       : energy = energy ?? 0,
-        super(name, inherent: inherent);
+        super(name);
 
   final int energy;
 
@@ -326,40 +289,34 @@ abstract class _EnergyPoolModifier extends RitualModifier {
 }
 
 class ExtraEnergy extends _EnergyPoolModifier {
-  const ExtraEnergy({int energy: 0, bool inherent = false})
-      : super('Extra Energy', energy: energy, inherent: inherent);
+  const ExtraEnergy({int energy: 0}) : super('Extra Energy', energy: energy);
 
-  ExtraEnergy copyWith({int energy, bool inherent}) => ExtraEnergy(
-      energy: energy ?? this.energy, inherent: inherent ?? this.inherent);
+  ExtraEnergy copyWith({int energy}) =>
+      ExtraEnergy(energy: energy ?? this.energy);
 
   @override
   ExtraEnergy incrementEffect(int value) =>
-      ExtraEnergy(energy: this.energy + value, inherent: this.inherent);
+      ExtraEnergy(energy: this.energy + value);
 
   @override
-  int get hashCode => hash2(energy, inherent);
+  int get hashCode => energy.hashCode;
 
   @override
   bool operator ==(Object other) {
-    return other is ExtraEnergy &&
-        other.energy == energy &&
-        other.inherent == inherent;
+    return other is ExtraEnergy && other.energy == energy;
   }
 }
 
 enum HealingType { hp, fp }
 
 class Healing extends RitualModifier {
-  const Healing({HealingType type, DieRoll dice, bool inherent})
+  const Healing({HealingType type, DieRoll dice})
       : type = type ?? HealingType.hp,
         dice = dice ?? const DieRoll(1, 0),
-        super('Healing', inherent: inherent);
+        super('Healing');
 
-  Healing copyWith({HealingType type, DieRoll dice, bool inherent}) => Healing(
-      type: type ?? this.type,
-      dice: dice ?? this.dice,
-      inherent: inherent ?? this.inherent);
-
+  Healing copyWith({HealingType type, DieRoll dice}) =>
+      Healing(type: type ?? this.type, dice: dice ?? this.dice);
   final DieRoll dice;
 
   final HealingType type;
@@ -368,51 +325,41 @@ class Healing extends RitualModifier {
   int get energyCost => DieRoll.denormalize(dice);
 
   @override
-  Healing incrementEffect(int value) => Healing(
-      dice: this.dice + value, type: this.type, inherent: this.inherent);
+  Healing incrementEffect(int value) =>
+      Healing(dice: this.dice + value, type: this.type);
 
   @override
-  int get hashCode => hash3(dice, type, inherent);
+  int get hashCode => hash2(dice, type);
 
   @override
-  bool operator ==(Object other) {
-    return other is Healing &&
-        other.dice == dice &&
-        other.inherent == inherent &&
-        other.type == type;
-  }
+  bool operator ==(Object other) =>
+      other is Healing && other.dice == dice && other.type == type;
 }
 
 class MetaMagic extends _EnergyPoolModifier {
-  const MetaMagic({int energy: 0, bool inherent = false})
-      : super('Meta-Magic', energy: energy, inherent: inherent);
+  const MetaMagic({int energy: 0}) : super('Meta-Magic', energy: energy);
 
-  MetaMagic copyWith({int energy, bool inherent}) => MetaMagic(
-      energy: energy ?? this.energy, inherent: inherent ?? this.inherent);
+  MetaMagic copyWith({int energy}) => MetaMagic(energy: energy ?? this.energy);
 
   @override
   MetaMagic incrementEffect(int value) =>
-      MetaMagic(energy: this.energy + value, inherent: this.inherent);
+      MetaMagic(energy: this.energy + value);
 
   @override
-  int get hashCode => hash2(energy, inherent);
+  int get hashCode => energy.hashCode;
 
   @override
-  bool operator ==(Object other) {
-    return other is MetaMagic &&
-        other.energy == energy &&
-        other.inherent == inherent;
-  }
+  bool operator ==(Object other) =>
+      other is MetaMagic && other.energy == energy;
 }
 
 class Speed extends RitualModifier {
-  const Speed({GDistance yardsPerSecond, bool inherent})
+  const Speed({GDistance yardsPerSecond})
       : _yardsPerSecond = yardsPerSecond ?? const GDistance(yards: 0),
-        super('Speed', inherent: inherent ?? false);
+        super('Speed');
 
-  Speed copyWith({GDistance yardsPerSecond, bool inherent}) => Speed(
-      yardsPerSecond: yardsPerSecond ?? this._yardsPerSecond,
-      inherent: inherent ?? this.inherent);
+  Speed copyWith({GDistance yardsPerSecond}) =>
+      Speed(yardsPerSecond: yardsPerSecond ?? this._yardsPerSecond);
 
   final GDistance _yardsPerSecond;
 
@@ -428,27 +375,24 @@ class Speed extends RitualModifier {
     GDistance speed =
         _sizeSpeedRangeTable.linearMeasureFor((size < 0) ? 0 : size);
 
-    return Speed(yardsPerSecond: speed, inherent: this.inherent);
+    return Speed(yardsPerSecond: speed);
   }
 
   @override
-  int get hashCode => hash2(_yardsPerSecond, inherent);
+  int get hashCode => _yardsPerSecond.hashCode;
 
   @override
-  bool operator ==(Object other) {
-    return other is Speed &&
-        other._yardsPerSecond == _yardsPerSecond &&
-        other.inherent == inherent;
-  }
+  bool operator ==(Object other) =>
+      other is Speed && other._yardsPerSecond == _yardsPerSecond;
 }
 
 class SubjectWeight extends RitualModifier {
-  const SubjectWeight({GWeight weight, bool inherent = false})
+  const SubjectWeight({GWeight weight})
       : _weight = weight ?? const GWeight(pounds: 10),
-        super('Subject GWeight', inherent: inherent ?? false);
+        super('Subject Weight');
 
-  SubjectWeight copyWith({GWeight weight, bool inherent}) => SubjectWeight(
-      weight: weight ?? this._weight, inherent: inherent ?? this.inherent);
+  SubjectWeight copyWith({GWeight weight}) =>
+      SubjectWeight(weight: weight ?? this._weight);
 
   final GWeight _weight;
 
@@ -465,16 +409,13 @@ class SubjectWeight extends RitualModifier {
     int index = _sequence.valueToIndex(_weight.inPounds) + value;
     int pounds = _sequence.indexToValue(index);
     GWeight weight = GWeight(pounds: pounds);
-    return SubjectWeight(weight: weight, inherent: this.inherent);
+    return SubjectWeight(weight: weight);
   }
 
   @override
-  int get hashCode => hash2(_weight, inherent);
+  int get hashCode => _weight.hashCode;
 
   @override
-  bool operator ==(Object other) {
-    return other is SubjectWeight &&
-        other._weight == _weight &&
-        other.inherent == inherent;
-  }
+  bool operator ==(Object other) =>
+      other is SubjectWeight && other._weight == _weight;
 }

@@ -1,15 +1,14 @@
 import 'package:gurps_dart/gurps_dart.dart';
-import 'package:quiver/core.dart';
 
 import 'ritual_modifier.dart';
 
 class Range extends RitualModifier {
-  const Range({GDistance distance, bool inherent})
+  const Range({GDistance distance})
       : distance = distance ?? const GDistance(yards: 2),
-        super('Range', inherent: inherent);
+        super('Range');
 
-  Range copyWith({GDistance distance, bool inherent}) => Range(
-      distance: distance ?? this.distance, inherent: inherent ?? this.inherent);
+  Range copyWith({GDistance distance}) =>
+      Range(distance: distance ?? this.distance);
 
   final GDistance distance;
 
@@ -22,30 +21,27 @@ class Range extends RitualModifier {
   Range incrementEffect(int value) {
     int size = _table.sizeFor(distance);
     GDistance d = _table.linearMeasureFor(size + value);
-    return Range(distance: d, inherent: this.inherent);
+    return Range(distance: d);
   }
 
   @override
-  int get hashCode => hash2(distance, inherent);
+  int get hashCode => distance.hashCode;
 
   @override
-  bool operator ==(Object other) {
-    return other is Range &&
-        other.distance == distance &&
-        other.inherent == inherent;
-  }
+  bool operator ==(Object other) =>
+      other is Range && other.distance == distance;
 }
 
 // used by both RangeInfo and RangeCrossTime
 const _table = RepeatingSequenceConverter([1, 3]);
 
 class RangeInfo extends RitualModifier {
-  const RangeInfo({GDistance distance, bool inherent})
+  const RangeInfo({GDistance distance})
       : distance = distance ?? const GDistance(yards: 200),
-        super('Range, Informational', inherent: inherent ?? false);
+        super('Range, Informational');
 
-  RangeInfo copyWith({GDistance distance, bool inherent}) => RangeInfo(
-      distance: distance ?? this.distance, inherent: inherent ?? this.inherent);
+  RangeInfo copyWith({GDistance distance}) =>
+      RangeInfo(distance: distance ?? this.distance);
 
   final GDistance distance;
 
@@ -68,30 +64,24 @@ class RangeInfo extends RitualModifier {
             ? GDistance(yards: 1000)
             : GDistance(miles: _table.indexToValue(newIndex - 2));
 
-    return RangeInfo(distance: d, inherent: this.inherent);
+    return RangeInfo(distance: d);
   }
 
   @override
-  int get hashCode => hash2(distance, inherent);
+  int get hashCode => distance.hashCode;
 
   @override
-  bool operator ==(Object other) {
-    return other is RangeInfo &&
-        other.distance == distance &&
-        other.inherent == inherent;
-  }
+  bool operator ==(Object other) =>
+      other is RangeInfo && other.distance == distance;
 }
 
 class RangeCrossTime extends RitualModifier {
-  const RangeCrossTime(
-      {GDuration duration = const GDuration(hours: 2), bool inherent = false})
+  const RangeCrossTime({GDuration duration = const GDuration(hours: 2)})
       : duration = duration ?? const GDuration(hours: 2),
-        super('Range, Cross-Time', inherent: inherent ?? false);
+        super('Range, Cross-Time');
 
-  RangeCrossTime copyWith({GDuration duration, bool inherent}) =>
-      RangeCrossTime(
-          duration: duration ?? this.duration,
-          inherent: inherent ?? this.inherent);
+  RangeCrossTime copyWith({GDuration duration}) =>
+      RangeCrossTime(duration: duration ?? this.duration);
 
   final GDuration duration;
 
@@ -110,30 +100,25 @@ class RangeCrossTime extends RitualModifier {
         ? 2
         : (newIndex == 1) ? 12 : _table.indexToValue(newIndex - 2) * 24;
 
-    return RangeCrossTime(
-        duration: GDuration(hours: hours), inherent: this.inherent);
+    return RangeCrossTime(duration: GDuration(hours: hours));
   }
 
   @override
-  int get hashCode => hash2(duration, inherent);
+  int get hashCode => duration.hashCode;
 
   @override
   bool operator ==(Object other) {
-    return other is RangeCrossTime &&
-        other.duration == duration &&
-        other.inherent == inherent;
+    return other is RangeCrossTime && other.duration == duration;
   }
 }
 
 class RangeDimensional extends RitualModifier {
-  const RangeDimensional({int numberDimensions = 0, bool inherent = false})
+  const RangeDimensional({int numberDimensions = 0})
       : numberDimensions = numberDimensions ?? 0,
-        super('Range, Extradimensional', inherent: inherent ?? false);
+        super('Range, Extradimensional');
 
-  RangeDimensional copyWith({int numberDimensions, bool inherent}) =>
-      RangeDimensional(
-          numberDimensions: numberDimensions ?? this.numberDimensions,
-          inherent: inherent ?? this.inherent);
+  RangeDimensional copyWith({int numberDimensions}) => RangeDimensional(
+      numberDimensions: numberDimensions ?? this.numberDimensions);
 
   final int numberDimensions;
 
@@ -141,16 +126,13 @@ class RangeDimensional extends RitualModifier {
   int get energyCost => 10 * numberDimensions;
 
   @override
-  RangeDimensional incrementEffect(int value) => new RangeDimensional(
-      numberDimensions: this.numberDimensions + value, inherent: this.inherent);
+  RangeDimensional incrementEffect(int value) =>
+      new RangeDimensional(numberDimensions: this.numberDimensions + value);
 
   @override
-  int get hashCode => hash2(numberDimensions, inherent);
+  int get hashCode => numberDimensions.hashCode;
 
   @override
-  bool operator ==(Object other) {
-    return other is RangeDimensional &&
-        other.numberDimensions == numberDimensions &&
-        other.inherent == inherent;
-  }
+  bool operator ==(Object other) =>
+      other is RangeDimensional && other.numberDimensions == numberDimensions;
 }

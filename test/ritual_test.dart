@@ -11,6 +11,62 @@ import 'package:gurps_ritual_path_magic_model/src/trait.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('Air Jet', () {
+    Ritual r = Ritual(
+      name: 'Air Jet',
+      effects: [
+        SpellEffect(Path.matter,
+            effect: Effect.control, level: Level.greater, inherent: true)
+      ],
+      modifiers: [
+        Damage(direct: false, modifiers: <TraitModifier>[
+          TraitModifier(name: 'Double Knockback', percent: 20),
+          TraitModifier(name: 'Jet', percent: 0),
+          TraitModifier(name: 'No Wounding', percent: -50),
+        ]),
+      ],
+    );
+
+    expect(r.name, equals('Air Jet'));
+    expect(r.greaterEffects, 1);
+    expect(r.effectsMultiplier, 3);
+    expect(r.energyCost, 15);
+  });
+
+  test('Alertness', () {
+    Ritual r = new Ritual(
+      name: 'Alertness',
+      effects: [
+        SpellEffect(Path.mind, effect: Effect.strengthen, inherent: true)
+      ],
+      modifiers: [
+        Bestows('Sense rolls', range: BestowsRange.broad, value: 2),
+      ],
+    );
+
+    expect(r.name, equals('Alertness'));
+    expect(r.effectsMultiplier, equals(1));
+    expect(r.greaterEffects, equals(0));
+    expect(r.energyCost, equals(13));
+
+    r = r.addModifier(DurationModifier(duration: GDuration(minutes: 10)));
+    expect(r.energyCost, equals(14));
+  });
+
+  test('Amplify Injury', () {
+    Ritual r = Ritual(name: 'Amplify Injury', effects: [
+      SpellEffect(Path.body,
+          level: Level.greater, effect: Effect.destroy, inherent: true)
+    ], modifiers: [
+      AlteredTraits(
+          Trait(name: 'Vulnerability to Physical Attacks, x2', baseCost: -40)),
+    ]);
+
+    expect(r.name, equals('Amplify Injury'));
+    expect(r.energyCost, equals(39));
+    expect(r.greaterEffects, equals(1));
+  });
+
   test('Bag of Bones', () {
     Ritual ritual = new Ritual(name: 'Bag of Bones', effects: [
       SpellEffect(Path.undead,
@@ -58,63 +114,5 @@ no skills, and other traits appropriate to an animated skeleton.
           DurationModifier(duration: GDuration(days: 1)),
           SubjectWeight(weight: GWeight(pounds: 100))
         ]));
-  });
-
-  test('Alertness', () {
-    Ritual r = new Ritual(
-      name: 'Alertness',
-      effects: [
-        SpellEffect(Path.mind, effect: Effect.strengthen, inherent: true)
-      ],
-      modifiers: [
-        Bestows('Sense rolls',
-            inherent: true, range: BestowsRange.broad, value: 2),
-      ],
-    );
-
-    expect(r.name, equals('Alertness'));
-    expect(r.effectsMultiplier, equals(1));
-    expect(r.greaterEffects, equals(0));
-    expect(r.energyCost, equals(13));
-
-    r = r.addModifier(DurationModifier(duration: GDuration(minutes: 10)));
-    expect(r.energyCost, equals(14));
-  });
-
-  test('Air Jet', () {
-    Ritual r = Ritual(
-      name: 'Air Jet',
-      effects: [
-        SpellEffect(Path.matter,
-            effect: Effect.control, level: Level.greater, inherent: true)
-      ],
-      modifiers: [
-        Damage(inherent: true, direct: false, modifiers: <TraitModifier>[
-          TraitModifier(name: 'Double Knockback', percent: 20),
-          TraitModifier(name: 'Jet', percent: 0),
-          TraitModifier(name: 'No Wounding', percent: -50),
-        ]),
-      ],
-    );
-
-    expect(r.name, equals('Air Jet'));
-    expect(r.greaterEffects, 1);
-    expect(r.effectsMultiplier, 3);
-    expect(r.energyCost, 15);
-  });
-
-  test('Amplify Injury', () {
-    Ritual r = Ritual(name: 'Amplify Injury', effects: [
-      SpellEffect(Path.body,
-          level: Level.greater, effect: Effect.destroy, inherent: true)
-    ], modifiers: [
-      AlteredTraits(
-          Trait(name: 'Vulnerability to Physical Attacks, x2', baseCost: -40),
-          inherent: true),
-    ]);
-
-    expect(r.name, equals('Amplify Injury'));
-    expect(r.energyCost, equals(39));
-    expect(r.greaterEffects, equals(1));
   });
 }

@@ -1,5 +1,8 @@
-import 'package:gurps_ritual_path_magic_model/ritual_path_magic.dart';
+import 'package:gurps_dart/gurps_dart.dart';
+import 'package:gurps_ritual_path_magic_model/src/effect.dart';
 import 'package:gurps_ritual_path_magic_model/src/level.dart';
+import 'package:gurps_ritual_path_magic_model/src/modifier/damage_modifier.dart';
+import 'package:gurps_ritual_path_magic_model/src/modifier/ritual_modifier.dart';
 import 'package:gurps_ritual_path_magic_model/src/path.dart';
 import 'package:gurps_ritual_path_magic_model/src/path_effect.dart';
 import 'package:gurps_ritual_path_magic_model/src/ritual.dart';
@@ -7,32 +10,86 @@ import 'package:test/test.dart';
 
 void main() {
   test('Bag of Bones', () {
-    Ritual r = new Ritual(name: 'Bag of Bones', effects: <PathEffect>[
-      PathEffect(Path.undead, level: Level.greater, effect: Effect.control),
-      PathEffect(Path.undead, effect: Effect.create)
+    Ritual r = new Ritual(name: 'Bag of Bones', effects: [
+      PathEffect(Path.undead,
+          level: Level.greater, effect: Effect.control, inherent: true),
+      PathEffect(Path.undead, effect: Effect.create, inherent: true)
     ]);
 
-    expect(r.name, equals('Bag of Bones'));
+    expect(r.energyCost, equals(33));
+
+    r = r.addPathEffect(PathEffect(Path.magic, effect: Effect.control));
+    expect(r.energyCost, equals(48));
+
+    r = r.addModifier(DurationModifier(duration: GDuration(days: 1)));
+    expect(r.energyCost, equals(69));
+
+    r = r.addModifier(SubjectWeight(weight: GWeight(pounds: 100)));
+
     expect(
         r.effects,
         containsAll(<PathEffect>[
-          PathEffect(Path.undead, level: Level.greater, effect: Effect.control),
-          PathEffect(Path.undead, level: Level.lesser, effect: Effect.create)
+          PathEffect(Path.undead,
+              level: Level.greater, effect: Effect.control, inherent: true),
+          PathEffect(Path.undead, effect: Effect.create, inherent: true),
+          PathEffect(Path.magic, effect: Effect.control)
         ]));
 
-    expect(r.modifiers, isEmpty);
+    expect(r.name, equals('Bag of Bones'));
+    expect(r.energyCost, equals(75));
     expect(r.greaterEffects, equals(1));
     expect(r.effectsMultiplier, equals(3));
+
+    expect(
+        r.modifiers,
+        containsAll(<RitualModifier>[
+          DurationModifier(duration: GDuration(days: 1)),
+          SubjectWeight(weight: GWeight(pounds: 100))
+        ]));
   });
 
   test('Alertness', () {
-    // Ritual r = new Ritual(name: 'Alertness', effects: <PathEffect>[
-    //   PathEffect(Path.mind, effect: Effect.strengthen)
-    // ], modifiers: <ModifierComponent>[
-    //   ModifierComponent(RitualModifier.bestowsBonus,
-    //       level: 2, variation: 'Moderate', detail: 'Sense rolls')
-    // ]);
+    Ritual r = new Ritual(
+      name: 'Alertness',
+      effects: [
+        PathEffect(Path.mind, effect: Effect.strengthen, inherent: true)
+      ],
+      modifiers: [
+        Bestows('Sense rolls',
+            inherent: true, range: BestowsRange.broad, value: 2),
+      ],
+    );
 
-    // expect(r.name, 'Alertness');
+    expect(r.name, equals('Alertness'));
+    expect(r.effectsMultiplier, equals(1));
+    expect(r.greaterEffects, equals(0));
+    expect(r.energyCost, equals(13));
+
+    r = r.addModifier(DurationModifier(duration: GDuration(minutes: 10)));
+    expect(r.energyCost, equals(14));
   });
+
+  test('Air Jet', () {
+    Ritual r = Ritual(
+      name: 'Air Jet',
+      effects: [
+        PathEffect(Path.matter,
+            effect: Effect.control, level: Level.greater, inherent: true)
+      ],
+      modifiers: [
+        Damage(inherent: true, direct: false, modifiers: <TraitModifier>[
+          TraitModifier(name: 'Double Knockback', percent: 20),
+          TraitModifier(name: 'Jet', percent: 0),
+          TraitModifier(name: 'No Wounding', percent: -50),
+        ]),
+      ],
+    );
+
+    expect(r.name, equals('Air Jet'));
+    expect(r.greaterEffects, 1);
+    expect(r.effectsMultiplier, 3);
+    expect(r.energyCost, 15);
+  });
+
+  test('Amplify Injury', () {});
 }

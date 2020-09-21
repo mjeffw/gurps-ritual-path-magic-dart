@@ -1,4 +1,5 @@
 import 'package:gurps_dart/gurps_dart.dart';
+import 'package:quiver/core.dart';
 
 import 'ritual_modifier.dart';
 
@@ -22,6 +23,16 @@ class Range extends RitualModifier {
     int size = _table.sizeFor(distance);
     GDistance d = _table.linearMeasureFor(size + value);
     return Range(distance: d, inherent: this.inherent);
+  }
+
+  @override
+  int get hashCode => hash2(distance, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is Range &&
+        other.distance == distance &&
+        other.inherent == inherent;
   }
 }
 
@@ -59,6 +70,16 @@ class RangeInfo extends RitualModifier {
 
     return RangeInfo(distance: d, inherent: this.inherent);
   }
+
+  @override
+  int get hashCode => hash2(distance, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is RangeInfo &&
+        other.distance == distance &&
+        other.inherent == inherent;
+  }
 }
 
 class RangeCrossTime extends RitualModifier {
@@ -92,6 +113,16 @@ class RangeCrossTime extends RitualModifier {
     return RangeCrossTime(
         duration: GDuration(hours: hours), inherent: this.inherent);
   }
+
+  @override
+  int get hashCode => hash2(duration, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is RangeCrossTime &&
+        other.duration == duration &&
+        other.inherent == inherent;
+  }
 }
 
 class RangeDimensional extends RitualModifier {
@@ -112,4 +143,14 @@ class RangeDimensional extends RitualModifier {
   @override
   RangeDimensional incrementEffect(int value) => new RangeDimensional(
       numberDimensions: this.numberDimensions + value, inherent: this.inherent);
+
+  @override
+  int get hashCode => hash2(numberDimensions, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is RangeDimensional &&
+        other.numberDimensions == numberDimensions &&
+        other.inherent == inherent;
+  }
 }

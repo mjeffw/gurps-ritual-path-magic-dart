@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
+import 'package:quiver/core.dart';
 
 import 'ritual_modifier.dart';
 
@@ -98,4 +99,19 @@ class Damage extends RitualModifier {
       modifiers: this._modifiers,
       type: this.type,
       inherent: this.inherent);
+
+  @override
+  int get hashCode => hashObjects(
+      <dynamic>[dice, direct, explosive, _modifiers, type, inherent]);
+
+  @override
+  bool operator ==(Object other) {
+    return other is Damage &&
+        other.dice == dice &&
+        other.direct == direct &&
+        other.type == type &&
+        other._explosive == _explosive &&
+        other._modifiers == _modifiers &&
+        other.inherent == inherent;
+  }
 }

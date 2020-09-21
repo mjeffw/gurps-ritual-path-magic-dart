@@ -41,7 +41,7 @@ class Ritual {
       effects: this.effects,
       modifiers: [...modifiers, if (modifier != null) modifier]);
 
-  Ritual addPathEffect(SpellEffect effect) => Ritual(
+  Ritual addSpellEffect(SpellEffect effect) => Ritual(
       name: this.name,
       effects: [...this.effects, if (effect != null) effect],
       modifiers: this.modifiers);

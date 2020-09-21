@@ -7,8 +7,8 @@ import 'package:meta/meta.dart';
 class Casting {
   const Casting(this.ritual,
       {List<SpellEffect> effects, List<RitualModifier> modifiers})
-      : _effects = effects,
-        _modifiers = modifiers;
+      : _effects = effects ?? const <SpellEffect>[],
+        _modifiers = modifiers ?? const <RitualModifier>[];
 
   final Ritual ritual;
   final List<SpellEffect> _effects;

@@ -3,6 +3,7 @@ import 'package:gurps_ritual_path_magic_model/src/casting.dart';
 import 'package:gurps_ritual_path_magic_model/src/effect.dart';
 import 'package:gurps_ritual_path_magic_model/src/level.dart';
 import 'package:gurps_ritual_path_magic_model/src/modifier/damage_modifier.dart';
+import 'package:gurps_ritual_path_magic_model/src/modifier/range_modifier.dart';
 import 'package:gurps_ritual_path_magic_model/src/modifier/ritual_modifier.dart';
 import 'package:gurps_ritual_path_magic_model/src/path.dart';
 import 'package:gurps_ritual_path_magic_model/src/spell_effect.dart';
@@ -11,42 +12,6 @@ import 'package:gurps_ritual_path_magic_model/src/trait.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Air Jet', () {
-    Ritual r = Ritual(name: 'Air Jet');
-    r = r.copyWith(effects: [
-      SpellEffect(Path.matter, effect: Effect.control, level: Level.greater)
-    ]);
-
-    r = r.copyWith(modifiers: [
-      Damage(direct: false, modifiers: <TraitModifier>[
-        TraitModifier(name: 'Double Knockback', percent: 20),
-        TraitModifier(name: 'Jet', percent: 0),
-        TraitModifier(name: 'No Wounding', percent: -50),
-      ]),
-    ]);
-
-    expect(r.name, equals('Air Jet'));
-    expect(r.greaterEffects, 1);
-    expect(r.effectsMultiplier, 3);
-    expect(r.energyCost, 15);
-  });
-
-  test('Alertness', () {
-    Ritual r = Ritual(name: 'Alertness', modifiers: [
-      Bestows('Sense rolls', range: BestowsRange.broad, value: 2)
-    ]);
-
-    r = r.addPathEffect(SpellEffect(Path.mind, effect: Effect.strengthen));
-
-    expect(r.name, equals('Alertness'));
-    expect(r.effectsMultiplier, equals(1));
-    expect(r.greaterEffects, equals(0));
-    expect(r.energyCost, equals(13));
-
-    r = r.addModifier(DurationModifier(duration: GDuration(minutes: 10)));
-    expect(r.energyCost, equals(14));
-  });
-
   test('has == and hashCode', () {
     Ritual r1 = Ritual();
     r1 = r1.copyWith(name: 'Alertness');
@@ -71,17 +36,110 @@ void main() {
     expect(r1.hashCode, isNot(equals(r2.hashCode)));
   });
 
+  test('Air Jet', () {
+    Ritual r = Ritual(name: 'Air Jet');
+    r = r.copyWith(effects: [
+      SpellEffect(Path.matter, effect: Effect.control, level: Level.greater)
+    ]);
+
+    r = r.copyWith(modifiers: [
+      Damage(direct: false, modifiers: <TraitModifier>[
+        TraitModifier(name: 'Double Knockback', percent: 20),
+        TraitModifier(name: 'Jet', percent: 0),
+        TraitModifier(name: 'No Wounding', percent: -50),
+      ]),
+    ]);
+
+    r = r.copyWith(notes: '''
+This spell conjures a jet (p. B106) of air extending from the caster’s hand or 
+an object that he is holding. The target takes 3d crushing damage; this does no 
+actual damage, but it does inflict blunt trauma and is doubled for knockback 
+purposes.''');
+
+    expect(r.name, equals('Air Jet'));
+    expect(r.greaterEffects, 1);
+    expect(r.effectsMultiplier, 3);
+    expect(r.energyCost, 15);
+  });
+
+  test('Alertness', () {
+    Ritual r = Ritual(name: 'Alertness', modifiers: [
+      Bestows('Sense rolls', range: BestowsRange.broad, value: 2)
+    ]);
+
+    r = r.addSpellEffect(SpellEffect(Path.mind, effect: Effect.strengthen));
+    r = r.copyWith(notes: '''
+This spell temporarily boosts the subject’s ability to process incoming 
+impressions, giving him +2 to all Sense rolls for the next 10 minutes.''');
+
+    expect(r.name, equals('Alertness'));
+    expect(r.effectsMultiplier, equals(1));
+    expect(r.greaterEffects, equals(0));
+    expect(r.energyCost, equals(13));
+
+    Casting typical = Casting(r,
+        modifiers: [DurationModifier(duration: GDuration(minutes: 10))]);
+
+    expect(typical.energyCost, equals(14));
+  });
+
   test('Amplify Injury', () {
     Ritual r = Ritual(name: 'Amplify Injury', effects: [
       SpellEffect(Path.body, level: Level.greater, effect: Effect.destroy)
     ], modifiers: [
       AlteredTraits(
           Trait(name: 'Vulnerability to Physical Attacks, x2', baseCost: -40)),
-    ]);
+    ], notes: '''
+This spell causes the target to suffer double normal injury from physical 
+attacks (those that use some sort of material substance to cause harm) for 
+the next 10 minutes. This does not increase the damage from energy, mental 
+attacks, etc. The target must be within 10 yards.''');
 
     expect(r.name, equals('Amplify Injury'));
     expect(r.energyCost, equals(39));
     expect(r.greaterEffects, equals(1));
+
+    Casting typical = Casting(r, modifiers: [
+      DurationModifier(duration: GDuration(minutes: 10)),
+      Range(distance: GDistance(yards: 10)),
+      SubjectWeight(weight: GWeight(pounds: 300)),
+    ]);
+
+    expect(typical.energyCost, equals(63));
+  });
+
+  test('Babble On', () {
+    Ritual babbleOn = Ritual(
+      name: 'Babble On',
+      effects: [
+        SpellEffect(Path.mind, effect: Effect.sense),
+        SpellEffect(Path.mind, effect: Effect.strengthen),
+      ],
+      modifiers: [
+        AreaOfEffect(radius: 3),
+        AlteredTraits(
+          Trait(name: 'Babel-Tongue (Native/None)', baseCost: 3),
+        )
+      ],
+      notes: '''
+This spell grants the subjects (at least two) the ability to converse with one 
+another in a mystically made-up language called "Babel-Tongue" – so called 
+after the Biblical story of the Tower of Babel. All subjects who are to be 
+affected must be within 3 yards of the caster. The “Babel-Tongue” language is 
+created anew for each casting; it cannot be learned normally. Only those under 
+the effects of this spell (or who have some other supernatural means to speak 
+unknown and alien languages) can comprehend it.''',
+    );
+
+    expect(babbleOn.name, equals('Babble On'));
+    expect(babbleOn.effectsMultiplier, equals(1));
+    expect(babbleOn.greaterEffects, equals(0));
+    expect(babbleOn.energyCost, equals(10));
+
+    Casting typical = Casting(babbleOn, modifiers: [
+      DurationModifier(duration: GDuration(hours: 1)),
+    ]);
+    expect(typical.energyCost, equals(13));
   });
 
   test('Bag of Bones', () {

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:meta/meta.dart';
+import 'package:quiver/core.dart';
 
 import '../trait.dart';
 
@@ -98,6 +99,17 @@ class AlteredTraits extends RitualModifier {
 
     return 1 + x;
   }
+
+  @override
+  int get hashCode => hash3(trait, _modifiers, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is AlteredTraits &&
+        trait == other.trait &&
+        _modifiers == other._modifiers &&
+        inherent == other.inherent;
+  }
 }
 
 /// Adds an Area of Effect, optionally including or excluding specific targets
@@ -158,6 +170,18 @@ class AreaOfEffect extends RitualModifier {
 
     return i + (numberTargets / 2.0).ceil();
   }
+
+  @override
+  int get hashCode => hash4(radius, numberTargets, excludes, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is AreaOfEffect &&
+        other.radius == radius &&
+        other.numberTargets == numberTargets &&
+        other.excludes == excludes &&
+        other.inherent == inherent;
+  }
 }
 
 /// Range of rolls affected by a Bestows modifier.
@@ -212,6 +236,18 @@ class Bestows extends RitualModifier {
   RitualModifier incrementEffect(int value) {
     return Bestows(this.roll,
         value: this.value + value, inherent: this.inherent, range: this.range);
+  }
+
+  @override
+  int get hashCode => hash4(inherent, range, roll, value);
+
+  @override
+  bool operator ==(Object other) {
+    return other is Bestows &&
+        other.inherent == inherent &&
+        other.range == range &&
+        other.roll == roll &&
+        other.value == value;
   }
 }
 
@@ -270,6 +306,16 @@ class DurationModifier extends RitualModifier {
 
     return DurationModifier(duration: dur, inherent: this.inherent);
   }
+
+  @override
+  int get hashCode => hash2(duration, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is DurationModifier &&
+        other.duration == duration &&
+        other.inherent == inherent;
+  }
 }
 
 abstract class _EnergyPoolModifier extends RitualModifier {
@@ -293,6 +339,16 @@ class ExtraEnergy extends _EnergyPoolModifier {
   @override
   ExtraEnergy incrementEffect(int value) =>
       ExtraEnergy(energy: this.energy + value, inherent: this.inherent);
+
+  @override
+  int get hashCode => hash2(energy, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is ExtraEnergy &&
+        other.energy == energy &&
+        other.inherent == inherent;
+  }
 }
 
 enum HealingType { hp, fp }
@@ -318,6 +374,14 @@ class Healing extends RitualModifier {
   @override
   Healing incrementEffect(int value) => Healing(
       dice: this.dice + value, type: this.type, inherent: this.inherent);
+
+  @override
+  int get hashCode => hash3(dice, type, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is Healing && other.dice == dice && other.inherent == inherent;
+  }
 }
 
 class MetaMagic extends _EnergyPoolModifier {
@@ -330,6 +394,16 @@ class MetaMagic extends _EnergyPoolModifier {
   @override
   MetaMagic incrementEffect(int value) =>
       MetaMagic(energy: this.energy + value, inherent: this.inherent);
+
+  @override
+  int get hashCode => hash2(energy, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is MetaMagic &&
+        other.energy == energy &&
+        other.inherent == inherent;
+  }
 }
 
 class Speed extends RitualModifier {
@@ -357,6 +431,16 @@ class Speed extends RitualModifier {
 
     return Speed(yardsPerSecond: speed, inherent: this.inherent);
   }
+
+  @override
+  int get hashCode => hash2(_yardsPerSecond, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is Speed &&
+        other._yardsPerSecond == _yardsPerSecond &&
+        other.inherent == inherent;
+  }
 }
 
 class SubjectWeight extends RitualModifier {
@@ -383,5 +467,15 @@ class SubjectWeight extends RitualModifier {
     int pounds = _sequence.indexToValue(index);
     GWeight weight = GWeight(pounds: pounds);
     return SubjectWeight(weight: weight, inherent: this.inherent);
+  }
+
+  @override
+  int get hashCode => hash2(_weight, inherent);
+
+  @override
+  bool operator ==(Object other) {
+    return other is SubjectWeight &&
+        other._weight == _weight &&
+        other.inherent == inherent;
   }
 }

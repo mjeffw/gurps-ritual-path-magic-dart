@@ -1,3 +1,5 @@
+import 'package:quiver/core.dart';
+
 import 'ritual_modifier.dart';
 
 /// Adds the Affliction: Stun (p. B36) effect to a spell.
@@ -12,6 +14,13 @@ class AfflictionStun extends RitualModifier {
 
   @override
   RitualModifier incrementEffect(int value) => this;
+
+  @override
+  int get hashCode => inherent.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      other is AfflictionStun && other.inherent == inherent;
 }
 
 /// Adds an Affliction (p. B36) effect to a spell.
@@ -44,4 +53,14 @@ class Affliction extends RitualModifier {
   /// for every +5% it’s worth as an enhancement to Affliction (pp. B35-36).
   @override
   int get energyCost => (percent / 5.0).ceil();
+
+  @override
+  int get hashCode => hash3(effect, percent, inherent);
+
+  @override
+  bool operator ==(Object other) =>
+      other is Affliction &&
+      other.effect == effect &&
+      other.percent == percent &&
+      other.inherent == inherent;
 }

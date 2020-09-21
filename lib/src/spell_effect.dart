@@ -61,11 +61,13 @@ class SpellEffect {
         any.path == path &&
         any._level == _level &&
         any._effect == _effect &&
-        any._inherent == _inherent;
+        any._inherent == _inherent &&
+        any._notes == _notes;
   }
 
   @override
-  int get hashCode => hash4(path, _level, _effect, _inherent);
+  int get hashCode =>
+      hashObjects(<dynamic>[path, _level, _effect, _inherent, _notes]);
 
   @override
   String toString() => '${_level} ${_effect} ${path}';

@@ -15,15 +15,15 @@ void main() {
   test('has == and hashCode', () {
     Ritual r1 = Ritual();
     r1 = r1.copyWith(name: 'Alertness');
-    // r1 = r1
-    //     .copyWith(effects: [SpellEffect(Path.mind, effect: Effect.strengthen)]);
+    r1 = r1
+        .copyWith(effects: [SpellEffect(Path.mind, effect: Effect.strengthen)]);
     r1 = r1.copyWith(
       modifiers: [Bestows('Sense rolls', range: BestowsRange.broad, value: 2)],
     );
 
     Ritual r2 = Ritual(
       name: 'Alertness',
-      // effects: [SpellEffect(Path.mind, effect: Effect.strengthen)],
+      effects: [SpellEffect(Path.mind, effect: Effect.strengthen)],
       modifiers: [Bestows('Sense rolls', range: BestowsRange.broad, value: 2)],
     );
 

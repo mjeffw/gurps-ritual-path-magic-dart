@@ -1,5 +1,5 @@
 import 'package:gurps_dart/gurps_dart.dart';
-import 'package:gurps_ritual_path_magic_model/src/modifier/range_modifier.dart';
+import 'package:gurps_rpm_model/src/modifier/range_modifier.dart';
 import 'package:test/test.dart';
 
 void main() {

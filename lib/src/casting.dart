@@ -1,6 +1,6 @@
-import 'package:gurps_ritual_path_magic_model/src/modifier/ritual_modifier.dart';
-import 'package:gurps_ritual_path_magic_model/src/ritual.dart';
-import 'package:gurps_ritual_path_magic_model/src/spell_effect.dart';
+import 'package:gurps_rpm_model/src/modifier/ritual_modifier.dart';
+import 'package:gurps_rpm_model/src/ritual.dart';
+import 'package:gurps_rpm_model/src/spell_effect.dart';
 import 'package:meta/meta.dart';
 
 @immutable

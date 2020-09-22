@@ -145,7 +145,7 @@ unknown and alien languages) can comprehend it.''',
   test('Bag of Bones', () {
     Ritual ritual = new Ritual(name: 'Bag of Bones', effects: [
       SpellEffect(Path.undead, level: Level.greater, effect: Effect.control),
-      SpellEffect(Path.undead, effect: Effect.create)
+      SpellEffect(Path.undead, effect: Effect.create),
     ]);
 
     ritual = ritual.copyWith(notes: '''
@@ -188,5 +188,53 @@ no skills, and other traits appropriate to an animated skeleton.
           DurationModifier(duration: GDuration(days: 1)),
           SubjectWeight(weight: GWeight(pounds: 100))
         ]));
+  });
+
+  test('Body of Shadow', () {
+    Ritual ritual = Ritual(name: 'Body of Shadow', effects: [
+      SpellEffect(Path.body, level: Level.greater, effect: Effect.transform),
+      SpellEffect(Path.energy, level: Level.greater, effect: Effect.transform)
+    ], modifiers: [
+      AlteredTraits(Trait(name: 'Shadow Form', baseCost: 50))
+    ], notes: '''
+The subject’s body fades away, leaving only his shadow behind. This gives him 
+the Shadow Form advantage (p. B83) for the next 10 minutes. His clothing, gear, 
+etc., falls to the ground around him. Though the subject is now made of living 
+darkness, he gains no special ability to **see** in the dark.
+      ''');
+
+    expect(ritual.name, equals('Body of Shadow'));
+    expect(ritual.greaterEffects, equals(2));
+    expect(ritual.effectsMultiplier, equals(5));
+    expect(ritual.baseEnergyCost, equals(66));
+    expect(ritual.energyCost, equals(330));
+
+    Casting typical = Casting(ritual, modifiers: [
+      DurationModifier(duration: GDuration(minutes: 10)),
+      SubjectWeight(weight: GWeight(pounds: 300))
+    ]);
+
+    expect(typical.energyCost, equals(350));
+  });
+
+  test('Call Spirit', () {
+    Ritual ritual = Ritual(name: 'Call Spirit', effects: [
+      SpellEffect(Path.spirit, effect: Effect.control, level: Level.greater)
+    ], notes: '''
+This ritual implants a compulsion in a specific subject spirit to travel at its 
+greatest speed to the location of the caster at the time the ritual is cast. If 
+the spirit is unable to reach that location within one day, the compulsion ends. 
+The subject must be within 10 miles of the caster, but the magic will reach 
+across the dimensional barrier into the spirit realm.
+
+Note that this ritual does not affect the spirit’s attitude toward the caster. 
+Indeed, a spirit called this way likely will be quite hostile when it arrives!
+    ''');
+
+    expect(ritual.name, equals('Call Spirit'));
+    expect(ritual.baseEnergyCost, equals(5));
+    expect(ritual.greaterEffects, equals(1));
+    expect(ritual.effectsMultiplier, equals(3));
+    expect(ritual.modifiers, isEmpty);
   });
 }

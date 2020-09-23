@@ -24,4 +24,18 @@ class Casting {
 
   int get energyCost =>
       (_castingCost + ritual.baseEnergyCost) * ritual.effectsMultiplier;
+
+  Casting copyWith(
+          {Ritual ritual,
+          List<SpellEffect> effects,
+          List<RitualModifier> modifiers}) =>
+      Casting(ritual ?? this.ritual,
+          effects: effects ?? this.effects,
+          modifiers: modifiers ?? this.modifiers);
+
+  Casting addModifier(RitualModifier modifier) => this
+      .copyWith(modifiers: [...this.modifiers, if (modifier != null) modifier]);
+
+  Casting addEffect(SpellEffect effect) =>
+      this.copyWith(effects: [...this.effects, if (effect != null) effect]);
 }

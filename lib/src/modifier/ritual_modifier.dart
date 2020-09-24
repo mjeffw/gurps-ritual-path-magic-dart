@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
 import '../trait.dart';
 import '../util/list_wrapper.dart';
+
+typedef Constructor = RitualModifier Function();
 
 /// Describes a modifier to an Ritual.
 ///
@@ -15,6 +18,18 @@ import '../util/list_wrapper.dart';
 @immutable
 abstract class RitualModifier {
   const RitualModifier(this.name);
+
+  factory RitualModifier.fromString(String name) {
+    switch (name) {
+      case AfflictionStun.label:
+        return AfflictionStun();
+    }
+    return null;
+  }
+
+  static final List<String> labels = [
+    AfflictionStun.label,
+  ];
 
   /// the name of this Modifier
   final String name;

@@ -4,7 +4,9 @@ import 'ritual_modifier.dart';
 
 /// Adds the Affliction: Stun (p. B36) effect to a spell.
 class AfflictionStun extends RitualModifier {
-  const AfflictionStun() : super('Affliction, Stunning');
+  const AfflictionStun() : super(AfflictionStun.label);
+
+  static const String label = 'Affliction, Stunning';
 
   /// GURPS rpm.16: Stunning a foe (mentally or physically) adds no additional
   /// energy; the spell effect is enough.

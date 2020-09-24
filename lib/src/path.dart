@@ -37,6 +37,8 @@ abstract class Path {
 
   @override
   String toString() => name;
+
+  List<String> get labels => _values.keys.toList();
 }
 
 class _Body extends Path {

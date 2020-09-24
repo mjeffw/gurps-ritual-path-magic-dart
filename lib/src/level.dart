@@ -22,5 +22,5 @@ class Level {
   @override
   String toString() => name;
 
-  List<String> get labels => _values.keys.toList();
+  static List<String> get labels => _values.keys.toList();
 }

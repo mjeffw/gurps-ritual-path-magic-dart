@@ -35,7 +35,7 @@ abstract class Effect {
   @override
   String toString() => name;
 
-  List<String> get labels => _values.keys.toList();
+  static List<String> get labels => _values.keys.toList();
 }
 
 /// GURPS rpm.15: Sense: Cost 2

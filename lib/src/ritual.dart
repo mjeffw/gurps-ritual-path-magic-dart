@@ -46,6 +46,16 @@ class Ritual {
       effects: [...this.effects, if (effect != null) effect],
       modifiers: this.modifiers);
 
+  Ritual updateSpellEffect(int index, SpellEffect effect) {
+    List<SpellEffect> effects = List.from(this.effects);
+    effects[index] = effect;
+    return Ritual(
+        name: this.name,
+        effects: effects,
+        modifiers: this.modifiers,
+        notes: this.notes);
+  }
+
   Ritual copyWith(
           {String name,
           List<SpellEffect> effects,

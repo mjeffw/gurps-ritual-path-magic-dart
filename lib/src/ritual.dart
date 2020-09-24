@@ -47,13 +47,14 @@ class Ritual {
       modifiers: this.modifiers);
 
   Ritual updateSpellEffect(int index, SpellEffect effect) {
-    List<SpellEffect> effects = List.from(this.effects);
-    effects[index] = effect;
-    return Ritual(
-        name: this.name,
-        effects: effects,
-        modifiers: this.modifiers,
-        notes: this.notes);
+    List<SpellEffect> effects = List.from(this.effects)..[index] = effect;
+    // effects[index] = effect;
+    return this.copyWith(effects: effects);
+  }
+
+  Ritual removeSpellEffect(int index) {
+    List<SpellEffect> value = List.from(effects)..removeAt(index);
+    return this.copyWith(effects: value);
   }
 
   Ritual copyWith(

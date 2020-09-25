@@ -23,12 +23,15 @@ abstract class RitualModifier {
     switch (name) {
       case AfflictionStun.label:
         return AfflictionStun();
+      case Affliction.label:
+        return Affliction();
     }
     return null;
   }
 
   static final List<String> labels = [
     AfflictionStun.label,
+    Affliction.label,
   ];
 
   /// the name of this Modifier

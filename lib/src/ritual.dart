@@ -48,9 +48,8 @@ class Ritual {
   Ritual removeSpellEffect(int index) =>
       copyWith(effects: List.from(effects)..removeAt(index));
 
-  Ritual incrementModifier(int index, int increment) => copyWith(
-      modifiers: modifiers
-        ..[index] = modifiers[index].incrementEffect(increment));
+  Ritual updateModifier(int index, RitualModifier modifier) =>
+      copyWith(modifiers: List.from(modifiers)..[index] = modifier);
 
   Ritual copyWith(
           {String name,

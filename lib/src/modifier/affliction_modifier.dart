@@ -28,7 +28,9 @@ class Affliction extends RitualModifier {
   const Affliction({String effect, int percent: 0})
       : percent = percent ?? 0,
         effect = effect ?? 'undefined',
-        super('Afflictions');
+        super(label);
+
+  static const String label = 'Afflictions';
 
   Affliction copyWith({String effect, int percent}) {
     return Affliction(

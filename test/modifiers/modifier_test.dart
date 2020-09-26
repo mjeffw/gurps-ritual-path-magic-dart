@@ -1,4 +1,5 @@
 import 'package:gurps_dart/gurps_dart.dart';
+import 'package:gurps_dice/gurps_dice.dart';
 import 'package:test/test.dart';
 
 import '../../lib/src/modifier/ritual_modifier.dart';
@@ -353,18 +354,22 @@ void main() {
     test('has initial state', () {
       expect(heal.name, equals('Healing'));
       expect(heal.energyCost, equals(0));
-      expect(heal.dice, equals(DieRoll(1, 0)));
+      expect(heal.dice, equals(DieRoll(dice: 1, adds: 0)));
       expect(heal.type, equals(HealingType.hp));
     });
 
     test('has Dice', () {
-      expect(heal.copyWith(dice: DieRoll(2, 0)).dice, equals(DieRoll(2, 0)));
-      expect(heal.copyWith(dice: DieRoll(4, -1)).dice, equals(DieRoll(4, -1)));
+      expect(heal.copyWith(dice: DieRoll(dice: 2, adds: 0)).dice,
+          equals(DieRoll(dice: 2, adds: 0)));
+      expect(heal.copyWith(dice: DieRoll(dice: 4, adds: -1)).dice,
+          equals(DieRoll(dice: 4, adds: -1)));
     });
 
     test('has energy cost', () {
-      expect(heal.copyWith(dice: DieRoll(2, 0)).energyCost, equals(4));
-      expect(heal.copyWith(dice: DieRoll(4, -1)).energyCost, equals(11));
+      expect(
+          heal.copyWith(dice: DieRoll(dice: 2, adds: 0)).energyCost, equals(4));
+      expect(heal.copyWith(dice: DieRoll(dice: 4, adds: -1)).energyCost,
+          equals(11));
     });
 
     test('has type', () {
@@ -372,18 +377,20 @@ void main() {
     });
 
     test('has increment effect', () {
-      expect(heal.incrementEffect(2).dice, equals(DieRoll(1, 2)));
-      expect(heal.incrementEffect(8).dice, equals(DieRoll(3, 0)));
+      expect(heal.incrementEffect(2).dice, equals(DieRoll(dice: 1, adds: 2)));
+      expect(heal.incrementEffect(8).dice, equals(DieRoll(dice: 3, adds: 0)));
     });
 
     test('implements == and hashCode', () {
       expect(heal, equals(Healing()));
-      expect(heal, isNot(equals(Healing(dice: DieRoll(2, 0)))));
+      expect(heal, isNot(equals(Healing(dice: DieRoll(dice: 2, adds: 0)))));
       expect(heal, isNot(equals(heal.copyWith(type: HealingType.fp))));
 
       expect(heal.hashCode, equals(Healing().hashCode));
-      expect(heal.hashCode,
-          isNot(equals(heal.copyWith(dice: DieRoll(2, 0)).hashCode)));
+      expect(
+          heal.hashCode,
+          isNot(
+              equals(heal.copyWith(dice: DieRoll(dice: 2, adds: 0)).hashCode)));
       expect(heal.hashCode,
           isNot(equals(heal.copyWith(type: HealingType.fp).hashCode)));
     });

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
+import 'package:gurps_dice/gurps_dice.dart';
 import 'package:quiver/core.dart';
 
 import '../util/list_wrapper.dart';
@@ -10,11 +11,11 @@ import 'ritual_modifier.dart';
 class Damage extends RitualModifier {
   const Damage(
       {DamageType type: DamageType.crushing,
-      DieRoll dice: const DieRoll(1, 0),
+      DieRoll dice: const DieRoll(dice: 1, adds: 0),
       List<TraitModifier> modifiers,
       bool direct: true,
       bool explosive: false})
-      : dice = dice ?? const DieRoll(1, 0),
+      : dice = dice ?? const DieRoll(dice: 1, adds: 0),
         direct = direct ?? true,
         type = type ?? DamageType.crushing,
         _explosive = explosive ?? false,

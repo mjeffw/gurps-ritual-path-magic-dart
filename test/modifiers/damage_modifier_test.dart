@@ -1,30 +1,31 @@
 import 'package:gurps_dart/gurps_dart.dart';
+import 'package:gurps_dice/gurps_dice.dart';
 
 import '../../lib/src/modifier/damage_modifier.dart';
 import "package:test/test.dart";
 
 void main() {
   group('Damage:', () {
-    const d1 = DieRoll(1, 0);
-    const d1p1 = DieRoll(1, 1);
-    const d1p2 = DieRoll(1, 2);
-    const d2m1 = DieRoll(2, -1);
-    const d2 = DieRoll(2, 0);
-    const d2p1 = DieRoll(2, 1);
-    const d2p2 = DieRoll(2, 2);
-    const d3m1 = DieRoll(3, -1);
-    const d3 = DieRoll(3, 0);
-    const d3p2 = DieRoll(3, 2);
-    const d4m1 = DieRoll(4, -1);
-    const d4 = DieRoll(4, 0);
-    const d4p2 = DieRoll(4, 2);
-    const d5 = DieRoll(5, 0);
-    const d5p1 = DieRoll(5, 1);
-    const d5p2 = DieRoll(5, 2);
-    const d6 = DieRoll(6, 0);
-    const d7m1 = DieRoll(7, -1);
-    const d7p2 = DieRoll(7, 2);
-    const d8p1 = DieRoll(8, 1);
+    const d1 = DieRoll(dice: 1, adds: 0);
+    const d1p1 = DieRoll(dice: 1, adds: 1);
+    const d1p2 = DieRoll(dice: 1, adds: 2);
+    const d2m1 = DieRoll(dice: 2, adds: -1);
+    const d2 = DieRoll(dice: 2, adds: 0);
+    const d2p1 = DieRoll(dice: 2, adds: 1);
+    const d2p2 = DieRoll(dice: 2, adds: 2);
+    const d3m1 = DieRoll(dice: 3, adds: -1);
+    const d3 = DieRoll(dice: 3, adds: 0);
+    const d3p2 = DieRoll(dice: 3, adds: 2);
+    const d4m1 = DieRoll(dice: 4, adds: -1);
+    const d4 = DieRoll(dice: 4, adds: 0);
+    const d4p2 = DieRoll(dice: 4, adds: 2);
+    const d5 = DieRoll(dice: 5, adds: 0);
+    const d5p1 = DieRoll(dice: 5, adds: 1);
+    const d5p2 = DieRoll(dice: 5, adds: 2);
+    const d6 = DieRoll(dice: 6, adds: 0);
+    const d7m1 = DieRoll(dice: 7, adds: -1);
+    const d7p2 = DieRoll(dice: 7, adds: 2);
+    const d8p1 = DieRoll(dice: 8, adds: 1);
 
     Damage m;
 
@@ -115,7 +116,7 @@ void main() {
           var t = m.copyWith(type: type, direct: false);
 
           expect(t.energyCost, equals(0));
-          expect(t.damageDice, equals(DieRoll(3, 0)));
+          expect(t.damageDice, equals(DieRoll(dice: 3, adds: 0)));
 
           expect(t.copyWith(dice: d1p1).energyCost, equals(1));
           expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
@@ -208,7 +209,7 @@ void main() {
         t = t.copyWith(direct: false);
 
         expect(t.energyCost, equals(0));
-        expect(t.damageDice, equals(DieRoll(3, 0)));
+        expect(t.damageDice, equals(DieRoll(dice: 3, adds: 0)));
 
         expect(t.copyWith(dice: d1p1).energyCost, equals(1));
         expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
@@ -299,7 +300,7 @@ void main() {
           var t = m.copyWith(type: type, direct: false);
 
           expect(t.energyCost, equals(0));
-          expect(t.damageDice, equals(DieRoll(3, 0)));
+          expect(t.damageDice, equals(DieRoll(dice: 3, adds: 0)));
 
           expect(t.copyWith(dice: d1p1).energyCost, equals(2));
           expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
@@ -397,7 +398,7 @@ void main() {
           var t = m.copyWith(type: type, direct: false);
 
           expect(t.energyCost, equals(0));
-          expect(t.damageDice, equals(DieRoll(3, 0)));
+          expect(t.damageDice, equals(DieRoll(dice: 3, adds: 0)));
 
           expect(t.copyWith(dice: d1p1).energyCost, equals(2));
           expect(t.copyWith(dice: d1p1).damageDice, equals(d4m1));
@@ -455,7 +456,7 @@ void main() {
 
     // Each +5% adds 1 SP if the base cost for Damage is 20 SP or less.
     test('should add 1 energy per 5 Percent of Enhancers', () {
-      var t1 = m.copyWith(dice: (DieRoll(1, 10)));
+      var t1 = m.copyWith(dice: (DieRoll(dice: 1, adds: 10)));
       expect(t1.energyCost, equals(10));
 
       t1 = t1.addModifier(TraitModifier(name: 'foo', percent: 1));
@@ -467,7 +468,7 @@ void main() {
       t1 = t1.addModifier(TraitModifier(name: 'qux', percent: 8));
       expect(t1.energyCost, equals(13));
 
-      var t2 = m.copyWith(dice: (DieRoll(1, 20)));
+      var t2 = m.copyWith(dice: (DieRoll(dice: 1, adds: 20)));
       expect(t2.energyCost, equals(20));
 
       t2 = t2.addModifier(TraitModifier(name: 'foo', percent: 1));
@@ -483,7 +484,7 @@ void main() {
     // If Damage costs 21 SP or more, apply the enhancement percentage to the
     // SP cost for Damage only (not to the cost of the whole spell); round up.
     test("should Add 1 energy cost Per 1 Percent", () {
-      var t1 = m.copyWith(dice: (DieRoll(1, 21)));
+      var t1 = m.copyWith(dice: (DieRoll(dice: 1, adds: 21)));
       expect(t1.energyCost, equals(21));
 
       t1 = t1.addModifier(TraitModifier(name: 'foo', percent: 1));
@@ -497,25 +498,26 @@ void main() {
     // Added limitations reduce this surcharge, but will never provide a net SP
     // discount.
     test("should Not Add 1 Point", () {
-      var t1 = m.copyWith(dice: (DieRoll(1, 10)));
+      var t1 = m.copyWith(dice: (DieRoll(dice: 1, adds: 10)));
       t1 = t1.addModifier(TraitModifier(name: 'foo', percent: 10));
       t1 = t1.addModifier(TraitModifier(name: 'bar', percent: -5));
       expect(t1.energyCost, equals(11));
 
-      t1 = t1.copyWith(dice: (DieRoll(1, 30)));
+      t1 = t1.copyWith(dice: (DieRoll(dice: 1, adds: 30)));
       expect(t1.energyCost, equals(35));
 
       t1 = t1.addModifier(TraitModifier(name: 'baz', percent: -10));
       expect(t1.energyCost, equals(30));
 
-      t1 = m.copyWith(dice: (DieRoll(1, 10)));
+      t1 = m.copyWith(dice: (DieRoll(dice: 1, adds: 10)));
       expect(t1.energyCost, equals(10));
     });
 
     test('implements == and hashCode', () {
       expect(m, equals(Damage()));
-      expect(m.hashCode, equals(Damage(dice: DieRoll(1, 0)).hashCode));
-      expect(m, isNot(equals(m.copyWith(dice: DieRoll(2, 0)))));
+      expect(
+          m.hashCode, equals(Damage(dice: DieRoll(dice: 1, adds: 0)).hashCode));
+      expect(m, isNot(equals(m.copyWith(dice: DieRoll(dice: 2, adds: 0)))));
       expect(m, isNot(equals(m.copyWith(direct: false))));
     });
   });

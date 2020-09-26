@@ -1,12 +1,13 @@
 import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
-import 'package:gurps_rpm_model/gurps_rpm_model.dart';
+import 'package:gurps_dice/gurps_dice.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
 import '../trait.dart';
 import '../util/list_wrapper.dart';
+import 'affliction_modifier.dart';
 
 typedef Constructor = RitualModifier Function();
 
@@ -331,7 +332,7 @@ enum HealingType { hp, fp }
 class Healing extends RitualModifier {
   const Healing({HealingType type, DieRoll dice})
       : type = type ?? HealingType.hp,
-        dice = dice ?? const DieRoll(1, 0),
+        dice = dice ?? const DieRoll(dice: 1, adds: 0),
         super('Healing');
 
   Healing copyWith({HealingType type, DieRoll dice}) =>

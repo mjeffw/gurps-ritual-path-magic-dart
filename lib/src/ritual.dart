@@ -36,9 +36,6 @@ class Ritual {
       modifiers.fold<int>(
           0, (previous, element) => previous + element.energyCost);
 
-  Ritual addModifier(RitualModifier modifier) =>
-      copyWith(modifiers: [...modifiers, if (modifier != null) modifier]);
-
   Ritual addSpellEffect(SpellEffect effect) =>
       copyWith(effects: [...effects, if (effect != null) effect]);
 
@@ -48,8 +45,14 @@ class Ritual {
   Ritual removeSpellEffect(int index) =>
       copyWith(effects: List.from(effects)..removeAt(index));
 
+  Ritual addModifier(RitualModifier modifier) =>
+      copyWith(modifiers: [...modifiers, if (modifier != null) modifier]);
+
   Ritual updateModifier(int index, RitualModifier modifier) =>
       copyWith(modifiers: List.from(modifiers)..[index] = modifier);
+
+  Ritual removeModifier(int index) =>
+      copyWith(modifiers: List.from(modifiers)..removeAt(index));
 
   Ritual copyWith(
           {String name,

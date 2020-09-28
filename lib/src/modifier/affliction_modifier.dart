@@ -39,7 +39,7 @@ class Affliction extends RitualModifier {
 
   @override
   Affliction incrementEffect(int energyIncrement) => Affliction(
-      effect: 'undefined', percent: (this.energyCost + energyIncrement) * 5);
+      effect: this.effect, percent: (this.energyCost + energyIncrement) * 5);
 
   final String effect;
 

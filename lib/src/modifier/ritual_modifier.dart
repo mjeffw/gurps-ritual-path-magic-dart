@@ -26,6 +26,8 @@ abstract class RitualModifier {
         return AfflictionStun();
       case Affliction.label:
         return Affliction();
+      case AlteredTraits.label:
+        return AlteredTraits(Trait());
     }
     return null;
   }
@@ -33,6 +35,7 @@ abstract class RitualModifier {
   static final List<String> labels = [
     AfflictionStun.label,
     Affliction.label,
+    AlteredTraits.label,
   ];
 
   /// the name of this Modifier
@@ -56,7 +59,7 @@ final _sizeSpeedRangeTable = const SizeAndSpeedRangeTable();
 class AlteredTraits extends RitualModifier {
   const AlteredTraits(this.trait, {List<TraitModifier> modifiers})
       : _modifiers = modifiers ?? const [],
-        super('Altered Traits');
+        super(AlteredTraits.label);
 
   AlteredTraits copyWith({Trait trait}) =>
       AlteredTraits(trait ?? this.trait, modifiers: this._modifiers);
@@ -74,6 +77,8 @@ class AlteredTraits extends RitualModifier {
 
     return AlteredTraits(t);
   }
+
+  static const String label = 'Altered Traits';
 
   final Trait trait;
 

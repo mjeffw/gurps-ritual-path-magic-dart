@@ -85,7 +85,7 @@ class AlteredTraits extends RitualModifier {
           if (sign.isNegative) {
             oldValue += -5;
           } else {
-            oldValue = min(0, oldValue + 5);
+            oldValue = (oldValue == 0) ? oldValue + 1 : min(0, oldValue + 5);
           }
         } else {
           oldValue += sign;

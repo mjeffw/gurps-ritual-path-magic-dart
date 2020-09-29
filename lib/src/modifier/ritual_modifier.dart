@@ -27,7 +27,7 @@ abstract class RitualModifier {
       case Affliction.label:
         return Affliction();
       case AlteredTraits.label:
-        return AlteredTraits(Trait());
+        return AlteredTraits(Trait(name: 'Trait'));
     }
     return null;
   }
@@ -69,13 +69,32 @@ class AlteredTraits extends RitualModifier {
 
   @override
   AlteredTraits incrementEffect(int value) {
-    int energy = energyCost + value;
-    Trait t = Trait(
-        name: 'undefined',
-        baseCost: (characterPoints.isNegative) ? -5 * energy : energy,
-        hasLevels: false);
+    if (trait.hasLevels) {
+      return AlteredTraits(Trait(
+          baseCost: trait.baseCost,
+          costPerLevel: trait.costPerLevel,
+          hasLevels: true,
+          levels: trait.levels + value,
+          name: trait.name));
+    } else {
+      int numberOfSteps = value.abs();
+      int sign = (value >= 0) ? 1 : -1;
+      int oldValue = trait.baseCost;
+      for (var i = 0; i < numberOfSteps; i++) {
+        if (oldValue < 1) {
+          if (sign.isNegative) {
+            oldValue += -5;
+          } else {
+            oldValue = min(0, oldValue + 5);
+          }
+        } else {
+          oldValue += sign;
+        }
+      }
 
-    return AlteredTraits(t);
+      return AlteredTraits(
+          Trait(baseCost: oldValue, hasLevels: false, name: trait.name));
+    }
   }
 
   static const String label = 'Altered Traits';

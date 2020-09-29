@@ -32,6 +32,8 @@ class Trait {
 
   int get totalCost => baseCost + (costPerLevel * levels);
 
+  String get nameLevel => hasLevels ? '$name $levels' : name;
+
   @override
   int get hashCode =>
       hashObjects(<dynamic>[name, baseCost, costPerLevel, levels, hasLevels]);

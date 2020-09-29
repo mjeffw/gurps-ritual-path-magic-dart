@@ -36,7 +36,7 @@ void main() {
     test('has initial state', () {
       expect(m.percent, equals(0));
       expect(m.effect, equals('Foo'));
-      expect(m.name, equals('Afflictions'));
+      expect(m.name, equals('Affliction'));
       expect(m.energyCost, equals(0));
     });
 
@@ -59,7 +59,6 @@ void main() {
       var aff = m.incrementEffect(1);
       expect(aff.energyCost, equals(1));
       expect(aff.percent, equals(5));
-      expect(aff.effect, equals('undefined'));
 
       aff = aff.incrementEffect(4);
       expect(aff.energyCost, equals(5));

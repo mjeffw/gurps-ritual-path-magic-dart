@@ -27,7 +27,7 @@ abstract class RitualModifier {
       case Affliction.label:
         return Affliction();
       case AlteredTraits.label:
-        return AlteredTraits(Trait(name: 'Trait'));
+        return AlteredTraits(Trait(name: 'Undefined'));
     }
     return null;
   }
@@ -74,7 +74,7 @@ class AlteredTraits extends RitualModifier {
           baseCost: trait.baseCost,
           costPerLevel: trait.costPerLevel,
           hasLevels: true,
-          levels: trait.levels + value,
+          levels: (trait.levels + value < 0) ? 0 : trait.levels + value,
           name: trait.name));
     } else {
       int numberOfSteps = value.abs();
@@ -97,7 +97,7 @@ class AlteredTraits extends RitualModifier {
     }
   }
 
-  static const String label = 'Altered Traits';
+  static const String label = 'Altered Trait';
 
   final Trait trait;
 

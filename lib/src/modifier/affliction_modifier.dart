@@ -27,10 +27,10 @@ class AfflictionStun extends RitualModifier {
 class Affliction extends RitualModifier {
   const Affliction({String effect, int percent: 0})
       : percent = percent ?? 0,
-        effect = effect ?? 'undefined',
+        effect = effect ?? 'Undefined',
         super(label);
 
-  static const String label = 'Afflictions';
+  static const String label = 'Affliction';
 
   Affliction copyWith({String effect, int percent}) {
     return Affliction(

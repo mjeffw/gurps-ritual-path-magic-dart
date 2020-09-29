@@ -16,7 +16,7 @@ void main() {
 
     test('has initial state', () {
       expect(m.characterPoints, equals(0));
-      expect(m.name, equals('Altered Traits'));
+      expect(m.name, equals('Altered Trait'));
       expect(m.energyCost, equals(0));
       expect(m.trait, equals(Trait(name: 'foo')));
     });
@@ -61,20 +61,33 @@ void main() {
     });
 
     test('incrementEnergy', () {
-      var alt = m.copyWith(trait: Trait(baseCost: -1));
-      expect(alt.incrementEffect(1).characterPoints, equals(-10));
-      expect(alt.incrementEffect(2).characterPoints, equals(-15));
-      expect(alt.incrementEffect(3).characterPoints, equals(-20));
+      var alt = m.copyWith(trait: Trait(baseCost: 0));
+      expect(alt.incrementEffect(-1).characterPoints, equals(-5));
+      expect(alt.incrementEffect(-2).characterPoints, equals(-10));
+      expect(alt.incrementEffect(-3).characterPoints, equals(-15));
 
       alt = m.copyWith(trait: Trait(baseCost: 1));
       expect(alt.incrementEffect(1).characterPoints, equals(2));
       expect(alt.incrementEffect(2).characterPoints, equals(3));
       expect(alt.incrementEffect(3).characterPoints, equals(4));
+      expect(alt.incrementEffect(-1).characterPoints, equals(0));
+      expect(alt.incrementEffect(-2).characterPoints, equals(-5));
 
       // zero-cost trait defaults to adding character points
       expect(m.incrementEffect(1).characterPoints, equals(1));
       expect(m.incrementEffect(2).characterPoints, equals(2));
       expect(m.incrementEffect(3).characterPoints, equals(3));
+
+      // traits with levels increment level
+      alt = m.copyWith(
+          trait:
+              Trait(baseCost: 10, costPerLevel: 5, hasLevels: true, levels: 0));
+      expect(alt.incrementEffect(1).energyCost, equals(15));
+      expect(alt.incrementEffect(1).trait.levels, equals(1));
+      expect(alt.incrementEffect(1).characterPoints, equals(15));
+      expect(alt.incrementEffect(2).trait.levels, equals(2));
+      expect(alt.incrementEffect(2).characterPoints, equals(20));
+      expect(alt.incrementEffect(3).trait.levels, equals(3));
     });
 
     test('implements == and hashCode', () {

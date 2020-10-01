@@ -30,6 +30,8 @@ abstract class RitualModifier {
         return AlteredTraits(Trait(name: 'Undefined'));
       case AreaOfEffect.label:
         return AreaOfEffect();
+      case Bestows.label:
+        return Bestows('Undefined');
     }
     return null;
   }
@@ -233,14 +235,18 @@ typedef int EnergyFunction(int value);
 /// (e.g., rolls to hide or Vision rolls), or a narrow range (e.g., Climbing
 /// rolls or social rolls affecting a specific person).
 class Bestows extends RitualModifier {
-  const Bestows(this.roll,
-      {BestowsRange range: BestowsRange.narrow, int value: 0})
-      : range = range ?? BestowsRange.narrow,
+  const Bestows(
+    this.roll, {
+    BestowsRange range: BestowsRange.narrow,
+    int value: 0,
+  })  : range = range ?? BestowsRange.narrow,
         value = value ?? 0,
-        super('Bestows a (Bonus or Penalty)');
+        super(label);
 
   Bestows copyWith({int value, BestowsRange range}) => Bestows(this.roll,
       value: value ?? this.value, range: range ?? this.range);
+
+  static const String label = 'Bestows a (Bonus or Penalty)';
 
   /// Name of range of traits being modified,
   final String roll;

@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
@@ -171,10 +170,15 @@ class AreaOfEffect extends RitualModifier {
   static const label = 'Area of Effect';
 
   @override
-  AreaOfEffect incrementEffect(int value) => AreaOfEffect(
-      radius: radius + value,
-      numberTargets: this.numberTargets,
-      excludes: this.excludes);
+  AreaOfEffect incrementEffect(int value) {
+    var x = _sizeSpeedRangeTable.linearMeasureForSize(radius);
+    x += value;
+
+    return AreaOfEffect(
+        radius: _sizeSpeedRangeTable.sizeForLinearMeasurement(x),
+        numberTargets: this.numberTargets,
+        excludes: this.excludes);
+  }
 
   final int radius;
 

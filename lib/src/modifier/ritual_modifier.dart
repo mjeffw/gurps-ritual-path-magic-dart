@@ -175,7 +175,7 @@ class AreaOfEffect extends RitualModifier {
 
     return AreaOfEffect(
         radius:
-            (size + value == 0) ? 0 : AreaOfEffect.stepToRadius(size + value),
+            (size + value <= 0) ? 0 : AreaOfEffect.stepToRadius(size + value),
         numberTargets: this.numberTargets,
         excludes: this.excludes);
   }

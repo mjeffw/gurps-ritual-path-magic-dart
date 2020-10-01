@@ -171,11 +171,11 @@ class AreaOfEffect extends RitualModifier {
 
   @override
   AreaOfEffect incrementEffect(int value) {
-    var x = _sizeSpeedRangeTable.linearMeasureForSize(radius);
-    x += value;
+    int size = _sizeSpeedRangeTable.sizeForLinearMeasurement(radius);
+    size += value;
 
     return AreaOfEffect(
-        radius: _sizeSpeedRangeTable.sizeForLinearMeasurement(x),
+        radius: _sizeSpeedRangeTable.linearMeasureForSize(size),
         numberTargets: this.numberTargets,
         excludes: this.excludes);
   }

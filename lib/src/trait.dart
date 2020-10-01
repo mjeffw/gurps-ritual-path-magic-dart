@@ -20,15 +20,18 @@ class Trait {
       bool hasLevels: false})
       : this.name = name,
         this.baseCost = baseCost,
-        this.costPerLevel = costPerLevel,
-        this.levels = levels,
+        this._costPerLevel = costPerLevel,
+        this._levels = levels,
         this.hasLevels = hasLevels;
 
   final String name;
   final int baseCost;
-  final int costPerLevel;
-  final int levels;
+  final int _costPerLevel;
+  final int _levels;
   final bool hasLevels;
+
+  int get levels => hasLevels ? _levels : 0;
+  int get costPerLevel => hasLevels ? _costPerLevel : 0;
 
   int get totalCost => baseCost + (costPerLevel * levels);
 

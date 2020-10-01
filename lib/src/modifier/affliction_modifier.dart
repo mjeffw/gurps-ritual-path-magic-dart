@@ -26,7 +26,7 @@ class AfflictionStun extends RitualModifier {
 /// Adds an Affliction (p. B36) effect to a spell.
 class Affliction extends RitualModifier {
   const Affliction({String effect, int percent: 0})
-      : percent = percent ?? 0,
+      : percent = (percent == null) ? 0 : (percent < 0) ? 0 : percent,
         effect = effect ?? 'Undefined',
         super(label);
 

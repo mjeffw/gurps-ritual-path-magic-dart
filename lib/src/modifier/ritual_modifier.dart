@@ -41,6 +41,7 @@ abstract class RitualModifier {
     Affliction.label,
     AlteredTraits.label,
     AreaOfEffect.label,
+    Bestows.label,
   ];
 
   /// the name of this Modifier

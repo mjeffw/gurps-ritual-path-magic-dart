@@ -7,7 +7,6 @@ import 'package:quiver/core.dart';
 
 import '../trait.dart';
 import '../util/list_wrapper.dart';
-import 'affliction_modifier.dart';
 
 typedef Constructor = RitualModifier Function();
 
@@ -19,30 +18,6 @@ typedef Constructor = RitualModifier Function();
 @immutable
 abstract class RitualModifier {
   const RitualModifier(this.name);
-
-  factory RitualModifier.fromString(String name) {
-    switch (name) {
-      case AfflictionStun.label:
-        return AfflictionStun();
-      case Affliction.label:
-        return Affliction();
-      case AlteredTraits.label:
-        return AlteredTraits(Trait(name: 'Undefined'));
-      case AreaOfEffect.label:
-        return AreaOfEffect();
-      case Bestows.label:
-        return Bestows('Undefined');
-    }
-    return null;
-  }
-
-  static final List<String> labels = [
-    AfflictionStun.label,
-    Affliction.label,
-    AlteredTraits.label,
-    AreaOfEffect.label,
-    Bestows.label,
-  ];
 
   /// the name of this Modifier
   final String name;
@@ -244,8 +219,11 @@ class Bestows extends RitualModifier {
         value = value ?? 0,
         super(label);
 
-  Bestows copyWith({int value, BestowsRange range}) => Bestows(this.roll,
-      value: value ?? this.value, range: range ?? this.range);
+  Bestows copyWith({String roll, int value, BestowsRange range}) => Bestows(
+        roll ?? this.roll,
+        value: value ?? this.value,
+        range: range ?? this.range,
+      );
 
   static const String label = 'Bestows a (Bonus or Penalty)';
 

@@ -171,13 +171,20 @@ class AreaOfEffect extends RitualModifier {
 
   @override
   AreaOfEffect incrementEffect(int value) {
-    int size = _sizeSpeedRangeTable.sizeForLinearMeasurement(radius);
-    size += value;
+    int size = AreaOfEffect.radiusToStep(radius);
 
     return AreaOfEffect(
-        radius: _sizeSpeedRangeTable.linearMeasureForSize(size),
+        radius: AreaOfEffect.stepToRadius(size) + value,
         numberTargets: this.numberTargets,
         excludes: this.excludes);
+  }
+
+  static int radiusToStep(int radius) {
+    return _sizeSpeedRangeTable.sizeForLinearMeasurement(radius);
+  }
+
+  static int stepToRadius(int step) {
+    return _sizeSpeedRangeTable.linearMeasureForSize(step);
   }
 
   final int radius;
@@ -196,7 +203,7 @@ class AreaOfEffect extends RitualModifier {
   @override
   int get energyCost {
     if (radius == 0) return 0;
-    var energy = _sizeSpeedRangeTable.sizeForLinearMeasurement(radius) * 2;
+    var energy = AreaOfEffect.radiusToStep(radius) * 2;
     var i = (energy < 2) ? 2 : energy;
 
     return i + (numberTargets / 2.0).ceil();

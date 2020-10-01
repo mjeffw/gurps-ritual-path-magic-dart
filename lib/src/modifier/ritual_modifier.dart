@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
@@ -28,6 +29,8 @@ abstract class RitualModifier {
         return Affliction();
       case AlteredTraits.label:
         return AlteredTraits(Trait(name: 'Undefined'));
+      case AreaOfEffect.label:
+        return AreaOfEffect();
     }
     return null;
   }
@@ -36,6 +39,7 @@ abstract class RitualModifier {
     AfflictionStun.label,
     Affliction.label,
     AlteredTraits.label,
+    AreaOfEffect.label,
   ];
 
   /// the name of this Modifier
@@ -154,7 +158,7 @@ class AreaOfEffect extends RitualModifier {
   })  : radius = radius ?? 0,
         numberTargets = numberTargets ?? 0,
         excludes = excludes ?? true,
-        super('Area of Effect');
+        super(AreaOfEffect.label);
 
   AreaOfEffect copyWith({int radius, int numberTargets, bool excludes}) {
     return AreaOfEffect(
@@ -163,6 +167,8 @@ class AreaOfEffect extends RitualModifier {
       excludes: excludes ?? this.excludes,
     );
   }
+
+  static const label = 'Area of Effect';
 
   @override
   AreaOfEffect incrementEffect(int value) => AreaOfEffect(

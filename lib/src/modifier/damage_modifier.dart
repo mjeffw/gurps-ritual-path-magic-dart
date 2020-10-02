@@ -53,6 +53,8 @@ class Damage extends RitualModifier {
 
   final List<TraitModifier> _modifiers;
 
+  List<TraitModifier> get modifiers => List.unmodifiable(_modifiers);
+
   bool get explosive => direct ? false : _explosive;
 
   DieRoll get damageDice => dice * _diceMultiplier;
@@ -92,7 +94,9 @@ class Damage extends RitualModifier {
   Damage incrementEffect(int value) {
     var addsFor1d = DieRoll.denormalize(dice + value);
     return Damage(
-        dice: (addsFor1d < 0) ? const DieRoll(dice: 1, adds: 0) : this.dice + value,
+        dice: (addsFor1d < 0)
+            ? const DieRoll(dice: 1, adds: 0)
+            : this.dice + value,
         direct: this.direct,
         explosive: this.explosive,
         modifiers: this._modifiers,

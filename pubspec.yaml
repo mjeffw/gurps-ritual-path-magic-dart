@@ -15,7 +15,7 @@ dependencies:
     git:
       url: https://github.com/mjeffw/gurps_dice.git
   gurps_dart:
-    version: ^1.4.0
+    version: ^1.4.1
     git:
       url: https://github.com/mjeffw/gurps_dart
 

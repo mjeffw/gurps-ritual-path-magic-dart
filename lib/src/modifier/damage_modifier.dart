@@ -20,7 +20,7 @@ class Damage extends RitualModifier {
         type = type ?? DamageType.crushing,
         _explosive = explosive ?? false,
         _modifiers = modifiers ?? const [],
-        super('Damage');
+        super(label);
 
   Damage copyWith(
       {DamageType type, DieRoll dice, bool direct, bool explosive}) {
@@ -38,6 +38,8 @@ class Damage extends RitualModifier {
       direct: this.direct,
       explosive: this.explosive,
       modifiers: [...this._modifiers, traitModifier]);
+
+  static const String label = 'Damage';
 
   /// GURPS rpm.17: If a spell lists “damage” without specifying whether it’s
   /// direct (internal) or indirect (external), assume direct (internal).

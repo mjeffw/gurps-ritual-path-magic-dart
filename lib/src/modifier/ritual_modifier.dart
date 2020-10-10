@@ -329,7 +329,7 @@ class DurationModifier extends RitualModifier {
 
 abstract class _EnergyPoolModifier extends RitualModifier {
   const _EnergyPoolModifier(String name, {int energy: 0})
-      : energy = energy ?? 0,
+      : energy = (energy == null || energy < 0) ? 0 : energy,
         super(name);
 
   final int energy;
@@ -339,7 +339,9 @@ abstract class _EnergyPoolModifier extends RitualModifier {
 }
 
 class ExtraEnergy extends _EnergyPoolModifier {
-  const ExtraEnergy({int energy: 0}) : super('Extra Energy', energy: energy);
+  const ExtraEnergy({int energy: 0}) : super(ExtraEnergy.label, energy: energy);
+
+  static const String label = 'Extra Energy';
 
   ExtraEnergy copyWith({int energy}) =>
       ExtraEnergy(energy: energy ?? this.energy);
@@ -363,7 +365,9 @@ class Healing extends RitualModifier {
   const Healing({HealingType type, DieRoll dice})
       : type = type ?? HealingType.hp,
         dice = dice ?? const DieRoll(dice: 1, adds: 0),
-        super('Healing');
+        super(Healing.label);
+
+  static const String label = 'Healing';
 
   Healing copyWith({HealingType type, DieRoll dice}) =>
       Healing(type: type ?? this.type, dice: dice ?? this.dice);
@@ -387,7 +391,9 @@ class Healing extends RitualModifier {
 }
 
 class MetaMagic extends _EnergyPoolModifier {
-  const MetaMagic({int energy: 0}) : super('Meta-Magic', energy: energy);
+  const MetaMagic({int energy: 0}) : super(MetaMagic.label, energy: energy);
+
+  static const String label = 'Meta-Magic';
 
   MetaMagic copyWith({int energy}) => MetaMagic(energy: energy ?? this.energy);
 

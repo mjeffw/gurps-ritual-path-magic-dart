@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:gurps_dice/gurps_dice.dart';
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
@@ -267,10 +268,12 @@ class Bestows extends RitualModifier {
 class DurationModifier extends RitualModifier {
   const DurationModifier({GDuration duration: GDuration.momentary})
       : duration = duration ?? GDuration.momentary,
-        super('Duration');
+        super(DurationModifier.label);
 
   DurationModifier copyWith({GDuration duration}) =>
       DurationModifier(duration: duration ?? this.duration);
+
+  static const String label = 'Duration';
 
   static List<GDuration> _durationTable = [
     GDuration.momentary,

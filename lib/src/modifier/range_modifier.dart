@@ -22,7 +22,8 @@ class Range extends RitualModifier {
   @override
   Range incrementEffect(int value) {
     int size = _table.sizeFor(distance);
-    GDistance d = _table.linearMeasureFor(size + value);
+    GDistance d =
+        _table.linearMeasureFor((size + value < 0) ? 0 : size + value);
     return Range(distance: d);
   }
 

@@ -320,6 +320,10 @@ class DurationModifier extends RitualModifier {
   }
 
   @override
+  String toString() =>
+      (duration == GDuration.momentary) ? 'Momentary' : duration.toString();
+
+  @override
   int get hashCode => duration.hashCode;
 
   @override

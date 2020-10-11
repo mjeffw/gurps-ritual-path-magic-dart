@@ -112,6 +112,12 @@ class RangeCrossTime extends RitualModifier {
     return RangeCrossTime(duration: GDuration(hours: hours));
   }
 
+  String effectToString() {
+    if (duration.inHours <= 2) return '2 hours';
+    if (duration.inHours < 24) return '${duration.inHours} hours';
+    return '${duration.inDays} days';
+  }
+
   @override
   int get hashCode => duration.hashCode;
 

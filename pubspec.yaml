@@ -1,6 +1,6 @@
 name: gurps_rpm_model
 description: A starting point for Dart libraries or applications.
-version: 0.8.8
+version: 0.8.9
 # homepage: https://www.example.com
 # author: jeff <email@example.com>
 
@@ -15,7 +15,7 @@ dependencies:
     git:
       url: https://github.com/mjeffw/gurps_dice.git
   gurps_dart:
-    version: ^1.4.2
+    version: ^1.4.3
     git:
       url: https://github.com/mjeffw/gurps_dart.git
 

@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:gurps_dice/gurps_dice.dart';
-import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
@@ -416,7 +415,9 @@ class MetaMagic extends _EnergyPoolModifier {
 class Speed extends RitualModifier {
   const Speed({GDistance yardsPerSecond})
       : _yardsPerSecond = yardsPerSecond ?? const GDistance(yards: 0),
-        super('Speed');
+        super(Speed.label);
+
+  static const String label = 'Speed';
 
   Speed copyWith({GDistance yardsPerSecond}) =>
       Speed(yardsPerSecond: yardsPerSecond ?? this._yardsPerSecond);
@@ -449,7 +450,9 @@ class Speed extends RitualModifier {
 class SubjectWeight extends RitualModifier {
   const SubjectWeight({GWeight weight})
       : _weight = weight ?? const GWeight(pounds: 10),
-        super('Subject Weight');
+        super(SubjectWeight.label);
+
+  static const String label = 'Subject Weight';
 
   SubjectWeight copyWith({GWeight weight}) =>
       SubjectWeight(weight: weight ?? this._weight);

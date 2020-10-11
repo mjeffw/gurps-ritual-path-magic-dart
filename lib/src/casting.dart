@@ -1,7 +1,8 @@
-import 'package:gurps_rpm_model/src/modifier/ritual_modifier.dart';
-import 'package:gurps_rpm_model/src/ritual.dart';
-import 'package:gurps_rpm_model/src/spell_effect.dart';
 import 'package:meta/meta.dart';
+
+import 'modifier/ritual_modifier.dart';
+import 'ritual.dart';
+import 'spell_effect.dart';
 
 @immutable
 class Casting {

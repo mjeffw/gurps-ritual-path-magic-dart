@@ -5,7 +5,9 @@ import 'ritual_modifier.dart';
 class Range extends RitualModifier {
   const Range({GDistance distance})
       : distance = distance ?? const GDistance(yards: 2),
-        super('Range');
+        super(Range.label);
+
+  static const String label = 'Range';
 
   Range copyWith({GDistance distance}) =>
       Range(distance: distance ?? this.distance);
@@ -38,7 +40,9 @@ const _table = RepeatingSequenceConverter([1, 3]);
 class RangeInfo extends RitualModifier {
   const RangeInfo({GDistance distance})
       : distance = distance ?? const GDistance(yards: 200),
-        super('Range, Informational');
+        super(RangeInfo.label);
+
+  static const String label = 'Range, Information';
 
   RangeInfo copyWith({GDistance distance}) =>
       RangeInfo(distance: distance ?? this.distance);
@@ -78,7 +82,9 @@ class RangeInfo extends RitualModifier {
 class RangeCrossTime extends RitualModifier {
   const RangeCrossTime({GDuration duration = const GDuration(hours: 2)})
       : duration = duration ?? const GDuration(hours: 2),
-        super('Range, Cross-Time');
+        super(RangeCrossTime.label);
+
+  static const String label = 'Range, Cross-Time';
 
   RangeCrossTime copyWith({GDuration duration}) =>
       RangeCrossTime(duration: duration ?? this.duration);
@@ -98,7 +104,9 @@ class RangeCrossTime extends RitualModifier {
 
     int hours = (newIndex == 0)
         ? 2
-        : (newIndex == 1) ? 12 : _table.indexToValue(newIndex - 2) * 24;
+        : (newIndex == 1)
+            ? 12
+            : _table.indexToValue(newIndex - 2) * 24;
 
     return RangeCrossTime(duration: GDuration(hours: hours));
   }
@@ -115,7 +123,9 @@ class RangeCrossTime extends RitualModifier {
 class RangeDimensional extends RitualModifier {
   const RangeDimensional({int numberDimensions = 0})
       : numberDimensions = numberDimensions ?? 0,
-        super('Range, Extradimensional');
+        super(RangeDimensional.label);
+
+  static const String label = 'Range, Extradimensional';
 
   final int numberDimensions;
 

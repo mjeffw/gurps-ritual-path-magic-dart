@@ -1,5 +1,5 @@
 import 'package:gurps_dart/gurps_dart.dart';
-import 'package:gurps_rpm_model/src/modifier/range_modifier.dart';
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -77,7 +77,7 @@ void main() {
 
     test('has initial state', () {
       expect(r.energyCost, equals(0));
-      expect(r.name, equals('Range, Informational'));
+      expect(r.name, equals('Range, Information'));
       expect(r.distance, equals(GDistance(yards: 200)));
     });
 

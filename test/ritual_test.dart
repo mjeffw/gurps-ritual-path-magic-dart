@@ -1,14 +1,5 @@
 import 'package:gurps_dart/gurps_dart.dart';
-import 'package:gurps_rpm_model/src/casting.dart';
-import 'package:gurps_rpm_model/src/effect.dart';
-import 'package:gurps_rpm_model/src/level.dart';
-import 'package:gurps_rpm_model/src/modifier/damage_modifier.dart';
-import 'package:gurps_rpm_model/src/modifier/range_modifier.dart';
-import 'package:gurps_rpm_model/src/modifier/ritual_modifier.dart';
-import 'package:gurps_rpm_model/src/path.dart';
-import 'package:gurps_rpm_model/src/spell_effect.dart';
-import 'package:gurps_rpm_model/src/ritual.dart';
-import 'package:gurps_rpm_model/src/trait.dart';
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 import 'package:test/test.dart';
 
 void main() {

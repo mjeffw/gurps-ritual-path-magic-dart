@@ -470,6 +470,7 @@ class SubjectWeight extends RitualModifier {
   @override
   SubjectWeight incrementEffect(int value) {
     int index = _sequence.valueToIndex(_weight.inPounds) + value;
+    if (index < 0) index = 0;
     int pounds = _sequence.indexToValue(index);
     GWeight weight = GWeight(pounds: pounds);
     return SubjectWeight(weight: weight);

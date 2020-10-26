@@ -163,7 +163,7 @@ no skills, and other traits appropriate to an animated skeleton.
     ]);
 
     expect(
-        typical.effects,
+        typical.allEffects,
         containsAll(<SpellEffect>[
           SpellEffect(Path.undead,
               level: Level.greater, effect: Effect.control),
@@ -174,7 +174,7 @@ no skills, and other traits appropriate to an animated skeleton.
     expect(typical.energyCost, equals(75));
 
     expect(
-        typical.modifiers,
+        typical.allModifiers,
         containsAll(<RitualModifier>[
           DurationModifier(duration: GDuration(days: 1)),
           SubjectWeight(weight: GWeight(pounds: 100))

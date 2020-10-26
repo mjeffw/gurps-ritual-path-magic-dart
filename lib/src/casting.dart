@@ -15,11 +15,13 @@ class Casting {
   final List<SpellEffect> _effects;
   final List<RitualModifier> _modifiers;
 
-  List<SpellEffect> get effects => [...ritual.effects, ..._effects];
+  List<SpellEffect> get allEffects => [...ritual.effects, ..._effects];
 
-  List<RitualModifier> get modifiers => [...ritual.modifiers, ..._modifiers];
+  List<RitualModifier> get allModifiers => [...ritual.modifiers, ..._modifiers];
 
   List<SpellEffect> get additionalEffects => _effects;
+
+  List<RitualModifier> get additionalModifiers => _modifiers;
 
   int get _castingCost =>
       _effects.fold<int>(0, (p, e) => p + e.cost) +
@@ -36,11 +38,17 @@ class Casting {
           effects: effects ?? this._effects,
           modifiers: modifiers ?? this._modifiers);
 
-  Casting addModifier(RitualModifier modifier) => this.copyWith(
-      modifiers: [...this._modifiers, if (modifier != null) modifier]);
+  Casting addModifier(RitualModifier value) =>
+      copyWith(modifiers: [...this._modifiers, if (value != null) value]);
 
-  Casting addEffect(SpellEffect effect) =>
-      this.copyWith(effects: [...this._effects, if (effect != null) effect]);
+  Casting updateModifier(int index, RitualModifier value) =>
+      copyWith(modifiers: List.from(_modifiers)..[index] = value);
+
+  Casting removeModifier(int index) =>
+      copyWith(effects: List.from(_modifiers)..removeAt(index));
+
+  Casting addEffect(SpellEffect value) =>
+      this.copyWith(effects: [...this._effects, if (value != null) value]);
 
   Casting updateEffect(int index, SpellEffect value) =>
       this.copyWith(effects: List.from(_effects)..[index] = value);

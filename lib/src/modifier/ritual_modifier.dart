@@ -8,8 +8,6 @@ import 'package:quiver/core.dart';
 import '../trait.dart';
 import '../util/list_wrapper.dart';
 
-typedef Constructor = RitualModifier Function();
-
 /// Describes a modifier to an Ritual.
 ///
 /// Modifiers add Damage, Range, GDuration, and other features to a ritual,

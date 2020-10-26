@@ -55,4 +55,8 @@ class Casting {
 
   Casting removeEffect(int index) =>
       copyWith(effects: List.from(_effects)..removeAt(index));
+
+  String formattedText() {
+    return '';
+  }
 }

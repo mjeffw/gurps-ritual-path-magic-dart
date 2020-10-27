@@ -32,7 +32,24 @@ class EffectsExporterList with ListMixin<EffectsExporter> {
 
   List<EffectsExporter> get sorted => _source..sort();
 
-  List<String> get asShortText => sorted.map((e) => e.toStringShort()).toList();
+  List<String> get asShortText {
+    var list = sorted.map((e) => e.toStringShort()).toList();
+
+    var result = <String>[];
+    // go through list and convert duplicates into tuples
+    while (list.isNotEmpty) {
+      String item = list.removeAt(0);
+
+      var repetitions = list.where((element) => item == element).length + 1;
+      if (repetitions > 1) {
+        list.removeWhere((element) => item == element);
+        item = '$item ×$repetitions';
+      }
+
+      result.add(item);
+    }
+    return result;
+  }
 
   List<String> get asDetailedText =>
       sorted.map((e) => e.toStringDetailed()).toList();
@@ -115,8 +132,9 @@ class MarkdownCastingExporter extends CastingExporter {
 
   @override
   String toString() {
+    var effects = ritualEffects.asShortText.reduce(_foldWithPlus);
     return '$title\n'
-        ' *  _Spell Effects:_ ${ritualEffects.asShortText.reduce(_foldWithPlus)}.\n'
+        ' *  _Spell Effects:_ $effects.\n'
         ' *  _Inherent Modifiers:_ ${_inherentModifiers()}.\n'
         ' *  _Greater Effects:_ $greaterEffects (×$effectsMultiplier).\n'
         '\n'

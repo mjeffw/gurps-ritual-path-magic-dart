@@ -518,5 +518,264 @@ void main() {
               'of Effect, 5 yards (4) + Duration, 1 month (11). '
               '_81 energy (27×3)._\n'));
     });
+
+    test('Death Touch', () {
+      Ritual r = Ritual(
+          name: 'Death Touch',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.destroy, level: Level.greater)
+          ],
+          modifiers: [
+            Damage(dice: DieRoll(dice: 3), type: DamageType.toxic),
+          ],
+          notes:
+              'This spell allows the caster to momentarily channel the energy '
+              'of death itself into any living being, with a touch. If the '
+              'subject fails to resist, he takes 3d toxic damage (bypassing '
+              'DR).');
+
+      Casting c =
+          Casting(r).addModifier(SubjectWeight(weight: GWeight(pounds: 300)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Death Touch\n'
+              ' *  _Spell Effects:_ Greater Destroy Body.\n'
+              ' *  _Inherent Modifiers:_ Damage, Internal Toxic.\n'
+              ' *  _Greater Effects:_ 1 (×3).\n'
+              '\n'
+              'This spell allows the caster to momentarily channel the energy '
+              'of death itself into any living being, with a touch. If the '
+              'subject fails to resist, he takes 3d toxic damage (bypassing '
+              'DR).\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Greater Destroy Body (5) + Damage, Internal Toxic 3d (8) + '
+              'Subject Weight, 300 lbs. (3). '
+              '_48 energy (16×3)._\n'));
+    });
+
+    test('Death Vision', () {
+      Ritual r = Ritual(
+          name: 'Death Vision',
+          effects: [
+            SpellEffect(Path.chance, level: Level.greater),
+            SpellEffect(Path.mind, effect: Effect.destroy)
+          ],
+          modifiers: [AfflictionStun()],
+          notes: 'If the subject of this spell (who must be within 10 yards of '
+              'the caster) does not or chooses not to resist, he sees a vivid '
+              'hallucination of his own death. If he has a disadvantageous '
+              'Destiny, this may be a preordained death – otherwise, it’s one '
+              'possible death. Regardless, he is mentally stunned until he can '
+              'make a Will roll to recover.');
+
+      Casting c = Casting(r).addModifier(Range(distance: GDistance(yards: 10)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Death Vision\n'
+              ' *  _Spell Effects:_ Greater Sense Chance + Lesser Destroy Mind.\n'
+              ' *  _Inherent Modifiers:_ Affliction, Stunning.\n'
+              ' *  _Greater Effects:_ 1 (×3).\n'
+              '\n'
+              'If the subject of this spell (who must be within 10 yards of '
+              'the caster) does not or chooses not to resist, he sees a vivid '
+              'hallucination of his own death. If he has a disadvantageous '
+              'Destiny, this may be a preordained death – otherwise, it’s one '
+              'possible death. Regardless, he is mentally stunned until he can '
+              'make a Will roll to recover.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Greater Sense Chance (2) + Lesser Destroy Mind (5) + '
+              'Affliction, Stunning (0) + Range, 10 yards (4). '
+              '_33 energy (11×3)._\n'));
+    });
+
+    test('Destruction', () {
+      Ritual r = Ritual(
+          name: 'Destruction',
+          effects: [
+            SpellEffect(Path.energy,
+                level: Level.greater, effect: Effect.create),
+          ],
+          modifiers: [
+            Damage(dice: DieRoll(dice: 20), type: DamageType.burning)
+          ],
+          notes: 'This is typically cast as a charm. By breaking the atomic '
+              'bonds that hold a person or thing together, this ritual turns '
+              'its target (who must be within 15 yards and weigh 1.5 tons or '
+              'less) into a cloud of fine ash. If the target fails to resist, '
+              'he or it takes 20d burning damage immediately, ignoring DR. '
+              'With an average of 70 points of damage, most people and things '
+              'will be immediately eradicated.');
+
+      Casting c = Casting(r)
+          .addModifier(Range(distance: GDistance(yards: 15)))
+          .addModifier(SubjectWeight(weight: GWeight(pounds: 3000)))
+          .addEffect(SpellEffect(Path.magic, effect: Effect.control));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Destruction\n'
+              ' *  _Spell Effects:_ Greater Create Energy.\n'
+              ' *  _Inherent Modifiers:_ Damage, Internal Burning.\n'
+              ' *  _Greater Effects:_ 1 (×3).\n'
+              '\n'
+              'This is typically cast as a charm. By breaking the atomic '
+              'bonds that hold a person or thing together, this ritual turns '
+              'its target (who must be within 15 yards and weigh 1.5 tons or '
+              'less) into a cloud of fine ash. If the target fails to resist, '
+              'he or it takes 20d burning damage immediately, ignoring DR. '
+              'With an average of 70 points of damage, most people and things '
+              'will be immediately eradicated.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Greater Create Energy (6) + Lesser Control Magic (5) + Damage, '
+              'Internal Burning 20d (76) + Range, 15 yards (5) + Subject '
+              'Weight, 1.5 tons (5). '
+              '_291 energy (97×3)._\n'));
+    });
+
+    test('Diamond Mind', () {
+      Ritual r = Ritual(
+          name: 'Diamond Mind',
+          effects: [
+            SpellEffect(Path.mind,
+                level: Level.greater, effect: Effect.strengthen),
+            SpellEffect(Path.mind, effect: Effect.strengthen)
+          ],
+          modifiers: [
+            AlteredTraits(
+                Trait(name: 'Indomitable and Unfazeable', baseCost: 30)),
+            AlteredTraits(Trait(
+                name: 'Mind Shield',
+                costPerLevel: 4,
+                levels: 5,
+                hasLevels: true)),
+          ],
+          notes: 'This is typically cast as a charm. This ritual perfects the '
+              'subject’s mind, driving away all fear, doubt, and possibility '
+              'of being socially influenced by others (unless they possess '
+              'Empathy, of course). It even protects the mind from '
+              'supernatural intrusions, adding +5 to resistance rolls against '
+              'psi powers and the like.');
+
+      Casting c = Casting(r)
+          .addModifier(DurationModifier(duration: GDuration(hours: 1)))
+          .addEffect(SpellEffect(Path.magic, effect: Effect.control));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Diamond Mind\n'
+              ' *  _Spell Effects:_ Greater Strengthen Mind + '
+              'Lesser Strengthen Mind.\n'
+              ' *  _Inherent Modifiers:_ '
+              'Altered Trait, Indomitable and Unfazeable + '
+              'Altered Trait, Mind Shield.\n'
+              ' *  _Greater Effects:_ 1 (×3).\n'
+              '\n'
+              'This is typically cast as a charm. This ritual perfects the '
+              'subject’s mind, driving away all fear, doubt, and possibility '
+              'of being socially influenced by others (unless they possess '
+              'Empathy, of course). It even protects the mind from '
+              'supernatural intrusions, adding +5 to resistance rolls against '
+              'psi powers and the like.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Greater Strengthen Mind (3) + Lesser Strengthen Mind (3) + '
+              'Lesser Control Magic (5) + Altered Trait, Indomitable and '
+              'Unfazeable (30) + Altered Trait, Mind Shield 5 (20) + Duration, '
+              '1 hour (3). '
+              '_192 energy (64×3)._\n'));
+    });
+
+    test('Dreamcatcher', () {
+      Ritual r = Ritual(
+          name: 'Dreamcatcher',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.strengthen),
+            SpellEffect(Path.mind, effect: Effect.strengthen),
+            SpellEffect(Path.mind, effect: Effect.strengthen),
+          ],
+          modifiers: [
+            AlteredTraits(Trait(
+                name: 'Less Sleep',
+                levels: 4,
+                costPerLevel: 2,
+                hasLevels: true)),
+            AlteredTraits(Trait(
+                name: 'Remove Nightmares, Light Sleeper, and Insomnia',
+                baseCost: 30)),
+            Bestows('Resistence against sleeping and dreaming attacks',
+                range: BestowsRange.moderate, value: 5)
+          ],
+          notes: 'This is almost always cast as a charm, usually (but not '
+              'always) on an actual dreamcatcher. The target finds his slumber '
+              'especially restful and needs four fewer hours of sleep (to a '
+              'minimum of one). If he suffers from Nightmares, Light Sleep, or '
+              'Insomnia, those disadvantages are suspended for the duration. '
+              'Additionally, he has +5 to resist all supernatural attacks that '
+              'involve his dreams or that attack his mind while he is '
+              'sleeping.\n'
+              '\n'
+              'Once activated, this charm lasts for one week. For longer '
+              'protection, the duration may be increased at the time of '
+              'casting or reinforced with later castings (see _After Casting_, '
+              'p. 22).');
+
+      Casting c = Casting(r)
+          .addModifier(DurationModifier(duration: GDuration(weeks: 1)))
+          .addEffect(SpellEffect(Path.magic, effect: Effect.control));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Dreamcatcher\n'
+              ' *  _Spell Effects:_ Lesser Strengthen Body + '
+              'Lesser Strengthen Mind ×2.\n'
+              ' *  _Inherent Modifiers:_ '
+              'Altered Trait, Less Sleep + '
+              'Altered Trait, Remove Nightmares, Light Sleeper, and Insomnia + '
+              'Bestows a Bonus, Resistence against sleeping and dreaming attacks.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This is almost always cast as a charm, usually (but not '
+              'always) on an actual dreamcatcher. The target finds his slumber '
+              'especially restful and needs four fewer hours of sleep (to a '
+              'minimum of one). If he suffers from Nightmares, Light Sleep, or '
+              'Insomnia, those disadvantages are suspended for the duration. '
+              'Additionally, he has +5 to resist all supernatural attacks that '
+              'involve his dreams or that attack his mind while he is '
+              'sleeping.\n'
+              '\n'
+              'Once activated, this charm lasts for one week. For longer '
+              'protection, the duration may be increased at the time of '
+              'casting or reinforced with later castings (see _After Casting_, '
+              'p. 22).\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Strengthen Body (3) + Lesser Strengthen Mind (3) + '
+              'Lesser Strengthen Mind (3) + Lesser Control Magic (5) + '
+              'Altered Trait, Less Sleep 4 (8) + '
+              'Altered Trait, Remove Nightmares, Light Sleeper, and Insomnia (30) + '
+              'Bestows a Bonus, +5 to Resistence against sleeping and dreaming attacks (32) + '
+              'Duration, 1 week (9). '
+              '_93 energy (93×1)._\n'));
+    });
   });
 }

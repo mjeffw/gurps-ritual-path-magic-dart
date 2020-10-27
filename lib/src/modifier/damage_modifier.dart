@@ -109,8 +109,8 @@ class Damage extends RitualModifier {
 
   @override
   String toStringShort() =>
-      'Damage, ${direct ? 'Internal ' : 'External '}${type.label} '
-      '${_modifiers.isEmpty ? '' : '($_traitModsToStringShort)'}';
+      'Damage, ${direct ? 'Internal ' : 'External '}${type.label}'
+      '${_modifiers.isEmpty ? '' : ' ($_traitModsToStringShort)'}';
 
   @override
   String toStringDetailed() {

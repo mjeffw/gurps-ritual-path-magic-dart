@@ -39,10 +39,10 @@ class Trait {
 
   String get nameLevel => hasLevels ? '$name $levels' : name;
 
-  String get toStringShort => '$name${hasLevels ? ' _levels' : ''}';
+  String get toStringShort => name;
 
   String get toStringDetailed => '$name${details == null ? '' : ' $details'}'
-      '${hasLevels ? ' _levels' : ''}';
+      '${hasLevels ? ' $levels' : ''}';
 
   @override
   int get hashCode =>

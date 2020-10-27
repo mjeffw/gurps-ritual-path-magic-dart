@@ -1,7 +1,7 @@
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:gurps_dice/gurps_dice.dart';
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 
-import '../../lib/src/modifier/damage_modifier.dart';
 import "package:test/test.dart";
 
 void main() {

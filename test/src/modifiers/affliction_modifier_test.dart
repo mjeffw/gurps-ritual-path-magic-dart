@@ -1,6 +1,5 @@
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 import 'package:test/test.dart';
-
-import '../../lib/src/modifier/affliction_modifier.dart';
 
 void main() {
   group('Affliction, Stun', () {

@@ -471,5 +471,52 @@ void main() {
               'Range, 10 yards (4). '
               '_28 energy (28×1)._\n'));
     });
+
+    test('Create Pocket Dimension', () {
+      Ritual r = Ritual(
+          name: 'Create Pocket Dimension',
+          effects: [
+            SpellEffect(Path.matter, effect: Effect.create),
+            SpellEffect(Path.crossroads,
+                effect: Effect.create, level: Level.greater)
+          ],
+          modifiers: [AreaOfEffect(radius: 5)],
+          notes:
+              'This spell creates a pocket dimension about the size of a small '
+              'studio apartment (700 square feet). The caster and any being he '
+              'brings along can access it. It functions identically to '
+              '“normal” reality in all respects and has its own self-renewing '
+              'supply of air, but nothing else (no furniture, food, water, '
+              'etc.). It lasts for a month, though most casters will regularly '
+              'renew it; the fate of anything left in the pocket when the '
+              'spell lapses or is canceled is up to the GM.');
+
+      Casting c = Casting(r)
+          .addModifier(DurationModifier(duration: GDuration(months: 1)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Create Pocket Dimension\n'
+              ' *  _Spell Effects:_ Greater Create Crossroads + Lesser Create Matter.\n'
+              ' *  _Inherent Modifiers:_ Area of Effect.\n'
+              ' *  _Greater Effects:_ 1 (×3).\n'
+              '\n'
+              'This spell creates a pocket dimension about the size of a small '
+              'studio apartment (700 square feet). The caster and any being he '
+              'brings along can access it. It functions identically to '
+              '“normal” reality in all respects and has its own self-renewing '
+              'supply of air, but nothing else (no furniture, food, water, '
+              'etc.). It lasts for a month, though most casters will regularly '
+              'renew it; the fate of anything left in the pocket when the '
+              'spell lapses or is canceled is up to the GM.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Greater Create Crossroads (6) + Lesser Create Matter (6) + Area '
+              'of Effect, 5 yards (4) + Duration, 1 month (11). '
+              '_81 energy (27×3)._\n'));
+    });
   });
 }

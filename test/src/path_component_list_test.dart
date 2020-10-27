@@ -1,12 +1,8 @@
 import 'dart:async';
 
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
+import 'package:gurps_rpm_model/src/util/list_events.dart';
 import 'package:test/test.dart';
-
-import '../lib/src/effect.dart';
-import '../lib/src/level.dart';
-import '../lib/src/path.dart';
-import '../lib/src/spell_effect.dart';
-import '../lib/src/util/list_events.dart';
 
 void main() {
   ObservableList<SpellEffect> emptyList;

@@ -1,9 +1,7 @@
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:gurps_dice/gurps_dice.dart';
+import 'package:gurps_rpm_model/gurps_rpm_model.dart';
 import 'package:test/test.dart';
-
-import '../../lib/src/modifier/ritual_modifier.dart';
-import '../../lib/src/trait.dart';
 
 void main() {
   group('Altered Traits', () {

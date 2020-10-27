@@ -58,4 +58,6 @@ class SpellEffect {
 
   @override
   String toString() => '${_level} ${_effect} ${path}';
+
+  String toStringDetailed() => '${toString()} ($cost)';
 }

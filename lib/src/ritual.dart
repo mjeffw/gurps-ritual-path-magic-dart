@@ -1,3 +1,4 @@
+import 'package:gurps_rpm_model/src/exporter/casting_exporter.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
@@ -76,4 +77,17 @@ class Ritual {
       ListWrapper(effects).equals(other.effects) &&
       ListWrapper(modifiers).equals(other.modifiers) &&
       other.notes == notes;
+
+  void exportTo(RitualExporter exporter) {
+    exporter.title = name;
+    exporter.spellEffects = effects.map((it) => it.toString()).toList();
+    exporter.spellEffectsDetailed =
+        effects.map((it) => it.toStringDetailed()).toList();
+    exporter.modifiers = modifiers.map((it) => it.toStringShort()).toList();
+    exporter.modifiersDetailed =
+        modifiers.map((it) => it.toStringDetailed()).toList();
+    exporter.greaterEffects = greaterEffects;
+    exporter.effectsMultiplier = effectsMultiplier;
+    exporter.description = notes;
+  }
 }

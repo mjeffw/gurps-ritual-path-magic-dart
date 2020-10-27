@@ -28,6 +28,12 @@ abstract class RitualModifier {
   /// Linear Measurement on the Size and Speed/Range table; +1 to an Affliction
   /// gives another +5% to the value of the enhancement, etc.
   RitualModifier incrementEffect(int value);
+
+  String toStringShort() => '$name';
+
+  String toStringDetailed() {
+    return '${toStringShort()} ($energyCost)';
+  }
 }
 
 /// SizeAndSpeedRange Table for use by modifiers
@@ -260,6 +266,15 @@ class Bestows extends RitualModifier {
       other.range == range &&
       other.roll == roll &&
       other.value == value;
+
+  @override
+  String toStringShort() =>
+      'Bestows a ${value.isNegative ? 'Penalty' : 'Bonus'}, $roll';
+
+  @override
+  String toStringDetailed() {
+    return 'Bestows a ${value.isNegative ? 'Penalty' : 'Bonus'}, ${value.isNegative ? '$value' : '+$value'} to $roll ($energyCost)';
+  }
 }
 
 class DurationModifier extends RitualModifier {

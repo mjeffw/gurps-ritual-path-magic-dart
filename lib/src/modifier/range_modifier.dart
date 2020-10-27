@@ -28,6 +28,11 @@ class Range extends RitualModifier {
   }
 
   @override
+  String toStringDetailed() {
+    return 'Range, $distance ($energyCost)';
+  }
+
+  @override
   int get hashCode => distance.hashCode;
 
   @override
@@ -105,9 +110,7 @@ class RangeCrossTime extends RitualModifier {
 
     int hours = (newIndex == 0)
         ? 2
-        : (newIndex == 1)
-            ? 12
-            : _table.indexToValue(newIndex - 2) * 24;
+        : (newIndex == 1) ? 12 : _table.indexToValue(newIndex - 2) * 24;
 
     return RangeCrossTime(duration: GDuration(hours: hours));
   }

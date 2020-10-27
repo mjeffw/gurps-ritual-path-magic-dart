@@ -107,9 +107,15 @@ class AlteredTraits extends RitualModifier {
   double get _modifierMultiplier {
     double x =
         _modifiers.map((i) => i.percent / 100.0).fold(0.0, (a, b) => a + b);
-
     return 1 + x;
   }
+
+  @override
+  String toStringShort() => 'Altered Trait, ${trait.toStringShort}';
+
+  @override
+  String toStringDetailed() =>
+      'Altered Trait, ${trait.toStringDetailed} ($energyCost)';
 
   @override
   int get hashCode => hash2(trait, ListWrapper(_modifiers));
@@ -332,6 +338,11 @@ class DurationModifier extends RitualModifier {
   }
 
   @override
+  String toStringDetailed() {
+    return 'Duration, ${toString()} ($energyCost)';
+  }
+
+  @override
   String toString() =>
       (duration == GDuration.momentary) ? 'Momentary' : duration.toString();
 
@@ -488,6 +499,9 @@ class SubjectWeight extends RitualModifier {
     GWeight weight = GWeight(pounds: pounds);
     return SubjectWeight(weight: weight);
   }
+
+  @override
+  String toStringDetailed() => 'Subject Weight, $weight ($energyCost)';
 
   @override
   int get hashCode => _weight.hashCode;

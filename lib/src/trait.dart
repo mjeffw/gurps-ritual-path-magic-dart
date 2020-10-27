@@ -14,6 +14,7 @@ import 'package:quiver/core.dart';
 class Trait {
   const Trait(
       {String name: '',
+      this.details,
       int baseCost: 0,
       int costPerLevel: 0,
       int levels: 0,
@@ -25,6 +26,7 @@ class Trait {
         this.hasLevels = hasLevels;
 
   final String name;
+  final String details;
   final int baseCost;
   final int _costPerLevel;
   final int _levels;
@@ -36,6 +38,11 @@ class Trait {
   int get totalCost => baseCost + (costPerLevel * levels);
 
   String get nameLevel => hasLevels ? '$name $levels' : name;
+
+  String get toStringShort => '$name${hasLevels ? ' _levels' : ''}';
+
+  String get toStringDetailed => '$name${details == null ? '' : ' $details'}'
+      '${hasLevels ? ' _levels' : ''}';
 
   @override
   int get hashCode =>

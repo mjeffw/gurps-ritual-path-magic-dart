@@ -507,7 +507,7 @@ void main() {
       expect(t1.energyCost, equals(35));
 
       t1 = t1.addModifier(TraitModifier(name: 'baz', percent: -10));
-      expect(t1.energyCost, equals(30));
+      expect(t1.energyCost, equals(31));
 
       t1 = m.copyWith(dice: (DieRoll(dice: 1, adds: 10)));
       expect(t1.energyCost, equals(10));

@@ -50,7 +50,7 @@ purposes.''');
     expect(r.name, equals('Air Jet'));
     expect(r.greaterEffects, 1);
     expect(r.effectsMultiplier, 3);
-    expect(r.energyCost, 15);
+    expect(r.energyCost, 18);
   });
 
   test('Alertness', () {

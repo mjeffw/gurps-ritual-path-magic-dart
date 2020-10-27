@@ -80,11 +80,11 @@ class Ritual {
 
   void exportTo(RitualExporter exporter) {
     exporter.title = name;
-    exporter.spellEffects = effects.map((it) => it.toString()).toList();
-    exporter.spellEffectsDetailed =
+    exporter.ritualEffects = effects.map((it) => it.toString()).toList();
+    exporter.ritualEffectsDetailed =
         effects.map((it) => it.toStringDetailed()).toList();
-    exporter.modifiers = modifiers.map((it) => it.toStringShort()).toList();
-    exporter.modifiersDetailed =
+    exporter.ritualModifiers = modifiers.map((it) => it.toStringShort()).toList();
+    exporter.ritualModifiersDetailed =
         modifiers.map((it) => it.toStringDetailed()).toList();
     exporter.greaterEffects = greaterEffects;
     exporter.effectsMultiplier = effectsMultiplier;

@@ -73,5 +73,7 @@ class Casting {
     exporter.energy = energyCost;
     exporter.baseEnergyCost = _baseEnergyCost;
     exporter.totalEffectsMultiplier = _totalEffectsMultiplier;
+    exporter.castingModifiersDetailed =
+        _modifiers.map((it) => it.toStringDetailed()).toList();
   }
 }

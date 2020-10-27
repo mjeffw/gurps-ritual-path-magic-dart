@@ -70,8 +70,12 @@ class Damage extends RitualModifier {
           .map((it) => it.percent)
           .fold(0, (previous, element) => previous + element));
 
-  int get _adjustForModifiers =>
-      (_baseEnergyCost > 20) ? _modifierPercent : (_modifierPercent / 5).ceil();
+  int get _adjustForModifiers {
+    var adjustment = (_baseEnergyCost > 20)
+        ? _modifierPercent
+        : (_modifierPercent / 5).ceil();
+    return (adjustment == 0 && _modifiers.isNotEmpty) ? 1 : adjustment;
+  }
 
   @override
   int get energyCost => _baseEnergyCost + _adjustForModifiers;
@@ -102,6 +106,29 @@ class Damage extends RitualModifier {
         modifiers: this._modifiers,
         type: this.type);
   }
+
+  @override
+  String toStringShort() =>
+      'Damage, ${direct ? 'Internal ' : 'External '}${type.label} '
+      '${_modifiers.isEmpty ? '' : '($_traitModsToStringShort)'}';
+
+  @override
+  String toStringDetailed() {
+    return 'Damage, ${direct ? 'Internal ' : 'External '}${type.label} '
+        '$damageDice '
+        '${_modifiers.isEmpty ? '' : '($_traitModsToStringDetailed) '}'
+        '($energyCost)';
+  }
+
+  String get _traitModsToStringShort =>
+      _modifiers.map((it) => it.name).reduce((a, b) => '$a; $b');
+
+  String get _traitModsToStringDetailed => _modifiers
+      .map(_traitToStringDetailed)
+      .reduce((value, element) => '$value; $element');
+
+  String _traitToStringDetailed(TraitModifier trait) => '${trait.name}, '
+      '${trait.percent.isNegative ? '${trait.percent}' : '+${trait.percent}'}%';
 
   @override
   int get hashCode => hashObjects(

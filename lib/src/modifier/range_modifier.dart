@@ -28,9 +28,7 @@ class Range extends RitualModifier {
   }
 
   @override
-  String toStringDetailed() {
-    return 'Range, $distance ($energyCost)';
-  }
+  String toStringDetailed() => 'Range, $distance ($energyCost)';
 
   @override
   int get hashCode => distance.hashCode;
@@ -54,6 +52,9 @@ class RangeInfo extends RitualModifier {
       RangeInfo(distance: distance ?? this.distance);
 
   final GDistance distance;
+
+  @override
+  String toStringDetailed() => 'Range, $distance ($energyCost)';
 
   @override
   int get energyCost {
@@ -145,6 +146,11 @@ class RangeDimensional extends RitualModifier {
   @override
   RangeDimensional incrementEffect(int value) =>
       new RangeDimensional(numberDimensions: this.numberDimensions + value);
+
+  @override
+  String toStringDetailed() =>
+      'Range, $numberDimensions dimension${numberDimensions > 1 ? 's' : ''} '
+      '($energyCost)';
 
   @override
   int get hashCode => numberDimensions.hashCode;

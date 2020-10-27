@@ -62,18 +62,14 @@ class Casting {
   Casting removeEffect(int index) =>
       copyWith(effects: List.from(_effects)..removeAt(index));
 
-  String formattedText() {
-    CastingExporter exporter = MarkdownCastingExporter();
-    this.exportTo(exporter);
-    return exporter.toString();
-  }
-
   void exportTo(CastingExporter exporter) {
     ritual.exportTo(exporter);
     exporter.energy = energyCost;
     exporter.baseEnergyCost = _baseEnergyCost;
     exporter.totalEffectsMultiplier = _totalEffectsMultiplier;
-    exporter.castingModifiersDetailed =
-        _modifiers.map((it) => it.toStringDetailed()).toList();
+    exporter.castingEffects
+        .addAll(_effects.map((a) => a.exportTo(EffectsExporter())));
+    exporter.castingModifiers
+        .addAll(_modifiers.map((a) => a.exportTo(ModifiersExporter())));
   }
 }

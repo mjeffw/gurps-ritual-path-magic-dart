@@ -1,3 +1,4 @@
+import 'package:gurps_rpm_model/src/exporter/casting_exporter.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
@@ -60,4 +61,12 @@ class SpellEffect {
   String toString() => '${_level} ${_effect} ${path}';
 
   String toStringDetailed() => '${toString()} ($cost)';
+
+  EffectsExporter exportTo(EffectsExporter exporter) {
+    exporter.effect = effect.name;
+    exporter.level = level.name;
+    exporter.path = path.name;
+    exporter.energyCost = cost;
+    return exporter;
+  }
 }

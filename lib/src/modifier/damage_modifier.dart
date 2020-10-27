@@ -120,12 +120,16 @@ class Damage extends RitualModifier {
         '($energyCost)';
   }
 
-  String get _traitModsToStringShort =>
-      _modifiers.map((it) => it.name).reduce((a, b) => '$a; $b');
+  String get _traitModsToStringShort {
+    _modifiers.sort();
+    return _modifiers.map((it) => it.name).reduce((a, b) => '$a; $b');
+  }
 
-  String get _traitModsToStringDetailed => _modifiers
-      .map(_traitToStringDetailed)
-      .reduce((value, element) => '$value; $element');
+  String get _traitModsToStringDetailed {
+    return (_modifiers..sort)
+        .map(_traitToStringDetailed)
+        .reduce((value, element) => '$value; $element');
+  }
 
   String _traitToStringDetailed(TraitModifier trait) => '${trait.name}, '
       '${trait.percent.isNegative ? '${trait.percent}' : '+${trait.percent}'}%';

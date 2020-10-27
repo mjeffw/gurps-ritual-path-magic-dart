@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:gurps_dart/gurps_dart.dart';
 import 'package:gurps_dice/gurps_dice.dart';
+import 'package:gurps_rpm_model/src/exporter/casting_exporter.dart';
 import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
@@ -33,6 +34,13 @@ abstract class RitualModifier {
 
   String toStringDetailed() {
     return '${toStringShort()} ($energyCost)';
+  }
+
+  ModifiersExporter exportTo(ModifiersExporter exporter) {
+    exporter.name = name;
+    exporter.shortText = toStringShort();
+    exporter.detailedText = toStringDetailed();
+    return exporter;
   }
 }
 
@@ -197,6 +205,11 @@ class AreaOfEffect extends RitualModifier {
 
     return i + (numberTargets / 2.0).ceil();
   }
+
+  @override
+  String toStringDetailed() => 'Area of Effect, $radius yards '
+      '${numberTargets > 0 ? (excludes ? 'excluding $numberTargets ' : 'including $numberTargets ') : ''}'
+      '($energyCost)';
 
   @override
   int get hashCode => hash3(radius, numberTargets, excludes);

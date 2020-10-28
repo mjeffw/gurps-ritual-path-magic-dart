@@ -15,3 +15,4 @@ export 'src/modifier/ritual_modifier.dart';
 export 'src/modifier/affliction_modifier.dart';
 export 'src/modifier/damage_modifier.dart';
 export 'src/modifier/range_modifier.dart';
+export 'src/exporter/casting_exporter.dart';

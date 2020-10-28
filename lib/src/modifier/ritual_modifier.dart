@@ -208,8 +208,13 @@ class AreaOfEffect extends RitualModifier {
 
   @override
   String toStringDetailed() => 'Area of Effect, $radius yards '
-      '${numberTargets > 0 ? (excludes ? 'excluding $numberTargets ' : 'including $numberTargets ') : ''}'
-      '($energyCost)';
+      '${_excludesText}($energyCost)';
+
+  String get _excludesText => numberTargets > 0
+      ? (excludes
+          ? 'excluding $numberTargets ${_pluralize('target', numberTargets)} '
+          : 'including $numberTargets ${_pluralize('target', numberTargets)} ')
+      : '';
 
   @override
   int get hashCode => hash3(radius, numberTargets, excludes);
@@ -222,6 +227,9 @@ class AreaOfEffect extends RitualModifier {
         other.excludes == excludes;
   }
 }
+
+String _pluralize(String s, int numberTargets) =>
+    (numberTargets == 1) ? s : '${s}s';
 
 /// Range of rolls affected by a Bestows modifier.
 enum BestowsRange { narrow, moderate, broad }
@@ -376,6 +384,8 @@ abstract class _EnergyPoolModifier extends RitualModifier {
 
   @override
   int get energyCost => energy;
+  @override
+  String toStringDetailed() => '$name, $energy ($energyCost)';
 }
 
 class ExtraEnergy extends _EnergyPoolModifier {
@@ -426,9 +436,11 @@ class Healing extends RitualModifier {
   int get hashCode => hash2(dice, type);
 
   @override
-  String toStringDetailed() {
-    return 'Healing, $dice ${(type == HealingType.fp) ? 'FP ' : ''}($energyCost)';
-  }
+  String toStringShort() => 'Healing${type == HealingType.fp ? ', FP' : ''}';
+
+  @override
+  String toStringDetailed() =>
+      'Healing, $dice ${(type == HealingType.fp) ? 'FP ' : ''}($energyCost)';
 
   @override
   bool operator ==(Object other) =>

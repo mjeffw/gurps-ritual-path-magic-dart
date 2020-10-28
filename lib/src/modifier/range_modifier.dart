@@ -123,6 +123,9 @@ class RangeCrossTime extends RitualModifier {
   }
 
   @override
+  String toStringDetailed() => 'Range, $duration ($energyCost)';
+
+  @override
   int get hashCode => duration.hashCode;
 
   @override

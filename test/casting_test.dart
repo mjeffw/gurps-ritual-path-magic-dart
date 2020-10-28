@@ -191,6 +191,59 @@ void main() {
               '(13×1)._\n'));
     });
 
+    test('Babble On (Except You!)', () {
+      Ritual r = Ritual(
+          name: 'Babble On (Except You!)',
+          effects: [
+            SpellEffect(Path.mind),
+            SpellEffect(Path.mind, effect: Effect.strengthen)
+          ],
+          modifiers: [
+            AreaOfEffect(radius: 3, excludes: true, numberTargets: 1),
+            AlteredTraits(Trait(
+                name: 'Babel-Tongue', details: '(Native/None)', baseCost: 3)),
+          ],
+          notes: 'This spell grants the subjects (at least two) the ability to '
+              'converse with one another in a mystically made-up language '
+              'called “Babel-Tongue” – so called after the Biblical story of '
+              'the Tower of Babel. All subjects who are to be affected must be '
+              'within 3 yards of the caster. The “Babel-Tongue” language is '
+              'created anew for each casting; it cannot be learned normally. '
+              'Only those under the effects of this spell (or who have some '
+              'other supernatural means to speak unknown and alien languages) '
+              'can comprehend it.');
+
+      Casting c = Casting(r)
+          .addModifier(DurationModifier(duration: GDuration(hours: 1)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Babble On (Except You!)\n'
+              ' *  _Spell Effects:_ Lesser Sense Mind + Lesser Strengthen Mind.\n'
+              ' *  _Inherent Modifiers:_ Area of Effect + Altered Trait, '
+              'Babel-Tongue.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell grants the subjects (at least two) the ability to '
+              'converse with one another in a mystically made-up language '
+              'called “Babel-Tongue” – so called after the Biblical story of '
+              'the Tower of Babel. All subjects who are to be affected must be '
+              'within 3 yards of the caster. The “Babel-Tongue” language is '
+              'created anew for each casting; it cannot be learned normally. '
+              'Only those under the effects of this spell (or who have some '
+              'other supernatural means to speak unknown and alien languages) '
+              'can comprehend it.\n'
+              '\n'
+              ' *  _Typical Casting:_ Lesser Sense Mind (2) + Lesser Strengthen '
+              'Mind (3) + Altered Trait, Babel-Tongue (Native/None) (3) + '
+              'Area of Effect, 3 yards excluding 1 target (3) + '
+              'Duration, 1 hour (3). _14 energy '
+              '(14×1)._\n'));
+    });
+
     test('Bag of Bones', () {
       Ritual r = Ritual(
           name: 'Bag of Bones',
@@ -377,6 +430,50 @@ void main() {
               ' *  _Typical Casting:_ Lesser Control Energy (5) + Area of '
               'Effect, 3 yards (2) + Duration, 1 month (11). '
               '_18 energy (18×1)._\n'));
+    });
+
+    test('Chill (With Meta-Magic)', () {
+      Ritual r = Ritual(
+          name: 'Chill (With Meta-Magic)',
+          effects: [
+            SpellEffect(Path.energy, effect: Effect.control),
+          ],
+          modifiers: [
+            AreaOfEffect(radius: 3),
+          ],
+          notes:
+              'This spell lowers the temperature in an area. It is typically '
+              'used to reduce a 1- to 3-yard area down to freezing, creating a '
+              'way for low-tech casters (or those wealthy enough to hire them) '
+              'to preserve food. It can also be used to cool a room. It cannot '
+              'be used to set a specific temperature; for that, a Greater '
+              'Control Energy effect is required.');
+
+      Casting c = Casting(r)
+          .addModifier(DurationModifier(duration: GDuration(months: 1)))
+          .addModifier(MetaMagic(energy: 12));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Chill (With Meta-Magic)\n'
+              ' *  _Spell Effects:_ Lesser Control Energy.\n'
+              ' *  _Inherent Modifiers:_ Area of Effect.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell lowers the temperature in an area. It is typically '
+              'used to reduce a 1- to 3-yard area down to freezing, creating a '
+              'way for low-tech casters (or those wealthy enough to hire them) '
+              'to preserve food. It can also be used to cool a room. It cannot '
+              'be used to set a specific temperature; for that, a Greater '
+              'Control Energy effect is required.\n'
+              '\n'
+              ' *  _Typical Casting:_ Lesser Control Energy (5) + Area of '
+              'Effect, 3 yards (2) + Duration, 1 month (11) + '
+              'Meta-Magic, 12 (12). '
+              '_30 energy (30×1)._\n'));
     });
 
     test('Cleanse Disease', () {
@@ -1001,6 +1098,42 @@ void main() {
               '_20 energy (20×1)._\n'));
     });
 
+    test('Intercom', () {
+      Ritual r = Ritual(
+          name: 'Intercom',
+          effects: [
+            SpellEffect(Path.mind),
+          ],
+          notes:
+              'This spell allows the subject to mentally communicate with the '
+              'caster as long as both stay within 100 yards of each other. The '
+              'effect lasts for one hour.');
+
+      Casting c = Casting(r)
+          .addModifier(Range(distance: GDistance(yards: 100)))
+          .addModifier(DurationModifier(duration: GDuration(hours: 1)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Intercom\n'
+              ' *  _Spell Effects:_ Lesser Sense Mind.\n'
+              ' *  _Inherent Modifiers:_ None.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell allows the subject to mentally communicate with the '
+              'caster as long as both stay within 100 yards of each other. The '
+              'effect lasts for one hour.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Sense Mind (2) + '
+              'Duration, 1 hour (3) + '
+              'Range, 100 yards (10). '
+              '_15 energy (15×1)._\n'));
+    });
+
     test('Itch', () {
       Ritual r = Ritual(
           name: 'Itch',
@@ -1088,6 +1221,194 @@ void main() {
               'Lesser Restore Body (4) + Healing, 1d (0) + '
               'Subject Weight, 300 lbs. (3). '
               '_7 energy (7×1)._\n'));
+    });
+
+    test('Minor Recovery', () {
+      Ritual r = Ritual(
+          name: 'Minor Recovery',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.restore),
+          ],
+          modifiers: [Healing(dice: DieRoll(dice: 1), type: HealingType.fp)],
+          notes:
+              'This spell heals any living being, restoring 1d FP. It does not '
+              'eliminate disease or poison. The level of healing can be '
+              'varied, as usual, without this counting as a different ritual. '
+              'See _Restore Body_ (p. 7) for more on how much Healing you can '
+              'add before this becomes a Greater effect (and thus a different '
+              'ritual).');
+
+      Casting c =
+          Casting(r).addModifier(SubjectWeight(weight: GWeight(pounds: 300)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Minor Recovery\n'
+              ' *  _Spell Effects:_ Lesser Restore Body.\n'
+              ' *  _Inherent Modifiers:_ Healing, FP.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell heals any living being, restoring 1d FP. It does not '
+              'eliminate disease or poison. The level of healing can be '
+              'varied, as usual, without this counting as a different ritual. '
+              'See _Restore Body_ (p. 7) for more on how much Healing you can '
+              'add before this becomes a Greater effect (and thus a different '
+              'ritual).\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Restore Body (4) + Healing, 1d FP (0) + '
+              'Subject Weight, 300 lbs. (3). '
+              '_7 energy (7×1)._\n'));
+    });
+
+    test('Path of Energy Botch', () {
+      Ritual r = Ritual(
+          name: 'Path of Energy Botch',
+          effects: [
+            SpellEffect(Path.energy,
+                effect: Effect.create, level: Level.greater),
+          ],
+          modifiers: [
+            Damage(
+              dice: DieRoll(dice: 2),
+              direct: false,
+              explosive: true,
+              type: DamageType.burning,
+            )
+          ],
+          notes: 'The spell blows up! The caster takes 4d burning damage (DR '
+              'protects normally); see _Explosions_ (p. B414) for everyone '
+              'else in the area.');
+
+      Casting c = Casting(r);
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Path of Energy Botch\n'
+              ' *  _Spell Effects:_ Greater Create Energy.\n'
+              ' *  _Inherent Modifiers:_ Damage, External Explosive Burning.\n'
+              ' *  _Greater Effects:_ 1 (×3).\n'
+              '\n'
+              'The spell blows up! The caster takes 4d burning damage (DR '
+              'protects normally); see _Explosions_ (p. B414) for everyone '
+              'else in the area.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Greater Create Energy (6) + '
+              'Damage, External Explosive Burning 4d (4). '
+              '_30 energy (10×3)._\n'));
+    });
+
+    test('Seek Person', () {
+      Ritual r = Ritual(
+          name: 'Seek Person',
+          effects: [
+            SpellEffect(Path.body),
+          ],
+          notes: 'Gives the caster an instantaneous flash of knowledge, '
+              'revealing the direction and distance to the subject of this '
+              'spell. The subject must be within 100 miles.');
+
+      Casting c =
+          Casting(r).addModifier(RangeInfo(distance: GDistance(miles: 100)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Seek Person\n'
+              ' *  _Spell Effects:_ Lesser Sense Body.\n'
+              ' *  _Inherent Modifiers:_ None.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'Gives the caster an instantaneous flash of knowledge, '
+              'revealing the direction and distance to the subject of this '
+              'spell. The subject must be within 100 miles.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Sense Body (2) + '
+              'Range, 100 miles (6). '
+              '_8 energy (8×1)._\n'));
+    });
+
+    test('Seek Person (Extra Energy)', () {
+      Ritual r = Ritual(
+          name: 'Seek Person',
+          effects: [
+            SpellEffect(Path.body),
+          ],
+          notes: 'Gives the caster an instantaneous flash of knowledge, '
+              'revealing the direction and distance to the subject of this '
+              'spell. The subject must be within 100 miles.');
+
+      Casting c = Casting(r)
+          .addModifier(RangeInfo(distance: GDistance(miles: 100)))
+          .addModifier(ExtraEnergy(energy: 20));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Seek Person\n'
+              ' *  _Spell Effects:_ Lesser Sense Body.\n'
+              ' *  _Inherent Modifiers:_ None.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'Gives the caster an instantaneous flash of knowledge, '
+              'revealing the direction and distance to the subject of this '
+              'spell. The subject must be within 100 miles.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Sense Body (2) + '
+              'Extra Energy, 20 (20) + '
+              'Range, 100 miles (6). '
+              '_28 energy (28×1)._\n'));
+    });
+
+    test('Track Traveler', () {
+      Ritual r = Ritual(
+          name: 'Track Traveler',
+          effects: [
+            SpellEffect(Path.crossroads),
+          ],
+          notes: 'If a particular gate was used within the past day, this '
+              'ritual will reveal the origin or destination of the last being '
+              'to make the trip. That is, the caster sees a brief flash of the '
+              '“other side” of the gate at the moment the traveler went '
+              'through it. The caster must be within arm’s reach of the gate, '
+              'although he need not physically touch it.');
+
+      Casting c =
+          Casting(r).addModifier(RangeCrossTime(duration: GDuration(days: 1)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Track Traveler\n'
+              ' *  _Spell Effects:_ Lesser Sense Crossroads.\n'
+              ' *  _Inherent Modifiers:_ None.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'If a particular gate was used within the past day, this '
+              'ritual will reveal the origin or destination of the last being '
+              'to make the trip. That is, the caster sees a brief flash of the '
+              '“other side” of the gate at the moment the traveler went '
+              'through it. The caster must be within arm’s reach of the gate, '
+              'although he need not physically touch it.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Sense Crossroads (2) + '
+              'Range, 1 day (2). '
+              '_4 energy (4×1)._\n'));
     });
   });
 }

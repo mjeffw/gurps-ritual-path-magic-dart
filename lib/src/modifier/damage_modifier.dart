@@ -109,12 +109,16 @@ class Damage extends RitualModifier {
 
   @override
   String toStringShort() =>
-      'Damage, ${direct ? 'Internal ' : 'External '}${type.label}'
+      'Damage, ${_directText} $_explosiveText${type.label}'
       '${_modifiers.isEmpty ? '' : ' ($_traitModsToStringShort)'}';
+
+  String get _directText => direct ? 'Internal' : 'External';
+
+  String get _explosiveText => explosive ? 'Explosive ' : '';
 
   @override
   String toStringDetailed() {
-    return 'Damage, ${direct ? 'Internal ' : 'External '}${type.label} '
+    return 'Damage, ${_directText} $_explosiveText${type.label} '
         '$damageDice '
         '${_modifiers.isEmpty ? '' : '($_traitModsToStringDetailed) '}'
         '($energyCost)';

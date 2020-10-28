@@ -9,8 +9,8 @@ class Level {
     return _values[name];
   }
 
-  static const greater = Level('Greater');
-  static const lesser = Level('Lesser');
+  static const greater = const Level('Greater');
+  static const lesser = const Level('Lesser');
 
   static Map<String, Level> _values = {
     greater.name: greater,

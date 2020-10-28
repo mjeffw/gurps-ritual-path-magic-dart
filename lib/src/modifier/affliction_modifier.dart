@@ -51,6 +51,16 @@ class Affliction extends RitualModifier {
   int get energyCost => (percent / 5.0).ceil();
 
   @override
+  String toStringShort() {
+    return 'Affliction, $effect';
+  }
+
+  @override
+  String toStringDetailed() {
+    return 'Affliction, $effect ($energyCost)';
+  }
+
+  @override
   int get hashCode => hash2(effect, percent);
 
   @override

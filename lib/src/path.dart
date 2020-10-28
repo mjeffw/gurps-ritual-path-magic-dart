@@ -12,13 +12,13 @@ abstract class Path {
 
   static const body = const _Body();
   static const chance = const _Chance();
-  static const crossroads = _Crossroads();
-  static const energy = _Energy();
-  static const magic = _Magic();
-  static const matter = _Matter();
-  static const mind = _Mind();
-  static const spirit = _Spirit();
-  static const undead = _Undead();
+  static const crossroads = const _Crossroads();
+  static const energy = const _Energy();
+  static const magic = const _Magic();
+  static const matter = const _Matter();
+  static const mind = const _Mind();
+  static const spirit = const _Spirit();
+  static const undead = const _Undead();
 
   static Map<String, Path> _values = {
     body.name: body,

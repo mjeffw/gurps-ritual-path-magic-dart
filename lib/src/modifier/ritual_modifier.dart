@@ -426,6 +426,11 @@ class Healing extends RitualModifier {
   int get hashCode => hash2(dice, type);
 
   @override
+  String toStringDetailed() {
+    return 'Healing, $dice ${(type == HealingType.fp) ? 'FP ' : ''}($energyCost)';
+  }
+
+  @override
   bool operator ==(Object other) =>
       other is Healing && other.dice == dice && other.type == type;
 }
@@ -474,6 +479,11 @@ class Speed extends RitualModifier {
         _sizeSpeedRangeTable.linearMeasureFor((size < 0) ? 0 : size);
 
     return Speed(yardsPerSecond: speed);
+  }
+
+  @override
+  String toStringDetailed() {
+    return 'Speed, $_yardsPerSecond/second ($energyCost)';
   }
 
   @override

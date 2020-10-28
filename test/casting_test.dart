@@ -777,5 +777,317 @@ void main() {
               'Duration, 1 week (9). '
               '_93 energy (93×1)._\n'));
     });
+
+    test('Gift of Gab', () {
+      Ritual r = Ritual(
+          name: 'Gift of Gab',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.strengthen),
+            SpellEffect(Path.mind, effect: Effect.strengthen),
+            SpellEffect(Path.mind, effect: Effect.strengthen),
+          ],
+          modifiers: [
+            AlteredTraits(
+              Trait(
+                name: 'Voice',
+                baseCost: 10,
+              ),
+            ),
+            Bestows(
+              'Fast-Talk',
+              range: BestowsRange.narrow,
+              value: 2,
+            ),
+            Bestows(
+              'detect subject’s lies',
+              value: -2,
+              range: BestowsRange.moderate,
+            ),
+          ],
+          notes:
+              'For the next hour, this spell makes whatever the subject says '
+              'seem to be the absolute truth, even if it’s not. While under '
+              'the effects of the spell, the subject temporarily gains the '
+              'Voice advantage, with an _extra_ +2 (net +4) to Fast-Talk! As '
+              'well, any rolls to determine whether the subject is lying '
+              '(e.g., for Body Language, Detect Lies, or Empathy) are at -2.\n'
+              '\n'
+              'Note that these bonuses do not violate _Stacking Spells_ (p. '
+              '15) because they’re all incorporated into a single ritual.');
+
+      Casting c = Casting(r)
+          .addModifier(DurationModifier(duration: GDuration(hours: 1)))
+          .addModifier(SubjectWeight(weight: GWeight(pounds: 300)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Gift of Gab\n'
+              ' *  _Spell Effects:_ Lesser Strengthen Body + '
+              'Lesser Strengthen Mind ×2.\n'
+              ' *  _Inherent Modifiers:_ '
+              'Altered Trait, Voice + '
+              'Bestows a Bonus, Fast-Talk + '
+              'Bestows a Penalty, detect subject’s lies.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'For the next hour, this spell makes whatever the subject says '
+              'seem to be the absolute truth, even if it’s not. While under '
+              'the effects of the spell, the subject temporarily gains the '
+              'Voice advantage, with an _extra_ +2 (net +4) to Fast-Talk! As '
+              'well, any rolls to determine whether the subject is lying '
+              '(e.g., for Body Language, Detect Lies, or Empathy) are at -2.\n'
+              '\n'
+              'Note that these bonuses do not violate _Stacking Spells_ (p. '
+              '15) because they’re all incorporated into a single ritual.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Strengthen Body (3) + Lesser Strengthen Mind (3) + '
+              'Lesser Strengthen Mind (3) + '
+              'Altered Trait, Voice (10) + '
+              'Bestows a Bonus, +2 to Fast-Talk (2) + '
+              'Bestows a Penalty, -2 to detect subject’s lies (4) + '
+              'Duration, 1 hour (3) + '
+              'Subject Weight, 300 lbs. (3). '
+              '_31 energy (31×1)._\n'));
+    });
+
+    test('Halt', () {
+      Ritual r = Ritual(
+          name: 'Halt',
+          effects: [
+            SpellEffect(Path.energy,
+                level: Level.greater, effect: Effect.destroy),
+          ],
+          modifiers: [
+            Speed(yardsPerSecond: GDistance(yards: 20)),
+          ],
+          notes: 'This spell brings a target within 10 yards to a sudden, '
+              'harmless stop. The target can be as heavy and fast as a '
+              'charging rhinoceros or accelerating pickup truck. The spell '
+              'works by instantly canceling out the subject’s momentum. '
+              'Falling objects stop safely, and then immediately start falling '
+              'again.\n'
+              '\n'
+              'Assuming a typical casting, a subject weighing more than five '
+              'tons is completely unaffected. A target moving faster than 20 '
+              'yards/second does not stop completely; instead, its velocity is '
+              'slowed by 20 yards/second. (If this spell is being cast on the '
+              'fly, it can easily be varied to match the mass and speed of the '
+              'specific subject.)');
+
+      Casting c = Casting(r)
+          .addModifier(Range(distance: GDistance(yards: 10)))
+          .addModifier(SubjectWeight(weight: GWeight(tons: 5)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Halt\n'
+              ' *  _Spell Effects:_ Greater Destroy Energy.\n'
+              ' *  _Inherent Modifiers:_ Speed.\n'
+              ' *  _Greater Effects:_ 1 (×3).\n'
+              '\n'
+              'This spell brings a target within 10 yards to a sudden, '
+              'harmless stop. The target can be as heavy and fast as a '
+              'charging rhinoceros or accelerating pickup truck. The spell '
+              'works by instantly canceling out the subject’s momentum. '
+              'Falling objects stop safely, and then immediately start falling '
+              'again.\n'
+              '\n'
+              'Assuming a typical casting, a subject weighing more than five '
+              'tons is completely unaffected. A target moving faster than 20 '
+              'yards/second does not stop completely; instead, its velocity is '
+              'slowed by 20 yards/second. (If this spell is being cast on the '
+              'fly, it can easily be varied to match the mass and speed of the '
+              'specific subject.)\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Greater Destroy Energy (5) + '
+              'Range, 10 yards (4) + '
+              'Speed, 20 yards/second (6) + '
+              'Subject Weight, 5 tons (6). '
+              '_63 energy (21×3)._\n'));
+    });
+
+    test('Haste', () {
+      Ritual r = Ritual(
+          name: 'Haste',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.strengthen),
+          ],
+          modifiers: [
+            AlteredTraits(
+                Trait(name: 'Basic Speed', baseCost: 20, details: '+1.00')),
+          ],
+          notes:
+              'This spell temporarily raises the subject’s Speed (and thus his '
+              'Move and Dodge) by 1 for the next 10 minutes.');
+
+      Casting c = Casting(r)
+          .addModifier(DurationModifier(duration: GDuration(minutes: 10)))
+          .addModifier(SubjectWeight(weight: GWeight(pounds: 300)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Haste\n'
+              ' *  _Spell Effects:_ Lesser Strengthen Body.\n'
+              ' *  _Inherent Modifiers:_ Altered Trait, Basic Speed.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell temporarily raises the subject’s Speed (and thus his '
+              'Move and Dodge) by 1 for the next 10 minutes.\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Strengthen Body (3) + '
+              'Altered Trait, Basic Speed +1.00 (20) + '
+              'Duration, 10 minutes (1) + '
+              'Subject Weight, 300 lbs. (3). '
+              '_27 energy (27×1)._\n'));
+    });
+
+    test('Hunger', () {
+      Ritual r = Ritual(
+          name: 'Hunger',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.destroy),
+          ],
+          modifiers: [
+            Damage(
+              dice: DieRoll(dice: 1),
+              type: DamageType.fatigue,
+              modifiers: [TraitModifier(name: 'Starvation', percent: 40)],
+            ),
+          ],
+          notes:
+              'This spell inflicts 1d FP of starvation damage on anyone within '
+              '10 yards. On average, this is the equivalent of a full day of '
+              'missed meals. Fatigue taken in this fashion can only be '
+              'recovered by a day of rest and adequate nourishment (see '
+              '_Starvation_, p. B426).');
+
+      Casting c = Casting(r)
+          .addModifier(Range(distance: GDistance(yards: 10)))
+          .addModifier(SubjectWeight(weight: GWeight(pounds: 300)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Hunger\n'
+              ' *  _Spell Effects:_ Lesser Destroy Body.\n'
+              ' *  _Inherent Modifiers:_ Damage, Internal Fatigue (Starvation).\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell inflicts 1d FP of starvation damage on anyone within '
+              '10 yards. On average, this is the equivalent of a full day of '
+              'missed meals. Fatigue taken in this fashion can only be '
+              'recovered by a day of rest and adequate nourishment (see '
+              '_Starvation_, p. B426).\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Destroy Body (5) + '
+              'Damage, Internal Fatigue 1d (Starvation, +40%) (8) + '
+              'Range, 10 yards (4) + '
+              'Subject Weight, 300 lbs. (3). '
+              '_20 energy (20×1)._\n'));
+    });
+
+    test('Itch', () {
+      Ritual r = Ritual(
+          name: 'Itch',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.control),
+          ],
+          modifiers: [
+            Affliction(effect: 'Itching', percent: 10),
+          ],
+          notes:
+              'This spell causes the subject (who must be within 10 yards) to '
+              'develop a fierce and irritating itch. This causes the subject '
+              'to suffer a -2 to DX for the next 10 minutes or until he takes '
+              'one full second to scratch the itch. He can do nothing else '
+              'while scratching. (Itching is a +10% Affliction enhancement '
+              'found in _**GURPS Power-Ups 4: Enhancements.**_)');
+
+      Casting c = Casting(r)
+          .addModifier(Range(distance: GDistance(yards: 10)))
+          .addModifier(DurationModifier(duration: GDuration(minutes: 10)))
+          .addModifier(SubjectWeight(weight: GWeight(pounds: 300)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Itch\n'
+              ' *  _Spell Effects:_ Lesser Control Body.\n'
+              ' *  _Inherent Modifiers:_ Affliction, Itching.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell causes the subject (who must be within 10 yards) to '
+              'develop a fierce and irritating itch. This causes the subject '
+              'to suffer a -2 to DX for the next 10 minutes or until he takes '
+              'one full second to scratch the itch. He can do nothing else '
+              'while scratching. (Itching is a +10% Affliction enhancement '
+              'found in _**GURPS Power-Ups 4: Enhancements.**_)\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Control Body (5) + '
+              'Affliction, Itching (2) + '
+              'Duration, 10 minutes (1) + '
+              'Range, 10 yards (4) + '
+              'Subject Weight, 300 lbs. (3). '
+              '_15 energy (15×1)._\n'));
+    });
+
+    test('Minor Healing', () {
+      Ritual r = Ritual(
+          name: 'Minor Healing',
+          effects: [
+            SpellEffect(Path.body, effect: Effect.restore),
+          ],
+          modifiers: [Healing(dice: DieRoll(dice: 1))],
+          notes:
+              'This spell heals any living being, restoring 1d HP. It does not '
+              'eliminate disease or poison. The level of healing can be '
+              'varied, as usual, without this counting as a different ritual. '
+              'See _Restore Body_ (p. 7) for more on how much Healing you can '
+              'add before this becomes a Greater effect (and thus a different '
+              'ritual).');
+
+      Casting c =
+          Casting(r).addModifier(SubjectWeight(weight: GWeight(pounds: 300)));
+
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## Minor Healing\n'
+              ' *  _Spell Effects:_ Lesser Restore Body.\n'
+              ' *  _Inherent Modifiers:_ Healing.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              'This spell heals any living being, restoring 1d HP. It does not '
+              'eliminate disease or poison. The level of healing can be '
+              'varied, as usual, without this counting as a different ritual. '
+              'See _Restore Body_ (p. 7) for more on how much Healing you can '
+              'add before this becomes a Greater effect (and thus a different '
+              'ritual).\n'
+              '\n'
+              ' *  _Typical Casting:_ '
+              'Lesser Restore Body (4) + Healing, 1d (0) + '
+              'Subject Weight, 300 lbs. (3). '
+              '_7 energy (7×1)._\n'));
+    });
   });
 }

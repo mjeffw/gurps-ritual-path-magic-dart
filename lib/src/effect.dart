@@ -10,13 +10,13 @@ abstract class Effect {
     return _values[name];
   }
 
-  static const sense = _Sense();
-  static const strengthen = _Strengthen();
-  static const restore = _Restore();
-  static const control = _Control();
-  static const destroy = _Destroy();
-  static const create = _Create();
-  static const transform = _Transform();
+  static const sense =const _Sense();
+  static const strengthen = const _Strengthen();
+  static const restore = const _Restore();
+  static const control = const _Control();
+  static const destroy = const _Destroy();
+  static const create = const _Create();
+  static const transform = const _Transform();
 
   static Map<String, Effect> _values = {
     sense.name: sense,

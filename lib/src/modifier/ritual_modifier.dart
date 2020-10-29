@@ -384,6 +384,7 @@ abstract class _EnergyPoolModifier extends RitualModifier {
 
   @override
   int get energyCost => energy;
+
   @override
   String toStringDetailed() => '$name, $energy ($energyCost)';
 }

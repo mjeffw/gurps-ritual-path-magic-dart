@@ -6,6 +6,23 @@ import 'package:test/test.dart';
 
 void main() {
   group('Casting:', () {
+    test('Nothing', () {
+      Casting c = Casting(Ritual());
+      CastingExporter exporter = MarkdownCastingExporter();
+      c.exportTo(exporter);
+
+      expect(
+          exporter.toString(),
+          equals('## \n'
+              ' *  _Spell Effects:_ None.\n'
+              ' *  _Inherent Modifiers:_ None.\n'
+              ' *  _Greater Effects:_ 0 (×1).\n'
+              '\n'
+              '\n'
+              '\n'
+              ' *  _Typical Casting:_ None. _0 energy (0×1)._\n'));
+    });
+
     test('Air Jet', () {
       Ritual r = Ritual(
           name: 'Air Jet',

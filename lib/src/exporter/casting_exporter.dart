@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+String foldWithPlus(String a, String b) => '$a + $b'.trim();
+
 class EffectsExporter implements Comparable<EffectsExporter> {
   String path;
   String level;
@@ -36,7 +38,7 @@ class EffectsExporterList with ListMixin<EffectsExporter> {
     var list = sorted.map((e) => e.toStringShort()).toList();
 
     var result = <String>[];
-    // go through list and convert duplicates into tuples
+
     while (list.isNotEmpty) {
       String item = list.removeAt(0);
 
@@ -106,20 +108,20 @@ class CastingExporter extends RitualExporter {
     return '';
   }
 
-  List<EffectsExporter> get _allEffects =>
+  List<EffectsExporter> get allEffects =>
       [...ritualEffects.sorted, ...castingEffects.sorted];
 
-  List<String> get _allEffectsAsDetailedString =>
-      _allEffects.map((a) => a.toStringDetailed()).toList();
+  List<String> get allEffectsAsDetailedString =>
+      allEffects.map((a) => a.toStringDetailed()).toList();
 
-  List<ModifiersExporter> get _allModifiers =>
+  List<ModifiersExporter> get allModifiers =>
       <ModifiersExporter>[...ritualModifiers, ...castingModifiers]..sort();
 
-  List<String> get _allModifiersAsDetailedString =>
-      _allModifiers.map((a) => a.detailedText).toList();
+  List<String> get allModifiersAsDetailedString =>
+      allModifiers.map((a) => a.detailedText).toList();
 
-  List<String> get _components =>
-      [..._allEffectsAsDetailedString, ..._allModifiersAsDetailedString];
+  List<String> get components =>
+      [...allEffectsAsDetailedString, ...allModifiersAsDetailedString];
 
   int energy;
   int baseEnergyCost;
@@ -128,25 +130,27 @@ class CastingExporter extends RitualExporter {
 
 class MarkdownCastingExporter extends CastingExporter {
   @override
-  String get title => '## ${super.title}';
+  String get title => '## ${super.title ?? ''}';
 
   @override
-  String toString() {
-    var effects = ritualEffects.asShortText.reduce(_foldWithPlus);
-    return '$title\n'
-        ' *  _Spell Effects:_ $effects.\n'
-        ' *  _Inherent Modifiers:_ ${_inherentModifiers()}.\n'
-        ' *  _Greater Effects:_ $greaterEffects (×$effectsMultiplier).\n'
-        '\n'
-        '$description\n'
-        '\n'
-        ' *  _Typical Casting:_ ${_components.reduce(_foldWithPlus)}. '
-        '_$energy energy ($baseEnergyCost×$totalEffectsMultiplier)._\n';
-  }
+  String toString() => '$title\n'
+      ' *  _Spell Effects:_ $_inherentEffects.\n'
+      ' *  _Inherent Modifiers:_ ${_inherentModifiers()}.\n'
+      ' *  _Greater Effects:_ $greaterEffects (×$effectsMultiplier).\n'
+      '\n'
+      '${description ?? ''}\n'
+      '\n'
+      ' *  _Typical Casting:_ ${_allComponents}. '
+      '_$energy energy ($baseEnergyCost×$totalEffectsMultiplier)._\n';
 
   String _inherentModifiers() => ritualModifiers.isNotEmpty
-      ? ritualModifiers.map((a) => a.shortText).reduce(_foldWithPlus)
+      ? ritualModifiers.map((a) => a.shortText).reduce(foldWithPlus)
       : 'None';
 
-  String _foldWithPlus(String a, String b) => '$a + $b'.trim();
+  String get _inherentEffects => ritualEffects.isNotEmpty
+      ? ritualEffects.asShortText.reduce(foldWithPlus)
+      : 'None';
+
+  String get _allComponents =>
+      components.isNotEmpty ? components.reduce(foldWithPlus) : 'None';
 }
